@@ -86,7 +86,7 @@ int GxxGmHttpImp::Open(const char *url)
 		}
 	}
 
-	notifer_->MediaFrameNotiferEx((AVCodecContext*)video_codec_ctx_, (AVCodecContext*)audio_codec_ctx_);
+	notifer_->StreamParamNotiferEx((AVCodecContext*)video_codec_ctx_, (AVCodecContext*)audio_codec_ctx_);
 	// notifer_->StreamParamNotifer(eVideoCode, eAudioCode, unSampleRate, unBits, unChannels, nRefFrameRate, nEnableTimeCaculate);
 
 	return 0;
@@ -138,6 +138,18 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 	AVPacket av_packet;
 	while (true)
 	{
+		//// 这里使用了一个非常低劣的手段来实现暂停
+		//while (true)
+		//{
+		//	if (is_paused_)
+		//	{
+		//		Sleep(1);
+		//		continue;
+		//	}
+		//	else
+		//		break;
+		//}
+
 		// 这里需要有一个事件，或者锁来进行暂停/恢复的同步处理
 		int errCode = av_read_frame((AVFormatContext*)http_->format_ctx_, &av_packet);
 		if (errCode != 0)

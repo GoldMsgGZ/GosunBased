@@ -2,11 +2,11 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GxxGmPlayer"
-	ProjectGUID="{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46}"
-	RootNamespace="GxxGmPlayer"
+	Name="GxxGmMultiDisp"
+	ProjectGUID="{8C0959C5-4AE2-4038-B43F-25E61998BDD4}"
+	RootNamespace="GxxGmMultiDisp"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="196613"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -41,8 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\GxxGmPlaySDK;..\ext\GSMediaPlayer;..\ext\FFMpeg\include;..\ext\SDL2\include;..\ext\GSFoundation"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;__STDC_CONSTANT_MACROS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -150,11 +149,17 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\GxxGmPlayer.cpp"
+				RelativePath=".\GxxGmMultiDisp.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Í·ÎÄ¼þ"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath=".\GxxGmPlayer.h"
+				RelativePath=".\GxxGmMultiDisp.h"
 				>
 			</File>
 		</Filter>
@@ -163,18 +168,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="GxxGmSDL2Player"
-			>
-			<File
-				RelativePath=".\GxxGmSDL2Player.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GxxGmSDL2Player.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

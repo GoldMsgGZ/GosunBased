@@ -4,6 +4,7 @@
 GxxGmPlayer::GxxGmPlayer()
 : screen_window_(NULL)
 , gxx_media_player_handle_(0)
+, sdl2_player_(new GxxGmSDL2Player())
 , play_sdk_(new GxxGmPlaySDK(this))
 , is_real_(true)
 {
@@ -15,6 +16,9 @@ GxxGmPlayer::~GxxGmPlayer()
 	screen_window_ = NULL;
 	if (play_sdk_)
 		delete play_sdk_;
+
+	if (sdl2_player_)
+		delete sdl2_player_;
 }
 
 int GxxGmPlayer::SetScreenWindow(HWND window)
@@ -83,6 +87,37 @@ void GxxGmPlayer::StreamParamNotifer(UInt32 eVideoCode, UInt32 eAudioCode, UInt3
 	}
 }
 
+void GxxGmPlayer::StreamParamNotiferEx(AVCodecContext *video_codec_context, AVCodecContext *audio_codec_context)
+{
+	// 提取出必要的参数
+	
+	// 视频相关参数
+	int video_img_width = video_codec_context->width;
+	int video_img_height = video_codec_context->height;
+	AVPixelFormat video_img_pixfmt = video_codec_context->pix_fmt;
+
+	// 音频相关参数
+	int audio_channel_layout = audio_codec_context->channel_layout;
+	int audio_frame_size = audio_codec_context->frame_size;
+	AVSampleFormat audio_sample_fmt = audio_codec_context->sample_fmt;
+	int audio_sample_rate = audio_codec_context->sample_rate;
+
+	int errCode = sdl2_player_->Initialize(screen_window_);
+	if (errCode != 0)
+	{
+		// 初始化失败
+	}
+
+	errCode = sdl2_player_->SetMediaInfo(video_img_width, video_img_height, video_img_pixfmt,
+		audio_channel_layout, audio_frame_size, audio_sample_fmt, audio_sample_rate);
+	if (errCode != 0)
+	{
+		// 初始化失败
+	}
+
+	sdl2_player_->Play();
+}
+
 void GxxGmPlayer::MediaFrameNotifer(StruGSMediaFrameData *media_frame_data)
 {
 	// 收到帧数据后，判断是不是视频帧，如果是，则补全视频宽高
@@ -111,4 +146,7 @@ void GxxGmPlayer::MediaFrameNotiferEx(AVMediaType type, AVFrame *data)
 	av_frame_copy(av_frame, data);
 
 	// 接下来将帧数据转为图像，最后渲染到播放窗口里
+	sdl2_player_->InputFrameData(type, av_frame);
+
+	av_frame_free(&av_frame);
 }

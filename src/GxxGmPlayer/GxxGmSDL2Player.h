@@ -2,7 +2,19 @@
 #define _GxxGmSDL2Player_H_
 
 #include "SDL.h"
-#include <condition_variable>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "libavformat/avformat.h"
+#include "libavcodec/avcodec.h"
+#include "libavutil/avutil.h"
+#ifdef __cplusplus
+};
+#endif
+
+#include <list>
+#include <windows.h>
 
 typedef struct _FrameData_
 {
@@ -18,10 +30,10 @@ public:
 
 public:
 	int push(AVMediaType type, AVFrame *data);
-	FrameData pop();
+	FrameData* pop();
 
 public:
-	std::queue<FrameData> frame_queue_;
+	std::list<FrameData*> frame_queue_;
 	CRITICAL_SECTION section_;
 };
 
@@ -33,8 +45,10 @@ public:
 
 public:
 	int Initialize(HWND screen);
-	int SetMediaInfo(int width, int height, AVPixelFormat pixfmt, int width2, int height2, int channel_layout, int audio_frame_size, AVSampleFormat samplefmt, int sample_rate);
+	int SetMediaInfo(int width, int height, AVPixelFormat pixfmt, int channel_layout, int audio_frame_size, AVSampleFormat samplefmt, int sample_rate);
 	int Play();
+	int Pause();
+	int Stop();
 	int InputFrameData(AVMediaType type, AVFrame *data);
 
 public:
@@ -51,6 +65,10 @@ public:
 	SDL_Texture *texture_;
 
 	// 需要缓存的视音频参数
+	int screen_width_;
+	int screen_height_;
+	int video_img_width_;
+	int video_img_height_;
 
 	// 图像转换上下文
 	AVFrame *video_frame_yuv_;

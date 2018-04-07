@@ -2,10 +2,12 @@
 #define _GxxGmPlayer_H_
 
 #include "GxxGmPlaySDK.h"
+#include "GxxGmSDL2Player.h"
 #include "GSMediaPlayer.h"
 #include <Windows.h>
 
 class GxxGmPlaySDK;
+class GxxGmSDL2Player;
 
 class GxxGmPlayer : public GxxGmPlayerNotifer
 {
@@ -36,7 +38,11 @@ private:
 	bool is_real_;
 
 private:
+	GxxGmSDL2Player *sdl2_player_;
+
+private:
 	GxxGmPlaySDK *play_sdk_; 
+	
 };
 
 #endif//_GxxGmPlayer_H_

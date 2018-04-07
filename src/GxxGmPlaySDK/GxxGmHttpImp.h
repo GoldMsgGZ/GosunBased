@@ -2,6 +2,7 @@
 #define _GxxGmHttpImp_H_
 
 #include "GxxGmPlaySDKCallback.h"
+//#include "GSThread.h"
 #include <windows.h>
 
 class GxxGmHttpImp

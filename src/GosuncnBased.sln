@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "数据源", "数据源", "{0D609229-2177-4ABD-9142-03DE829C3F89}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "渲染播放", "渲染播放", "{CA3DAEE4-FF40-4903-9584-CA9D5310684F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "流服务", "流服务", "{4355BAA4-7DED-4DA6-805B-6949C5E75DC9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayCore", "GxxGmPlayCore\GxxGmPlayCore.vcproj", "{DC39A25E-B09B-4F94-926F-8C555788C34A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -22,6 +18,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayer", "GxxGmPlayer\
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "浏览器插件", "浏览器插件", "{068ED2E6-0927-4884-8D69-67560C9F637A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "多窗口管理", "多窗口管理", "{C8A97697-30F8-4974-AD60-3281A3E3609D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmMultiDisp", "GxxGmMultiDisp\GxxGmMultiDisp.vcproj", "{8C0959C5-4AE2-4038-B43F-25E61998BDD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +41,10 @@ Global
 		{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46}.Debug|Win32.Build.0 = Debug|Win32
 		{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46}.Release|Win32.ActiveCfg = Release|Win32
 		{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46}.Release|Win32.Build.0 = Release|Win32
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Debug|Win32.Build.0 = Debug|Win32
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Release|Win32.ActiveCfg = Release|Win32
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +53,6 @@ Global
 		{DC39A25E-B09B-4F94-926F-8C555788C34A} = {CA3DAEE4-FF40-4903-9584-CA9D5310684F}
 		{1FCD2B69-0412-404F-8961-AE766E979ACD} = {001FD25F-7836-4CE1-AC4D-AF916F5708C5}
 		{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46} = {001FD25F-7836-4CE1-AC4D-AF916F5708C5}
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4} = {C8A97697-30F8-4974-AD60-3281A3E3609D}
 	EndGlobalSection
 EndGlobal

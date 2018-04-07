@@ -41,24 +41,27 @@ int FrameDataCache::push(AVMediaType type, AVFrame *data)
 		else
 			break;
 	}
-	
 
-	FrameData data;
-	data->type_ = type;
-	data.data_ = data;
+	FrameData *framedata = new FrameData;
+	framedata->type_ = type;
+	framedata->data_ = data;
 
-	frame_queue_.push(data);
+	frame_queue_.push_back(framedata);
 
 	LeaveCriticalSection(&section_);
 	return 0;
 }
 
-FrameData FrameDataCache::pop()
+FrameData* FrameDataCache::pop()
 {
 	EnterCriticalSection(&section_);
 
-	FrameData data = frame_queue_.front();
-	frame_queue_.pop();
+	// 这里先判断是否为空
+	if (frame_queue_.empty())
+		return NULL;
+
+	FrameData *data = frame_queue_.front();
+	frame_queue_.pop_front();
 
 	LeaveCriticalSection(&section_);
 	return data;
@@ -71,6 +74,7 @@ GxxGmSDL2Player::GxxGmSDL2Player()
 , renderer_(NULL)
 , texture_(NULL)
 , video_frame_yuv_(NULL)
+, image_convert_context_(NULL)
 {
 
 }
@@ -96,9 +100,9 @@ int GxxGmSDL2Player::Initialize(HWND screen)
 
 	RECT rt;
 	GetWindowRect(screen, &rt);
-	int width = rt.right - rt.left;
-	int height = rt.bottom - rt.top;
-	texture_ = SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, width, height);
+	screen_width_ = rt.right - rt.left;
+	screen_height_ = rt.bottom - rt.top;
+	texture_ = SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, screen_width_, screen_height_);
 	if (texture_ == NULL)
 		return -3;
 
@@ -109,15 +113,17 @@ int GxxGmSDL2Player::Initialize(HWND screen)
 	return 0;
 }
 
-int GxxGmSDL2Player::SetMediaInfo(int width, int height, AVPixelFormat pixfmt, int width2, int height2, int channel_layout, int audio_frame_size, AVSampleFormat samplefmt, int sample_rate)
+int GxxGmSDL2Player::SetMediaInfo(int width, int height, AVPixelFormat pixfmt, int channel_layout, int audio_frame_size, AVSampleFormat samplefmt, int sample_rate)
 {
 	// 先准备视频图像转换相关的事情
+	video_img_width_ = width;
+	video_img_height_ = height;
 	video_frame_yuv_ = av_frame_alloc();
-	int video_frame_yuv_buffer_size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, width, height, 1);
+	int video_frame_yuv_buffer_size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, video_img_width_, video_img_height_, 1);
 	unsigned char *video_frame_yuv_buffer = (unsigned char *)av_malloc(video_frame_yuv_buffer_size);
-	av_image_fill_arrays(video_frame_yuv_->data, video_frame_yuv_->linesize, video_frame_yuv_buffer, AV_PIX_FMT_YUV420P, width, height, 1);
+	av_image_fill_arrays(video_frame_yuv_->data, video_frame_yuv_->linesize, video_frame_yuv_buffer, AV_PIX_FMT_YUV420P, video_img_width_, video_img_height_, 1);
 
-	image_convert_context_ = sws_getContext(width, height, pixfmt, width, height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+	image_convert_context_ = sws_getContext(video_img_width_, video_img_height_, pixfmt, screen_width_, screen_height_, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
 
 	// 处理音频相关的事情
 	return 0;
@@ -146,6 +152,16 @@ int GxxGmSDL2Player::Play()
 	return 0;
 }
 
+int GxxGmSDL2Player::Pause()
+{
+	return 0;
+}
+
+int GxxGmSDL2Player::Stop()
+{
+	return 0;
+}
+
 int GxxGmSDL2Player::InputFrameData(AVMediaType type, AVFrame *data)
 {
 	// 将帧数据插入队列
@@ -159,21 +175,32 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 	while (true)
 	{
 		// 等待触发事件
-		WaitForSingleObject(player_->framerate_control_event_, INFINITE);
+		//WaitForSingleObject(player_->framerate_control_event_, INFINITE);
 
 		// 从缓存中取出帧数据
-		FrameData data = player_->frame_cache_.pop();
-		if (data.type_ == AVMEDIA_TYPE_VIDEO)
+		FrameData *data = player_->frame_cache_.pop();
+		if (data->type_ == AVMEDIA_TYPE_VIDEO)
 		{
 			// 图像格式转换
-			sws_scale(image_convert_context_, (const unsigned char * const*)data.data_->data, data.data_->linesize, 0, player_->);
+			sws_scale(player_->image_convert_context_, (const unsigned char * const*)data->data_->data, data->data_->linesize, 0, player_->video_img_height_, player_->video_frame_yuv_->data, player_->video_frame_yuv_->linesize);
+
+			// 渲染
+			SDL_Rect rect;
+			rect.x = 0;
+			rect.y = 0;
+			rect.w = player_->screen_width_;
+			rect.h = player_->screen_height_;
+
+			SDL_UpdateTexture(player_->texture_, NULL, player_->video_frame_yuv_->data[0], player_->video_frame_yuv_->linesize[0]);
+			SDL_RenderCopy(player_->renderer_, player_->texture_, NULL, &rect);
+			SDL_RenderPresent(player_->renderer_);
 		}
-		else if (data.type_ == AVMEDIA_TYPE_AUDIO)
+		else if (data->type_ == AVMEDIA_TYPE_AUDIO)
 		{
 			// 音频转换
 		}
 
-		av_frame_free(&data.data_);
+		av_frame_free(&data->data_);
 	}
 
 	return 0;
