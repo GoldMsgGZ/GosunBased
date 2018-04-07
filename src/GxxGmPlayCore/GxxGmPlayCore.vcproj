@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\GxxGmPlayer;..\GxxGmPlaySDK;..\ext\RtspStack;..\ext\GSMediaPlayer;..\ext\FFMpeg\include;..\ext\SDL2\include"
+				AdditionalIncludeDirectories="..\GxxGmPlayer;..\GxxGmPlaySDK;..\ext\RtspStack;..\ext\GSMediaPlayer;..\ext\FFMpeg\include;..\ext\SDL2\include;..\GxxGmPlayBase"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;__STDC_CONSTANT_MACROS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GxxGmPlayer.lib GxxGmPlaySDK.lib GSServerSDK.lib GSRtspClient.lib GSMediaPlayer.lib avformat.lib avcodec.lib avutil.lib swscale.lib swresample.lib SDL2.lib"
+				AdditionalDependencies="GxxGmPlayBase.lib GxxGmPlayer.lib GxxGmPlaySDK.lib GSServerSDK.lib GSRtspClient.lib GSMediaPlayer.lib avformat.lib avcodec.lib avutil.lib swscale.lib swresample.lib SDL2.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\Debug;..\ext\RtspStack;..\ext\GSStreamServerSDK;..\ext\GSMediaPlayer;..\ext\FFMpeg\lib\x86;..\ext\SDL2\lib\x86"
 				GenerateDebugInformation="true"

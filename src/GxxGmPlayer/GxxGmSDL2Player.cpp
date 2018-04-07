@@ -174,11 +174,24 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 
 	while (true)
 	{
-		// 等待触发事件
-		//WaitForSingleObject(player_->framerate_control_event_, INFINITE);
+		FrameData *data = NULL;
 
 		// 从缓存中取出帧数据
-		FrameData *data = player_->frame_cache_.pop();
+		while (true)
+		{
+			// 等待触发事件
+			//WaitForSingleObject(player_->framerate_control_event_, INFINITE);
+
+			data = player_->frame_cache_.pop();
+			if (data == NULL)
+			{
+				Sleep(1000);
+				continue;
+			}
+			else
+				break;
+		}
+		
 		if (data->type_ == AVMEDIA_TYPE_VIDEO)
 		{
 			// 图像格式转换
@@ -201,6 +214,7 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 		}
 
 		av_frame_free(&data->data_);
+		Sleep(1);
 	}
 
 	return 0;
@@ -209,6 +223,11 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 DWORD WINAPI GxxGmSDL2Player::ControlThread(LPVOID lpParam)
 {
 	GxxGmSDL2Player *player_ = (GxxGmSDL2Player *)lpParam;
+
+	while (true)
+	{
+		Sleep(1000);
+	}
 
 	return 0;
 }

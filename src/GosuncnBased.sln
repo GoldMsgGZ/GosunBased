@@ -11,6 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "播放库", "播放库", "{001FD25F-7836-4CE1-AC4D-AF916F5708C5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlaySDK", "GxxGmPlaySDK\GxxGmPlaySDK.vcproj", "{1FCD2B69-0412-404F-8961-AE766E979ACD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{95FDFAE9-6425-4D2F-B38D-9BD681160995} = {95FDFAE9-6425-4D2F-B38D-9BD681160995}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayer", "GxxGmPlayer\GxxGmPlayer.vcproj", "{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -22,6 +25,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "多窗口管理", "多窗口管理", "{C8A97697-30F8-4974-AD60-3281A3E3609D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmMultiDisp", "GxxGmMultiDisp\GxxGmMultiDisp.vcproj", "{8C0959C5-4AE2-4038-B43F-25E61998BDD4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayBase", "GxxGmPlayBase\GxxGmPlayBase.vcproj", "{95FDFAE9-6425-4D2F-B38D-9BD681160995}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +50,10 @@ Global
 		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Debug|Win32.Build.0 = Debug|Win32
 		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Release|Win32.ActiveCfg = Release|Win32
 		{8C0959C5-4AE2-4038-B43F-25E61998BDD4}.Release|Win32.Build.0 = Release|Win32
+		{95FDFAE9-6425-4D2F-B38D-9BD681160995}.Debug|Win32.ActiveCfg = Debug|Win32
+		{95FDFAE9-6425-4D2F-B38D-9BD681160995}.Debug|Win32.Build.0 = Debug|Win32
+		{95FDFAE9-6425-4D2F-B38D-9BD681160995}.Release|Win32.ActiveCfg = Release|Win32
+		{95FDFAE9-6425-4D2F-B38D-9BD681160995}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

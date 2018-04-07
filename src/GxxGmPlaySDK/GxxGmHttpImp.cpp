@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 #include "FFmpeg2Gxx.h"
+#include "GxxGmPlayBase.h"
 
 GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)
 : notifer_(notifer)
@@ -38,7 +39,10 @@ int GxxGmHttpImp::Open(const char *url)
 	// 这里负责解复用，回调给上层视音频流的基本参数
 	int errCode = avformat_open_input((AVFormatContext **)&format_ctx_, url, NULL, NULL);
 	if (errCode != 0)
+	{
+		GxxGmPlayBase::DebugStringOutput("打开目标媒体：\"%s\"失败！错误码：%d\n", url, errCode);
 		return errCode;
+	}
 
 	avformat_find_stream_info((AVFormatContext*)format_ctx_, NULL);
 
@@ -55,6 +59,7 @@ int GxxGmHttpImp::Open(const char *url)
 			if (video_codec_ == NULL)
 			{
 				// 没有找到对应的视频解码器
+				GxxGmPlayBase::DebugStringOutput("没有找到对应的视频解码器！解码器名称：%s\n", avcodec_get_name(((AVCodecContext*)video_codec_ctx_)->codec_id));
 				break;
 			}
 
@@ -62,6 +67,7 @@ int GxxGmHttpImp::Open(const char *url)
 			if (errCode != 0)
 			{
 				// 打开视频解码器失败
+				GxxGmPlayBase::DebugStringOutput("打开视频解码器：%s 失败！错误码：%d\n", avcodec_get_name(((AVCodecContext*)video_codec_ctx_)->codec_id), errCode);
 				break;
 			}
 		}
@@ -74,6 +80,7 @@ int GxxGmHttpImp::Open(const char *url)
 			if (audio_codec_ == NULL)
 			{
 				// 没有找到对应的音频解码器
+				GxxGmPlayBase::DebugStringOutput("没有找到对应的视频解码器！解码器名称：%s\n", avcodec_get_name(((AVCodecContext*)audio_codec_ctx_)->codec_id));
 				break;
 			}
 
@@ -81,6 +88,7 @@ int GxxGmHttpImp::Open(const char *url)
 			if (errCode != 0)
 			{
 				// 打开音频解码器失败
+				GxxGmPlayBase::DebugStringOutput("打开视频解码器：%s 失败！错误码：%d\n", avcodec_get_name(((AVCodecContext*)audio_codec_ctx_)->codec_id), errCode);
 				break;
 			}
 		}
@@ -101,11 +109,13 @@ int GxxGmHttpImp::Play()
 	{
 		// 线程正在运行，那么则将暂停标志位调整为关闭
 		// 这里用系统事件可能会更好
+		GxxGmPlayBase::DebugStringOutput("流读取线程正在运行，将暂停标记关闭！\n");
 		is_paused_ = false;
 	}
 	else
 	{
 		// 不存在线程，那么我们就新建一个线程来处理相关问题
+		GxxGmPlayBase::DebugStringOutput("未检测到流读取线程，启动线程！\n");
 		read_stream_thread_handle_ = CreateThread(NULL, 0, ReadStreamThread, this, 0, NULL);
 	}
 
@@ -115,6 +125,7 @@ int GxxGmHttpImp::Play()
 int GxxGmHttpImp::Pause()
 {
 	// 暂停读取编码包
+	GxxGmPlayBase::DebugStringOutput("流读取线程正在运行，将暂停标记开启！\n");
 	is_paused_ = true;
 	return 0;
 }
@@ -138,17 +149,19 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 	AVPacket av_packet;
 	while (true)
 	{
-		//// 这里使用了一个非常低劣的手段来实现暂停
-		//while (true)
-		//{
-		//	if (is_paused_)
-		//	{
-		//		Sleep(1);
-		//		continue;
-		//	}
-		//	else
-		//		break;
-		//}
+		GxxGmPlayBase::DebugStringOutput("准备读取媒体帧...\n");
+
+		// 这里使用了一个非常低劣的手段来实现暂停
+		while (true)
+		{
+			if (http_->is_paused_)
+			{
+				Sleep(1);
+				continue;
+			}
+			else
+				break;
+		}
 
 		// 这里需要有一个事件，或者锁来进行暂停/恢复的同步处理
 		int errCode = av_read_frame((AVFormatContext*)http_->format_ctx_, &av_packet);
@@ -166,7 +179,9 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 			avcodec_decode_video2((AVCodecContext*)http_->video_codec_ctx_, av_frame, &got_pic, &av_packet);
 			if (got_pic)
 			{
+				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器...\n");
 				http_->notifer_->MediaFrameNotiferEx(AVMediaType::AVMEDIA_TYPE_VIDEO, av_frame);
+				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器完成...\n");
 			}
 #else
 			//// 这是视频帧
@@ -201,5 +216,6 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 		av_free_packet(&av_packet);
 	}
 
+	GxxGmPlayBase::DebugStringOutput("准备退出媒体帧读取线程...\n");
 	return 0;
 }
