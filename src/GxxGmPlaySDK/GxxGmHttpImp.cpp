@@ -27,6 +27,8 @@ GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)
 , audio_codec_(NULL)
 {
 	av_register_all();
+	avformat_network_init();
+	avcodec_register_all();
 }
 
 GxxGmHttpImp::~GxxGmHttpImp()

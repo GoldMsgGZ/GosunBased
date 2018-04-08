@@ -30,7 +30,7 @@ int FrameDataCache::push(AVMediaType type, AVFrame *data)
 	// 我们按照缓存15秒视频、视频帧率为30帧来计算
 	// 最大我们缓存30 * 15 = 450帧视频帧
 	// 由于这个队列有点令人伤心，我们粗暴一点，直接将数量乘以10，也就纯视频帧的情况下最多缓存不到3分钟的视频
-	EnterCriticalSection(&section_);
+	//EnterCriticalSection(&section_);
 
 	// 当缓存帧数大于150帧时，我们
 	while (true)
@@ -44,11 +44,11 @@ int FrameDataCache::push(AVMediaType type, AVFrame *data)
 
 	FrameData *framedata = new FrameData;
 	framedata->type_ = type;
-	framedata->data_ = data;
+	framedata->data_ = av_frame_clone(data);
 
 	frame_queue_.push_back(framedata);
 
-	LeaveCriticalSection(&section_);
+	//LeaveCriticalSection(&section_);
 	return 0;
 }
 
@@ -86,11 +86,17 @@ GxxGmSDL2Player::~GxxGmSDL2Player()
 
 int GxxGmSDL2Player::Initialize(HWND screen)
 {
+	RECT rt;
+	GetWindowRect(screen, &rt);
+	screen_width_ = rt.right - rt.left;
+	screen_height_ = rt.bottom - rt.top;
+
 	int errCode = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER);
 	if (errCode != 0)
 		return errCode;
 
 	window_ = SDL_CreateWindowFrom(screen);
+	//window_ = SDL_CreateWindow("GMVideoPlayer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width_, screen_height_, SDL_WINDOW_OPENGL);
 	if (window_ == NULL)
 		return -1;
 
@@ -98,17 +104,7 @@ int GxxGmSDL2Player::Initialize(HWND screen)
 	if (renderer_ == NULL)
 		return -2;
 
-	RECT rt;
-	GetWindowRect(screen, &rt);
-	screen_width_ = rt.right - rt.left;
-	screen_height_ = rt.bottom - rt.top;
-	texture_ = SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, screen_width_, screen_height_);
-	if (texture_ == NULL)
-		return -3;
-
-	framerate_control_event_ = CreateEvent(NULL, FALSE, FALSE, NULL);
-	if (framerate_control_event_ == NULL)
-		return -4;
+	
 
 	return 0;
 }
@@ -123,7 +119,15 @@ int GxxGmSDL2Player::SetMediaInfo(int width, int height, AVPixelFormat pixfmt, i
 	unsigned char *video_frame_yuv_buffer = (unsigned char *)av_malloc(video_frame_yuv_buffer_size);
 	av_image_fill_arrays(video_frame_yuv_->data, video_frame_yuv_->linesize, video_frame_yuv_buffer, AV_PIX_FMT_YUV420P, video_img_width_, video_img_height_, 1);
 
-	image_convert_context_ = sws_getContext(video_img_width_, video_img_height_, pixfmt, screen_width_, screen_height_, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+	image_convert_context_ = sws_getContext(video_img_width_, video_img_height_, pixfmt, video_img_width_, video_img_height_, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+
+	texture_ = SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, video_img_width_, video_img_height_);
+	if (texture_ == NULL)
+		return -1;
+
+	framerate_control_event_ = CreateEvent(NULL, FALSE, FALSE, NULL);
+	if (framerate_control_event_ == NULL)
+		return -2;
 
 	// 处理音频相关的事情
 	return 0;
@@ -180,7 +184,7 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 		while (true)
 		{
 			// 等待触发事件
-			//WaitForSingleObject(player_->framerate_control_event_, INFINITE);
+			WaitForSingleObject(player_->framerate_control_event_, INFINITE);
 
 			data = player_->frame_cache_.pop();
 			if (data == NULL)
@@ -220,13 +224,17 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 	return 0;
 }
 
+int frame_rate = 25;
 DWORD WINAPI GxxGmSDL2Player::ControlThread(LPVOID lpParam)
 {
 	GxxGmSDL2Player *player_ = (GxxGmSDL2Player *)lpParam;
 
+	// 计算一下平均帧率下需要Delay的时间
+	int delay_time = 1000 / frame_rate;
 	while (true)
 	{
-		Sleep(1000);
+		SetEvent(player_->framerate_control_event_);
+		Sleep(delay_time);		// 这里由帧率来控制
 	}
 
 	return 0;

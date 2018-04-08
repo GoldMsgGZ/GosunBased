@@ -109,7 +109,8 @@ BOOL CGxxGmPlayCoreDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	m_cUrl.SetWindowText(_T("rtsp://127.0.0.1:554/hkstv"));
+	//m_cUrl.SetWindowText(_T("rtsp://127.0.0.1:554/hkstv"));
+	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/bob.flv"));
 
 	HWND window = NULL;
 	GetDlgItem(IDC_STATIC_SCREEN, &window);
