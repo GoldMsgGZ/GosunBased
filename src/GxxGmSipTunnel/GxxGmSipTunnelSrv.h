@@ -28,6 +28,7 @@ public:
 public:
 	static DWORD WINAPI MessageThread(LPVOID lpParam);
 	HANDLE message_thread_handle_;
+	bool is_need_stop_;
 
 public:
 	eXosip_t *sip_context_;
