@@ -14,6 +14,10 @@ extern "C" {
 #include "FFmpeg2Gxx.h"
 #include "GxxGmPlayBase.h"
 
+
+#define _SAVE_AS_BMP_
+
+
 GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)
 : notifer_(notifer)
 , is_paused_(false)
@@ -146,8 +150,10 @@ void GxxGmHttpImp::Close()
 DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 {
 	GxxGmHttpImp *http_ = (GxxGmHttpImp *)lpParam;
+	GxxGmPlayBase::DebugStringOutput("已启动媒体解码线程...\n");
 
 	// 这里开始组织
+	int index = 0;
 	AVPacket av_packet;
 	while (true)
 	{
@@ -178,7 +184,10 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 		{
 #ifdef USE_FFMPEG
 			int got_pic = 0;
-			avcodec_decode_video2((AVCodecContext*)http_->video_codec_ctx_, av_frame, &got_pic, &av_packet);
+			errCode = avcodec_decode_video2((AVCodecContext*)http_->video_codec_ctx_, av_frame, &got_pic, &av_packet);
+			if (errCode != 0)
+				GxxGmPlayBase::DebugStringOutput("解码视频帧失败！错误码：%d...\n", errCode);
+			
 			if (got_pic)
 			{
 				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器...\n");
@@ -216,6 +225,7 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 		}
 
 		av_free_packet(&av_packet);
+		++index;
 	}
 
 	GxxGmPlayBase::DebugStringOutput("准备退出媒体帧读取线程...\n");

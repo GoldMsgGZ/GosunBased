@@ -12,6 +12,8 @@ extern "C" {
 };
 #endif
 
+#define _SAVE_AS_BMP_
+
 
 FrameDataCache::FrameDataCache()
 {
@@ -115,9 +117,9 @@ int GxxGmSDL2Player::SetMediaInfo(int width, int height, AVPixelFormat pixfmt, i
 	video_img_width_ = width;
 	video_img_height_ = height;
 	video_frame_yuv_ = av_frame_alloc();
-	int video_frame_yuv_buffer_size = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, video_img_width_, video_img_height_, 1);
+	int video_frame_yuv_buffer_size = av_image_get_buffer_size(/*AV_PIX_FMT_YUV420P*/AV_PIX_FMT_RGB24, video_img_width_, video_img_height_, 1);
 	unsigned char *video_frame_yuv_buffer = (unsigned char *)av_malloc(video_frame_yuv_buffer_size);
-	av_image_fill_arrays(video_frame_yuv_->data, video_frame_yuv_->linesize, video_frame_yuv_buffer, AV_PIX_FMT_YUV420P, video_img_width_, video_img_height_, 1);
+	av_image_fill_arrays(video_frame_yuv_->data, video_frame_yuv_->linesize, video_frame_yuv_buffer, /*AV_PIX_FMT_YUV420P*/AV_PIX_FMT_RGB24, video_img_width_, video_img_height_, 1);
 
 	image_convert_context_ = sws_getContext(video_img_width_, video_img_height_, pixfmt, video_img_width_, video_img_height_, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
 
@@ -176,6 +178,7 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 {
 	GxxGmSDL2Player *player_ = (GxxGmSDL2Player *)lpParam;
 
+	int index = 0;
 	while (true)
 	{
 		FrameData *data = NULL;
@@ -205,8 +208,8 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 			SDL_Rect rect;
 			rect.x = 0;
 			rect.y = 0;
-			rect.w = player_->screen_width_;
-			rect.h = player_->screen_height_;
+			rect.w = player_->screen_width_ / 2;
+			rect.h = player_->screen_height_ / 2;
 
 			SDL_UpdateTexture(player_->texture_, NULL, player_->video_frame_yuv_->data[0], player_->video_frame_yuv_->linesize[0]);
 			SDL_RenderCopy(player_->renderer_, player_->texture_, NULL, &rect);
@@ -219,6 +222,8 @@ DWORD WINAPI GxxGmSDL2Player::RenderThread(LPVOID lpParam)
 
 		av_frame_free(&data->data_);
 		Sleep(1);
+
+		++index;
 	}
 
 	return 0;
