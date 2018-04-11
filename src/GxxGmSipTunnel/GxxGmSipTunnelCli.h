@@ -1,6 +1,9 @@
 #ifndef _GxxGmSipTunnelCli_H_
 #define _GxxGmSipTunnelCli_H_
 
+#include <Windows.h>
+
+
 class GxxGmSipTunnelCliNotifer
 {
 public:
@@ -26,7 +29,7 @@ public:
 	bool is_need_stop_;
 
 public:
-	eXosip_t *sip_context_;
+	void* sip_context_;
 	GxxGmSipTunnelCliNotifer *notifer_;
 
 	std::string srv_ip_;

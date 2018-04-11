@@ -1,7 +1,6 @@
 #ifndef _GxxGmSipTunnelSrv_H_
 #define _GxxGmSipTunnelSrv_H_
 
-#include "eXosip2/eXosip.h"
 #include <iostream>
 #include <string>
 #include <WinSock.h>
@@ -31,7 +30,7 @@ public:
 	bool is_need_stop_;
 
 public:
-	eXosip_t *sip_context_;
+	void* sip_context_;
 	GxxGmSipTunnelSrvNotifer *notifer_;
 
 	std::string srv_ip_;

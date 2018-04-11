@@ -1,8 +1,9 @@
+#include "eXosip2/eXosip.h"
 #include "GxxGmSipTunnelCli.h"
 
 GxxGmSipTunnelCli::GxxGmSipTunnelCli(GxxGmSipTunnelCliNotifer *notifer)
 : notifer_(notifer)
-, sip_context_(eXosip_malloc())
+, sip_context_((void*)eXosip_malloc())
 , message_thread_handle_(NULL)
 , is_need_stop_(false)
 {
@@ -25,12 +26,12 @@ int GxxGmSipTunnelCli::Initialize(const char *srv_ip, int srv_port, const char *
 	cli_id_ = cli_id;
 
 	// 初始化
-	int errCode = eXosip_init(sip_context_);
+	int errCode = eXosip_init((eXosip_t *)sip_context_);
 	if (errCode != 0)
 		return errCode;
 
 	// 监听
-	errCode = eXosip_listen_addr(sip_context_, IPPROTO_UDP, cli_ip_.c_str(), cli_port_, AF_INET, 0);
+	errCode = eXosip_listen_addr((eXosip_t *)sip_context_, IPPROTO_UDP, cli_ip_.c_str(), cli_port_, AF_INET, 0);
 	if (errCode != 0)
 		return errCode;
 
@@ -59,12 +60,12 @@ int GxxGmSipTunnelCli::SendRequest(const char *request, int request_len)
 	sprintf_s(src_call, 4096, "sip:%s@%s:%d", cli_id_.c_str(), cli_ip_.c_str(), cli_port_);
 
 	osip_message_t *message = NULL;
-	eXosip_message_build_request(sip_context_, &message, "MESSAGE", dest_call, src_call, NULL);
+	eXosip_message_build_request((eXosip_t *)sip_context_, &message, "MESSAGE", dest_call, src_call, NULL);
 
 	osip_message_set_body(message, request, request_len);
 
 	osip_message_set_content_type(message, "text/xml");
-	int errCode = eXosip_message_send_request(sip_context_, message);
+	int errCode = eXosip_message_send_request((eXosip_t *)sip_context_, message);
 
 	return 0;
 }
@@ -80,13 +81,13 @@ DWORD WINAPI GxxGmSipTunnelCli::MessageThread(LPVOID lpParam)
 			break;
 
 		// 等待事件，50毫秒检查一次
-		eXosip_event_t *je = eXosip_event_wait(client->sip_context_, 0, 50);
+		eXosip_event_t *je = eXosip_event_wait((eXosip_t *)client->sip_context_, 0, 50);
 
 		//协议栈带有此语句,具体作用未知
-		eXosip_lock(client->sip_context_);
-		eXosip_default_action(client->sip_context_, je);
-		eXosip_automatic_refresh(client->sip_context_);
-		eXosip_unlock(client->sip_context_);
+		eXosip_lock((eXosip_t *)client->sip_context_);
+		eXosip_default_action((eXosip_t *)client->sip_context_, je);
+		eXosip_automatic_refresh((eXosip_t *)client->sip_context_);
+		eXosip_unlock((eXosip_t *)client->sip_context_);
 
 		//没有接收到消息
 		if (je == NULL)
@@ -108,8 +109,8 @@ DWORD WINAPI GxxGmSipTunnelCli::MessageThread(LPVOID lpParam)
 
 				// 应答，表示已经收到
 				osip_message_t *answer = NULL;
-				eXosip_message_build_answer(client->sip_context_, je->tid, 200, &answer);
-				eXosip_message_send_answer(client->sip_context_, je->tid, 200, answer);
+				eXosip_message_build_answer((eXosip_t *)client->sip_context_, je->tid, 200, &answer);
+				eXosip_message_send_answer((eXosip_t *)client->sip_context_, je->tid, 200, answer);
 			}
 			break;
 		default:

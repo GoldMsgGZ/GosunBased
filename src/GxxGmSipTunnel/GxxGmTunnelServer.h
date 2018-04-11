@@ -2,6 +2,15 @@
 #define _GxxGmTunnelServer_H_
 
 #include "GxxGmSipTunnelCli.h"
+#include <winsock.h>
+#include <map>
+
+typedef struct _TUNNEL_MSG_
+{
+	SOCKET client_socket_;	// 客户端接入的SOCKET
+	char socket_index_[40];	// 客户端SOCKET-ID，一个GUID
+
+} TUNNEL_MSG, *PTUNNEL_MSG;
 
 class GxxGmTunnelServer : public GxxGmSipTunnelCliNotifer
 {
@@ -31,9 +40,24 @@ public:
 
 public:
 	static DWORD WINAPI ListenThread(LPVOID lpParam);
+	HANDLE listen_thread_handle_;
+	bool is_need_stop_;
+
+public:
+	static DWORD WINAPI RecvClientThread(LPVOID lpParam);
+	//static DWORD WINAPI SendClientThread(LPVOID lpParam);
 
 public:
 	virtual void RecvResponse(const char *response, int response_len);
+
+public:
+	SOCKET srv_sock_;
+
+public:
+	GxxGmSipTunnelCli *sip_tunnel_cli_;
+
+public:
+	std::map<SOCKET, std::string> client_connections_;
 };
 
 #endif//_GxxGmTunnelServer_H_
