@@ -21,7 +21,7 @@ const int data_len_space_len = 4;
 
 GxxGmTunnelData::GxxGmTunnelData()
 : tunnel_id_(NULL)
-, tunnel_data_len_(0)
+, tunnel_id_len_(0)
 , tunnel_data_(NULL)
 , tunnel_data_len_(0)
 {

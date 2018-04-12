@@ -8,7 +8,7 @@
 
 void show_usage()
 {
-	std::cout<<"GxxGmNetTunnelServer.exe [Tcp-ip] [Tcp-port] [Tunnel-Cli-ip] [Tunnel-Cli-port] [Tunnel-Cli-id] [Tunnel-Srv-ip] [Tunnel-Srv-port] [Tunnel-Srv-id]"<<std::endl;
+	std::cout<<"GxxGmNetTunnelClient.exe [Tcp-ip] [Tcp-port] [Tunnel-Cli-ip] [Tunnel-Cli-port] [Tunnel-Cli-id] [Tunnel-Srv-ip] [Tunnel-Srv-port] [Tunnel-Srv-id]"<<std::endl;
 	system("pause");
 }
 

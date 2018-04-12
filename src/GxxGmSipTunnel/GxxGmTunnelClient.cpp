@@ -29,6 +29,7 @@ int GxxGmTunnelClient::Initialize(const char *tcp_srv_ip, int tcp_port, const ch
 	tcp_srv_port_ = tcp_port;
 
 	// 当然了，这里还是需要先测试一下
+	// 不测试了
 
 	// 开启SIP隧道
 	errCode = sip_tunnel_srv_->Initialize(sip_srv_ip, sip_srv_port, sip_srv_id, sip_cli_ip, sip_cli_port, sip_cli_id);
@@ -98,9 +99,9 @@ int GxxGmTunnelClient::RecvRequest(const char *request, int request_len)
 	}
 
 	// 取出实际数据
-	const char *real_request_data = NULL;
+	char *real_request_data = NULL;
 	int real_request_data_len = 0;
-	while (return)
+	while (true)
 	{
 		errCode = tunnel_data_factory.GetTunnelData(real_request_data, &real_request_data_len);
 		if (errCode == 0)

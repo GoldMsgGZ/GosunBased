@@ -114,9 +114,9 @@ int GxxGmTunnelServer::RecvResponse(const char *response, int response_len)
 	}
 
 	// 取出实际数据
-	const char *real_response_data = NULL;
+	char *real_response_data = NULL;
 	int real_response_data_len = 0;
-	while (return)
+	while (true)
 	{
 		errCode = tunnel_data_factory.GetTunnelData(real_response_data, &real_response_data_len);
 		if (errCode == 0)
@@ -162,9 +162,20 @@ DWORD WINAPI GxxGmTunnelServer::ListenThread(LPVOID lpParam)
 
 		// 如果接入的是无效的客户端，跳过
 		if (client_sock == INVALID_SOCKET)
-			continue;
+		{
+			int errCode = WSAGetLastError();
+			if (errCode == WSAEINTR)
+			{
+				// socket被关闭
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
 
-		client_connections_.HandleClientSocket(client_sock);
+		server->client_connections_.HandleClientSocket(client_sock);
 
 		// 每接收到一个客户端的接入请求后，都在线程池里面新建一个任务进行处理
 		// 很想用Chromium那套东西来实现...
@@ -172,7 +183,7 @@ DWORD WINAPI GxxGmTunnelServer::ListenThread(LPVOID lpParam)
 		client_info->cli_sock_ = client_sock;
 		client_info->cli_addr_ = client_addr;
 		client_info->srv_ = server;
-		CreateThread(NULL, 0, RecvClientThread, client_info, 0, NULL);
+		CreateThread(NULL, 0, GxxGmTunnelServer::RecvClientThread, client_info, 0, NULL);
 	}
 
 	return 0;

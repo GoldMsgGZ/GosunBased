@@ -45,7 +45,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib Dnsapi.lib Iphlpapi.lib Crypt32.lib eXosip.lib osip2.lib osipparser2.lib libeay32.lib ssleay32.lib GxxGmPlayBase.lib GxxGmSipTunnel.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\Debug;..\ext\osip\lib\x86"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
