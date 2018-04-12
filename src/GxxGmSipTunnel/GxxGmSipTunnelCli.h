@@ -1,13 +1,14 @@
 #ifndef _GxxGmSipTunnelCli_H_
 #define _GxxGmSipTunnelCli_H_
 
+#include <string>
 #include <Windows.h>
 
 
 class GxxGmSipTunnelCliNotifer
 {
 public:
-	virtual void RecvResponse(const char *response, int response_len) = 0;
+	virtual int RecvResponse(const char *response, int response_len) = 0;
 };
 
 class GxxGmSipTunnelCli

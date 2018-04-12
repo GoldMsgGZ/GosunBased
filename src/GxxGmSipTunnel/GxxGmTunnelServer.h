@@ -2,6 +2,7 @@
 #define _GxxGmTunnelServer_H_
 
 #include "GxxGmSipTunnelCli.h"
+#include "GxxGmTunnelData.h"
 #include <winsock.h>
 #include <map>
 
@@ -24,12 +25,12 @@ public:
 	 * 参数：
 	 *	@tcp_srv_ip		用于绑定监听的IP，如果监听所有IP则填“0.0.0.0”
 	 *	@tcp_srv_port	TCP监听端口
-	 *	@sip_cli_ip		SIP隧道客户端IP
-	 *	@sip_cli_port	SIP隧道客户端端口号
-	 *	@sip_cli_id		SIP隧道客户端编码
-	 *	@sip_srv_ip		SIP隧道服务端IP
-	 *	@sip_srv_port	SIP隧道服务端端口号
-	 *	@sip_srv_id		SIP隧道服务端编码
+	 *	@sip_cli_ip		SIP隧道客户端IP（本端IP）
+	 *	@sip_cli_port	SIP隧道客户端端口号（本端端口）
+	 *	@sip_cli_id		SIP隧道客户端编码（本端编码）
+	 *	@sip_srv_ip		SIP隧道服务端IP（对端IP）
+	 *	@sip_srv_port	SIP隧道服务端端口号（对端端口）
+	 *	@sip_srv_id		SIP隧道服务端编码（对端编码）
 	 */
 	int Initialize(const char *tcp_srv_ip, int tcp_srv_port, const char *sip_cli_ip, int sip_cli_port, const char *sip_cli_id, const char *sip_srv_ip, int sip_srv_port, const char *sip_srv_id);
 	void Close();
@@ -48,7 +49,7 @@ public:
 	//static DWORD WINAPI SendClientThread(LPVOID lpParam);
 
 public:
-	virtual void RecvResponse(const char *response, int response_len);
+	virtual int RecvResponse(const char *response, int response_len);
 
 public:
 	SOCKET srv_sock_;
@@ -57,7 +58,7 @@ public:
 	GxxGmSipTunnelCli *sip_tunnel_cli_;
 
 public:
-	std::map<SOCKET, std::string> client_connections_;
+	GxxGmTunnelConnections client_connections_;
 };
 
 #endif//_GxxGmTunnelServer_H_

@@ -117,6 +117,6 @@ DWORD WINAPI GxxGmSipTunnelSrv::MessageThread(LPVOID lpParam)
 		}
 	}
 
-	eXosip_quit(srv->sip_context_);
+	eXosip_quit((eXosip_t *)srv->sip_context_);
 	return 0;
 }

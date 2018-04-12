@@ -67,7 +67,7 @@ int GxxGmSipTunnelCli::SendRequest(const char *request, int request_len)
 	osip_message_set_content_type(message, "text/xml");
 	int errCode = eXosip_message_send_request((eXosip_t *)sip_context_, message);
 
-	return 0;
+	return errCode;
 }
 
 DWORD WINAPI GxxGmSipTunnelCli::MessageThread(LPVOID lpParam)
@@ -118,6 +118,6 @@ DWORD WINAPI GxxGmSipTunnelCli::MessageThread(LPVOID lpParam)
 		}
 	}
 
-	eXosip_quit(client->sip_context_);
+	eXosip_quit((eXosip_t *)client->sip_context_);
 	return 0;
 }

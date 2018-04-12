@@ -40,7 +40,7 @@ int GxxGmTunnelServer::Initialize(const char *tcp_srv_ip, int tcp_srv_port, cons
 
 	SOCKADDR_IN srv_addr;
 	srv_addr.sin_family = AF_INET;
-	srv_addr.sin_port = tcp_srv_port;
+	srv_addr.sin_port = htons(tcp_srv_port);
 	srv_addr.sin_addr.S_un.S_addr = inet_addr(tcp_srv_ip);
 
 	errCode = bind(srv_sock_, (SOCKADDR*)&srv_addr, sizeof(SOCKADDR));
@@ -96,10 +96,58 @@ void GxxGmTunnelServer::Stop()
 	is_need_stop_ = true;
 }
 
-void GxxGmTunnelServer::RecvResponse(const char *response, int response_len)
+int GxxGmTunnelServer::RecvResponse(const char *response, int response_len)
 {
-	int errCode = send(srv_sock_, response, response_len, 0);
-	// 这里评估一下是否需要输出相关信息
+	// 首先解包
+	GxxGmTunnelData tunnel_data_factory;
+	int errCode = tunnel_data_factory.ParseData(response, response_len);
+	if (errCode != 0)
+		return errCode;
+
+	// 取出通道ID，找到对应的socket
+	std::string tunnel_id = tunnel_data_factory.GetTunnelId();
+	SOCKET client_socket = client_connections_.GetSocketByConnectionId(tunnel_id);
+	if (client_socket == INVALID_SOCKET)
+	{
+		// 不存在对应的socket
+		return -6002;
+	}
+
+	// 取出实际数据
+	const char *real_response_data = NULL;
+	int real_response_data_len = 0;
+	while (return)
+	{
+		errCode = tunnel_data_factory.GetTunnelData(real_response_data, &real_response_data_len);
+		if (errCode == 0)
+			break;
+		else if (errCode == -1)
+		{
+			if (real_response_data)
+				delete [] real_response_data;
+
+			real_response_data = new char[real_response_data_len];
+		}
+		else if (errCode == -2)
+		{
+			if (real_response_data)
+				delete [] real_response_data;
+
+			real_response_data = new char[real_response_data_len];
+		}
+	}
+
+	// 发送给客户端
+	errCode = send(client_socket, response, response_len, 0);
+	if (errCode != real_response_data_len)
+		errCode = WSAGetLastError();
+	else
+		errCode = 0;
+
+	delete [] real_response_data;
+	real_response_data = NULL;
+
+	return errCode;
 }
 
 DWORD WINAPI GxxGmTunnelServer::ListenThread(LPVOID lpParam)
@@ -109,27 +157,14 @@ DWORD WINAPI GxxGmTunnelServer::ListenThread(LPVOID lpParam)
 	while (true)
 	{
 		SOCKADDR_IN client_addr;
-		SOCKET client_sock = accept(server->srv_sock_, (SOCKADDR *)&client_addr, sizeof(SOCKADDR));
+		int addr_len = sizeof(SOCKADDR);
+		SOCKET client_sock = accept(server->srv_sock_, (SOCKADDR *)&client_addr, &addr_len);
 
 		// 如果接入的是无效的客户端，跳过
 		if (client_sock == INVALID_SOCKET)
 			continue;
 
-		// 有效客户端，先对客户端生成一个唯一ID，然后缓存记录
-		GUID guid;
-		HRESULT ret = CoCreateGuid(&guid);
-		if (ret != S_OK)
-			continue;
-
-		char buffer[60] = {0};
-		_snprintf(buffer, sizeof(buffer),
-			"%08X-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X",
-			guid.Data1, guid.Data2, guid.Data3,
-			guid.Data4[0], guid.Data4[1], guid.Data4[2],
-			guid.Data4[3], guid.Data4[4], guid.Data4[5],
-			guid.Data4[6], guid.Data4[7]);
-
-		server->client_connections_.insert(std::pair<SOCKET, std::string>(client_sock, buffer));
+		client_connections_.HandleClientSocket(client_sock);
 
 		// 每接收到一个客户端的接入请求后，都在线程池里面新建一个任务进行处理
 		// 很想用Chromium那套东西来实现...
@@ -137,9 +172,7 @@ DWORD WINAPI GxxGmTunnelServer::ListenThread(LPVOID lpParam)
 		client_info->cli_sock_ = client_sock;
 		client_info->cli_addr_ = client_addr;
 		client_info->srv_ = server;
-		client_info->cli_sock_id_ = buffer;
 		CreateThread(NULL, 0, RecvClientThread, client_info, 0, NULL);
-		//CreateThread(NULL, 0, SendClientThread, client_info, 0, NULL);
 	}
 
 	return 0;
@@ -157,7 +190,17 @@ DWORD WINAPI GxxGmTunnelServer::RecvClientThread(LPVOID lpParam)
 		if (recv_len > 0)
 		{
 			// 这里重新构建消息，消息算法为：Base64(client_sock_id + message)
-			client_info->srv_->sip_tunnel_cli_->SendRequest(recv_buffer, recv_len);
+			std::string tunnel_id = client_info->srv_->client_connections_.GetConnectionIdBySocket(client_info->cli_sock_);
+
+			GxxGmTunnelData tunnel_data_factory;
+			tunnel_data_factory.SetTunnelId(tunnel_id.c_str(), tunnel_id.size());
+			tunnel_data_factory.SetTunnelData(recv_buffer, recv_len);
+
+			int tunnel_data_len = tunnel_data_factory.GetSerializedDataLength();
+			char *tunnel_data = new char[tunnel_data_len];
+			tunnel_data_factory.GetSerializedData(tunnel_data, tunnel_data_len);
+
+			int errCode = client_info->srv_->sip_tunnel_cli_->SendRequest(tunnel_data, tunnel_data_len);
 		}
 	}
 

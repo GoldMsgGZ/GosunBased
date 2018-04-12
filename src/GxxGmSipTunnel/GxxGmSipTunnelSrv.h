@@ -8,7 +8,7 @@
 class GxxGmSipTunnelSrvNotifer
 {
 public:
-	virtual void RecvRequest(const char *request, int request_len) = 0;
+	virtual int RecvRequest(const char *request, int request_len) = 0;
 };
 
 class GxxGmSipTunnelSrv
