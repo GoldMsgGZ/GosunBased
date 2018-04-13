@@ -45,7 +45,7 @@ public:
 
 public:
 	int Initialize(HWND screen);
-	int SetMediaInfo(int width, int height, AVPixelFormat pixfmt, int channel_layout, int audio_frame_size, AVSampleFormat samplefmt, int sample_rate);
+	int SetMediaInfo(AVCodecContext *video_ctx, AVCodecContext *audio_ctx);
 	int Play();
 	int Pause();
 	int Stop();

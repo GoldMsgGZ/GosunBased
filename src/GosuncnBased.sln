@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.渲染播放", "5.渲染播放", "{CA3DAEE4-FF40-4903-9584-CA9D5310684F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.[测试] 渲染播放", "5.[测试] 渲染播放", "{CA3DAEE4-FF40-4903-9584-CA9D5310684F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayCore", "GxxGmPlayCore\GxxGmPlayCore.vcproj", "{DC39A25E-B09B-4F94-926F-8C555788C34A}"
 	ProjectSection(ProjectDependencies) = postProject

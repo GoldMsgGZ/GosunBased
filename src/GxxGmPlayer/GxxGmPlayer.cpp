@@ -1,5 +1,6 @@
 #include "GxxGmPlayer.h"
 #include "GxxGmPlaySDK.h"
+#include "GxxGmPlayBase.h"
 
 GxxGmPlayer::GxxGmPlayer()
 : screen_window_(NULL)
@@ -89,27 +90,16 @@ void GxxGmPlayer::StreamParamNotifer(UInt32 eVideoCode, UInt32 eAudioCode, UInt3
 
 void GxxGmPlayer::StreamParamNotiferEx(AVCodecContext *video_codec_context, AVCodecContext *audio_codec_context)
 {
-	// 提取出必要的参数
-	
-	// 视频相关参数
-	int video_img_width = video_codec_context->width;
-	int video_img_height = video_codec_context->height;
-	AVPixelFormat video_img_pixfmt = video_codec_context->pix_fmt;
-
-	// 音频相关参数
-	int audio_channel_layout = audio_codec_context->channel_layout;
-	int audio_frame_size = audio_codec_context->frame_size;
-	AVSampleFormat audio_sample_fmt = audio_codec_context->sample_fmt;
-	int audio_sample_rate = audio_codec_context->sample_rate;
-
+	// 先初始化SDL2渲染环境
 	int errCode = sdl2_player_->Initialize(screen_window_);
 	if (errCode != 0)
 	{
 		// 初始化失败
+		GxxGmPlayBase::DebugStringOutput("初始化SDL2渲染播放环境失败！");
 	}
 
-	errCode = sdl2_player_->SetMediaInfo(video_img_width, video_img_height, video_img_pixfmt,
-		audio_channel_layout, audio_frame_size, audio_sample_fmt, audio_sample_rate);
+	// 上报视音频解码上下文
+	errCode = sdl2_player_->SetMediaInfo(video_codec_context, audio_codec_context);
 	if (errCode != 0)
 	{
 		// 初始化失败
@@ -126,8 +116,8 @@ void GxxGmPlayer::MediaFrameNotifer(StruGSMediaFrameData *media_frame_data)
 		// 
 		RECT window_rect;
 		GetWindowRect(screen_window_, &window_rect);
-		media_frame_data->VideoFrameInfo.Width = window_rect.right - window_rect.left;
-		media_frame_data->VideoFrameInfo.Height = window_rect.bottom - window_rect.top;
+		media_frame_data->VideoFrameInfo.Width = media_frame_data->VideoFrameInfo.Width == 0 ? (window_rect.right - window_rect.left) : media_frame_data->VideoFrameInfo.Width;
+		media_frame_data->VideoFrameInfo.Height = media_frame_data->VideoFrameInfo.Height == 0 ? (window_rect.bottom - window_rect.top) : media_frame_data->VideoFrameInfo.Height;
 	}
 	else if (media_frame_data->MediaType == EnumGSMediaType::GS_MEDIA_TYPE_AUDIO)
 	{

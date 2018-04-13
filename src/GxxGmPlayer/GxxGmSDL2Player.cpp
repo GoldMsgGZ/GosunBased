@@ -111,17 +111,17 @@ int GxxGmSDL2Player::Initialize(HWND screen)
 	return 0;
 }
 
-int GxxGmSDL2Player::SetMediaInfo(int width, int height, AVPixelFormat pixfmt, int channel_layout, int audio_frame_size, AVSampleFormat samplefmt, int sample_rate)
+int GxxGmSDL2Player::SetMediaInfo(AVCodecContext *video_ctx, AVCodecContext *audio_ctx)
 {
 	// 先准备视频图像转换相关的事情
-	video_img_width_ = width;
-	video_img_height_ = height;
+	video_img_width_ = video_ctx->width;
+	video_img_height_ = video_ctx->height;
 	video_frame_yuv_ = av_frame_alloc();
 	int video_frame_yuv_buffer_size = av_image_get_buffer_size(/*AV_PIX_FMT_YUV420P*/AV_PIX_FMT_RGB24, video_img_width_, video_img_height_, 1);
 	unsigned char *video_frame_yuv_buffer = (unsigned char *)av_malloc(video_frame_yuv_buffer_size);
 	av_image_fill_arrays(video_frame_yuv_->data, video_frame_yuv_->linesize, video_frame_yuv_buffer, /*AV_PIX_FMT_YUV420P*/AV_PIX_FMT_RGB24, video_img_width_, video_img_height_, 1);
 
-	image_convert_context_ = sws_getContext(video_img_width_, video_img_height_, pixfmt, video_img_width_, video_img_height_, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+	image_convert_context_ = sws_getContext(video_img_width_, video_img_height_, video_ctx->pix_fmt, video_img_width_, video_img_height_, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
 
 	texture_ = SDL_CreateTexture(renderer_, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, video_img_width_, video_img_height_);
 	if (texture_ == NULL)

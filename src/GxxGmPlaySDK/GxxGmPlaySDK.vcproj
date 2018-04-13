@@ -45,7 +45,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GXXGMPLAYSDK_EXPORTS;__STDC_CONSTANT_MACROS;USE_FFMPEG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -214,6 +214,18 @@
 					RelativePath=".\GxxGmHttpImp.h"
 					>
 				</File>
+				<File
+					RelativePath=".\GxxGmHttpImpEx.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GxxGmHttpImpEx.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="RTMP"
+				>
 			</Filter>
 		</Filter>
 		<Filter
@@ -233,6 +245,46 @@
 				RelativePath=".\FFmpeg2Gxx.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="FFmpegStub"
+			>
+			<File
+				RelativePath=".\ffmpeg_avcodec_stub.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ffmpeg_avcodec_stub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ffmpeg_avformat_stub.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ffmpeg_avformat_stub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ffmpeg_stub.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ffmpeg_stub.h"
+				>
+			</File>
+			<Filter
+				Name="接口定义"
+				>
+				<File
+					RelativePath=".\ffmpeg_interface_declare.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ffmpeg_interface_def.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

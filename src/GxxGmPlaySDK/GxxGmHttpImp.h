@@ -20,11 +20,23 @@ public:
 
 public:
 	static DWORD WINAPI ReadStreamThread(LPVOID lpParam);
+	static DWORD WINAPI ControlThread(LPVOID lpParam);
 
 public:
 	GxxGmPlaySDKNotifer *notifer_;
 	bool is_paused_;
 	HANDLE read_stream_thread_handle_;
+	HANDLE control_thread_handle_;
+	HANDLE framerate_event_handle_;
+
+public:
+	UInt32 eVideoCode_;
+	UInt32 eAudioCode_;
+	UInt32 unSampleRate_;
+	UInt32 unBits_;
+	UInt32 unChannels_;
+	Int32 nRefFrameRate_;
+	Int32 nEnableTimeCaculate_;
 
 public:
 	// AVFormatContext
@@ -33,6 +45,10 @@ public:
 	// 流序号
 	int video_stream_index_;
 	int audio_stream_index_;
+
+	// 流实体
+	void* video_stream_;
+	void* audio_stream_;
 
 	// 解码器上下文
 	void* video_codec_ctx_;

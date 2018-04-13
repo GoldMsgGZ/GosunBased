@@ -15,7 +15,7 @@ extern "C" {
 #include "GxxGmPlayBase.h"
 
 
-#define _SAVE_AS_BMP_
+#define _USE_GXX_
 
 
 GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)
@@ -25,6 +25,8 @@ GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)
 , format_ctx_(NULL)
 , video_stream_index_(-1)
 , audio_stream_index_(-1)
+, video_stream_(NULL)
+, audio_stream_(NULL)
 , video_codec_ctx_(NULL)
 , audio_codec_ctx_(NULL)
 , video_codec_(NULL)
@@ -59,8 +61,10 @@ int GxxGmHttpImp::Open(const char *url)
 		if (st->codec->codec_type == AVMEDIA_TYPE_VIDEO)
 		{
 			video_stream_index_ = index;
+			video_stream_ = (void*)st;
 			video_codec_ctx_ = (void*)st->codec;
 
+#ifdef _USE_FFMPEG_
 			video_codec_ = (void*)avcodec_find_decoder(((AVCodecContext*)video_codec_ctx_)->codec_id);
 			if (video_codec_ == NULL)
 			{
@@ -76,12 +80,15 @@ int GxxGmHttpImp::Open(const char *url)
 				GxxGmPlayBase::DebugStringOutput("打开视频解码器：%s 失败！错误码：%d\n", avcodec_get_name(((AVCodecContext*)video_codec_ctx_)->codec_id), errCode);
 				break;
 			}
+#endif
 		}
 		else if (st->codec->codec_type == AVMEDIA_TYPE_AUDIO)
 		{
 			audio_stream_index_ = index;
+			audio_stream_ = (void*)st;
 			audio_codec_ctx_ = (void*)st->codec;
 
+#ifdef _USE_FFMPEG_
 			audio_codec_ = (void*)avcodec_find_decoder(((AVCodecContext*)audio_codec_ctx_)->codec_id);
 			if (audio_codec_ == NULL)
 			{
@@ -97,17 +104,33 @@ int GxxGmHttpImp::Open(const char *url)
 				GxxGmPlayBase::DebugStringOutput("打开视频解码器：%s 失败！错误码：%d\n", avcodec_get_name(((AVCodecContext*)audio_codec_ctx_)->codec_id), errCode);
 				break;
 			}
+#endif
 		}
 	}
 
+#ifdef _USE_GXX_
+	eVideoCode_ = FFmpegCodecId2GxxCodecId(((AVStream *)video_stream_)->codecpar->codec_id);
+	eAudioCode_ = FFmpegCodecId2GxxCodecId(((AVStream *)audio_stream_)->codecpar->codec_id);
+	unSampleRate_ = ((AVStream *)video_stream_)->codecpar->sample_rate;
+	unBits_ = ((AVStream *)video_stream_)->codecpar->bits_per_raw_sample;
+	unChannels_ = ((AVStream *)video_stream_)->codecpar->channels;
+	nRefFrameRate_ = ((AVStream *)video_stream_)->avg_frame_rate.num / ((AVStream *)video_stream_)->avg_frame_rate.den;
+	nEnableTimeCaculate_ = 1;
+#endif
+
+#ifdef _USE_FFMPEG_
 	notifer_->StreamParamNotiferEx((AVCodecContext*)video_codec_ctx_, (AVCodecContext*)audio_codec_ctx_);
-	// notifer_->StreamParamNotifer(eVideoCode, eAudioCode, unSampleRate, unBits, unChannels, nRefFrameRate, nEnableTimeCaculate);
+#else if
+	notifer_->StreamParamNotifer(eVideoCode_, eAudioCode_, unSampleRate_, unBits_, unChannels_, nRefFrameRate_, nEnableTimeCaculate_);
+#endif
 
 	return 0;
 }
 
 int GxxGmHttpImp::Play()
 {
+	int errCode = 0;
+
 	// 启动线程，读出编码包，将编码包数据传到上层
 	DWORD thread_exit_code = 0;
 	GetExitCodeThread(read_stream_thread_handle_, &thread_exit_code);
@@ -122,7 +145,27 @@ int GxxGmHttpImp::Play()
 	{
 		// 不存在线程，那么我们就新建一个线程来处理相关问题
 		GxxGmPlayBase::DebugStringOutput("未检测到流读取线程，启动线程！\n");
+		framerate_event_handle_ = CreateEvent(NULL, FALSE, FALSE, NULL);
+		if (framerate_event_handle_ == NULL)
+		{
+			errCode = GetLastError();
+			return errCode;
+		}
+
+		control_thread_handle_ = CreateThread(NULL, 0, ControlThread, this, 0, NULL);
+		if (control_thread_handle_ == NULL)
+		{
+			errCode = GetLastError();
+			return errCode;
+		}
+
 		read_stream_thread_handle_ = CreateThread(NULL, 0, ReadStreamThread, this, 0, NULL);
+		if (read_stream_thread_handle_ == NULL)
+		{
+			errCode = GetLastError();
+			TerminateThread(control_thread_handle_, 4);
+			return errCode;
+		}
 	}
 
 	return 0;
@@ -176,13 +219,15 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 		if (errCode != 0)
 			break;
 
-		//StruGSMediaFrameData media_frame;
-		//media_frame.PresentationTimestamp = 0;//av_packet.pts;
+		StruGSMediaFrameData media_frame;
+		media_frame.PresentationTimestamp = av_packet.pts;
 
 		AVFrame *av_frame = av_frame_alloc();
 		if (av_packet.stream_index == http_->video_stream_index_)
 		{
-#ifdef USE_FFMPEG
+			WaitForSingleObject(http_->framerate_event_handle_, INFINITE);
+
+#ifdef _USE_FFMPEG_
 			int got_pic = 0;
 			errCode = avcodec_decode_video2((AVCodecContext*)http_->video_codec_ctx_, av_frame, &got_pic, &av_packet);
 			if (errCode != 0)
@@ -195,19 +240,19 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器完成...\n");
 			}
 #else
-			//// 这是视频帧
-			//media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_VIDEO;
-			//media_frame.CodecType = (EnumGSCodeID)http_->video_codec_id_;
-			//media_frame.VideoFrameInfo.Width = 0;
-			//media_frame.VideoFrameInfo.Height = 0;
-			//media_frame.VideoFrameInfo.IsKeyFrame = true;
-			//media_frame.VideoFrameInfo.FrameLength[0] = av_packet.size;
-			//media_frame.VideoFrameInfo.FrameBuffer[0] = (char*)av_packet.data;
+			// 这是视频帧
+			media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_VIDEO;
+			media_frame.CodecType = (EnumGSCodeID)http_->eVideoCode_;
+			media_frame.VideoFrameInfo.Width = ((AVStream*)http_->video_stream_)->codecpar->width;
+			media_frame.VideoFrameInfo.Height = ((AVStream*)http_->video_stream_)->codecpar->height;
+			media_frame.VideoFrameInfo.IsKeyFrame = av_packet.flags & AV_PKT_FLAG_KEY;
+			media_frame.VideoFrameInfo.FrameLength[0] = av_packet.size;
+			media_frame.VideoFrameInfo.FrameBuffer[0] = (char*)av_packet.data;
 #endif
 		}
 		else if (av_packet.stream_index == http_->audio_stream_index_)
 		{
-#ifdef USE_FFMPEG
+#ifdef _USE_FFMPEG_
 			int got_data = 0;
 			avcodec_decode_audio4((AVCodecContext*)http_->audio_codec_ctx_, av_frame, &got_data, &av_packet);
 			if (got_data)
@@ -215,19 +260,41 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 				http_->notifer_->MediaFrameNotiferEx(AVMediaType::AVMEDIA_TYPE_AUDIO, av_frame);
 			}
 #else
-			//// 这是音频帧
-			//media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_AUDIO;
-			//media_frame.CodecType = (EnumGSCodeID)http_->audio_codec_id_;
-			//media_frame.AudioFrameInfo.SampleRate = http_->audio_sample_rate_;
-			//media_frame.AudioFrameInfo.Bits = http_->audio_bits_;
-			//media_frame.AudioFrameInfo.Channels = http_->audio_channels_;
+			// 这是音频帧
+			media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_AUDIO;
+			media_frame.CodecType = (EnumGSCodeID)http_->eAudioCode_;
+			media_frame.AudioFrameInfo.SampleRate = http_->unSampleRate_;
+			media_frame.AudioFrameInfo.Bits = http_->unBits_;
+			media_frame.AudioFrameInfo.Channels = http_->unChannels_;
 #endif
 		}
+
+#ifdef _USE_GXX_
+		http_->notifer_->MediaFrameNotifer(&media_frame);
+#endif
 
 		av_free_packet(&av_packet);
 		++index;
 	}
 
 	GxxGmPlayBase::DebugStringOutput("准备退出媒体帧读取线程...\n");
+	return 0;
+}
+
+DWORD WINAPI GxxGmHttpImp::ControlThread(LPVOID lpParam)
+{
+	GxxGmHttpImp *http_ = (GxxGmHttpImp *)lpParam;
+
+	// 计算一下平均帧率下需要Delay的时间
+	int delay_time = 1000 / http_->nRefFrameRate_;
+	while (true)
+	{
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		GxxGmPlayBase::DebugStringOutput("%02d%02d%02d-%03d:过一帧...\n", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+		SetEvent(http_->framerate_event_handle_);
+		Sleep(delay_time);		// 这里由帧率来控制
+	}
+
 	return 0;
 }
