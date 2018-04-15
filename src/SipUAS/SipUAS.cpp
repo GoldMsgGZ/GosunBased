@@ -3,7 +3,7 @@
 #include <WinSock.h>
 using namespace std;
 
-#define SERVER_IP		"10.10.16.59"
+#define SERVER_IP		"192.168.182.1"
 #define SERVER_PORT		5069
 
 int main(int argc, const char *argv[])

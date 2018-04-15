@@ -3,11 +3,11 @@
 #include <WinSock.h>
 using namespace std;
 
-#define SERVER_IP		"10.10.16.59"
+#define SERVER_IP		"192.168.182.1"
 #define SERVER_PORT		5069
 #define SERVER_ID		"00000000000000000000"
 
-#define CLI_IP			"10.10.16.59"
+#define CLI_IP			"192.168.182.1"
 #define CLI_PORT		5070
 #define CLI_ID			"00000000000000000001"
 

@@ -15,7 +15,8 @@ extern "C" {
 #include "GxxGmPlayBase.h"
 
 
-#define _USE_GXX_
+//#define _USE_GXX_
+#define _USE_FFMPEG_
 
 
 GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)

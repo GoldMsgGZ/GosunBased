@@ -105,10 +105,11 @@ BOOL CGxxGmPlayDemoDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/bob.flv"));
+	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/t.mp4"));
 
 	av_register_all();
 	avformat_network_init();
+	avcodec_register_all();
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -250,12 +251,12 @@ void CGxxGmPlayDemoDlg::OnBnClickedBtnOpen()
 	// 开始准备声音转换相关参数
 #define MAX_AUDIO_FRAME_SIZE 192000
 
-	uint64_t output_channel_layout = /*AV_CH_LAYOUT_STEREO*/audio_codec_ctx_->channel_layout;
+	uint64_t output_channel_layout = AV_CH_LAYOUT_STEREO;
 	int output_frame_size = audio_codec_ctx_->frame_size;	// AAC是1024；MP3是1152；
-	AVSampleFormat output_sample_format = /*AV_SAMPLE_FMT_S16*/audio_codec_ctx_->sample_fmt;
+	AVSampleFormat output_sample_format = AV_SAMPLE_FMT_S16;
 	int output_sample_rate = audio_codec_ctx_->sample_rate;	// 44100
 	int output_channels = av_get_channel_layout_nb_channels(output_channel_layout);
-	int audio_output_buffer_size_ = av_samples_get_buffer_size(NULL, output_channels, output_frame_size, output_sample_format, 1);
+	audio_output_buffer_size_ = av_samples_get_buffer_size(NULL, output_channels, output_frame_size, output_sample_format, 1);
 
 	audio_output_buffer_ = (unsigned char *)av_malloc(MAX_AUDIO_FRAME_SIZE * 2);
 
@@ -471,10 +472,10 @@ void CGxxGmPlayDemoDlg::AudioFillCallback(void *udata, Uint8 *stream, int len)
 {
 	CGxxGmPlayDemoDlg *dlg = (CGxxGmPlayDemoDlg*)udata;
 
+	SDL_memset(stream, 0, len);
+
 	if(dlg->audio_len_ <= 0)
 		return;
-
-	SDL_memset(stream, 0, len);
 
 	len = (len > dlg->audio_len_ ? dlg->audio_len_ : len);
 

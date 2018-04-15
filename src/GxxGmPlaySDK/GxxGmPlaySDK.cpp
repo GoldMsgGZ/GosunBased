@@ -58,9 +58,13 @@ int GxxGmPlaySDK::Open(const char *url, bool is_real)
 	{
 		protocol_type_ = PROTOCOL_TYPE_HTTP;
 
+		// 首先解复用，准备好图像转换和音频转换的参数
 		errCode = http_->Open(url);
 		if (errCode == 0)
+		{
+			// 准备完成后，启动线程读取编码帧
 			errCode = http_->Play();
+		}
 	}
 	else
 	{

@@ -25,37 +25,39 @@ GxxGmTunnelServer::~GxxGmTunnelServer()
 
 int GxxGmTunnelServer::Initialize(const char *tcp_srv_ip, int tcp_srv_port, const char *sip_cli_ip, int sip_cli_port, const char *sip_cli_id, const char *sip_srv_ip, int sip_srv_port, const char *sip_srv_id)
 {
-	// 首先开启TCP监听
-	WSAData wsaData;
-	int errCode = WSAStartup(MAKEWORD(1,1), &wsaData);
-	if (errCode != 0)
-		return errCode;
+	int errCode = 0;
 
-	srv_sock_ = socket(AF_INET, SOCK_STREAM, 0);
-	if (srv_sock_ == INVALID_SOCKET)
-	{
-		errCode = WSAGetLastError();
-		return errCode;
-	}
+	//// 首先开启TCP监听
+	//WSAData wsaData;
+	//errCode = WSAStartup(MAKEWORD(2,0), &wsaData);
+	//if (errCode != 0)
+	//	return errCode;
 
-	SOCKADDR_IN srv_addr;
-	srv_addr.sin_family = AF_INET;
-	srv_addr.sin_port = htons(tcp_srv_port);
-	srv_addr.sin_addr.S_un.S_addr = inet_addr(tcp_srv_ip);
+	//srv_sock_ = socket(AF_INET, SOCK_STREAM, 0);
+	//if (srv_sock_ == INVALID_SOCKET)
+	//{
+	//	errCode = WSAGetLastError();
+	//	return errCode;
+	//}
 
-	errCode = bind(srv_sock_, (SOCKADDR*)&srv_addr, sizeof(SOCKADDR));
-	if (errCode == SOCKET_ERROR)
-	{
-		errCode = WSAGetLastError();
-		return errCode;
-	}
+	//SOCKADDR_IN srv_addr;
+	//srv_addr.sin_family = AF_INET;
+	//srv_addr.sin_port = htons(tcp_srv_port);
+	//srv_addr.sin_addr.S_un.S_addr = inet_addr(tcp_srv_ip);
 
-	errCode = listen(srv_sock_, 5);
-	if (errCode == SOCKET_ERROR)
-	{
-		errCode = WSAGetLastError();
-		return errCode;
-	}
+	//errCode = bind(srv_sock_, (SOCKADDR*)&srv_addr, sizeof(SOCKADDR));
+	//if (errCode == SOCKET_ERROR)
+	//{
+	//	errCode = WSAGetLastError();
+	//	return errCode;
+	//}
+
+	//errCode = listen(srv_sock_, 5);
+	//if (errCode == SOCKET_ERROR)
+	//{
+	//	errCode = WSAGetLastError();
+	//	return errCode;
+	//}
 
 	sip_tunnel_cli_ = new GxxGmSipTunnelCli(this);
 	errCode = sip_tunnel_cli_->Initialize(sip_srv_ip, sip_srv_port, sip_srv_id, sip_cli_ip, sip_cli_port, sip_cli_id);

@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="eXosip.lib osip2.lib osipparser2.lib ws2_32.lib Dnsapi.lib Iphlpapi.lib Crypt32.lib libeay32.lib ssleay32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\ext\osip\lib\x86"
+				AdditionalLibraryDirectories="..\Debug;..\ext\OpenSSL"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
