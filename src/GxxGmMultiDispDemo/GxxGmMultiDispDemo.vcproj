@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GxxGmPlayDemo"
-	ProjectGUID="{D9BF2524-2D43-45C1-BAEB-5DF8AA4044BE}"
-	RootNamespace="GxxGmPlayDemo"
+	Name="GxxGmMultiDispDemo"
+	ProjectGUID="{077FBB08-1936-458A-A644-784C4728CD6C}"
+	RootNamespace="GxxGmMultiDispDemo"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="196613"
 	>
@@ -45,12 +45,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\ext\FFMpeg\include;..\ext\SDL2\include"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;__STDC_CONSTANT_MACROS"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -68,9 +67,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="avcodec.lib avdevice.lib avfilter.lib avformat.lib avutil.lib postproc.lib swresample.lib swscale.lib SDL2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\ext\SDL2\lib\x86;..\ext\FFMpeg\lib\x86"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -189,11 +186,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\GxxGmPlayDemo.cpp"
+				RelativePath=".\GxxGmMultiDispDemo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GxxGmPlayDemoDlg.cpp"
+				RelativePath=".\GxxGmMultiDispDemoDlg.cpp"
 				>
 			</File>
 			<File
@@ -223,11 +220,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\GxxGmPlayDemo.h"
+				RelativePath=".\GxxGmMultiDispDemo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\GxxGmPlayDemoDlg.h"
+				RelativePath=".\GxxGmMultiDispDemoDlg.h"
 				>
 			</File>
 			<File
@@ -249,15 +246,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\GxxGmPlayDemo.ico"
+				RelativePath=".\res\GxxGmMultiDispDemo.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\GxxGmPlayDemo.rc"
+				RelativePath=".\GxxGmMultiDispDemo.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\res\GxxGmPlayDemo.rc2"
+				RelativePath=".\res\GxxGmMultiDispDemo.rc2"
 				>
 			</File>
 		</Filter>
@@ -267,9 +264,5 @@
 		</File>
 	</Files>
 	<Globals>
-		<Global
-			Name="RESOURCE_FILE"
-			Value="GxxGmPlayDemo.rc"
-		/>
 	</Globals>
 </VisualStudioProject>

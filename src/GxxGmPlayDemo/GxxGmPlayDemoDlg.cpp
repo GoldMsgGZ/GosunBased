@@ -371,6 +371,8 @@ DWORD WINAPI CGxxGmPlayDemoDlg::ReadThread(LPVOID lpParam)
 		if (errCode < 0)
 			break;
 
+		// 读取帧之后应该塞进缓存队列
+
 		AVFrame *av_frame = av_frame_alloc();
 		if (av_packet.stream_index == dlg->video_index_)
 		{
@@ -472,11 +474,10 @@ void CGxxGmPlayDemoDlg::AudioFillCallback(void *udata, Uint8 *stream, int len)
 {
 	CGxxGmPlayDemoDlg *dlg = (CGxxGmPlayDemoDlg*)udata;
 
-	SDL_memset(stream, 0, len);
-
 	if(dlg->audio_len_ <= 0)
 		return;
 
+	SDL_memset(stream, 0, len);
 	len = (len > dlg->audio_len_ ? dlg->audio_len_ : len);
 
 	SDL_MixAudio(stream, dlg->audio_pos_, len, SDL_MIX_MAXVOLUME);

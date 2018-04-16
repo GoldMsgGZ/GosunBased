@@ -2,7 +2,7 @@
 #define _GxxGmHttpImp_H_
 
 #include "GxxGmPlaySDKCallback.h"
-//#include "GSThread.h"
+#include "..\ext\Foundation\GSThread.h"
 #include <windows.h>
 
 class GxxGmHttpImp
@@ -19,12 +19,15 @@ public:
 	void Close();
 
 public:
+	GSThread read_stream_thread_;
+	GSThread control_thread_;
 	static DWORD WINAPI ReadStreamThread(LPVOID lpParam);
 	static DWORD WINAPI ControlThread(LPVOID lpParam);
 
 public:
 	GxxGmPlaySDKNotifer *notifer_;
 	bool is_paused_;
+	bool need_stop_;
 	HANDLE read_stream_thread_handle_;
 	HANDLE control_thread_handle_;
 	HANDLE framerate_event_handle_;
