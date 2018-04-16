@@ -56,6 +56,11 @@ CGxxGmMultiDispDemoDlg::CGxxGmMultiDispDemoDlg(CWnd* pParent /*=NULL*/)
 void CGxxGmMultiDispDemoDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_COMBO_ROW_COUNT, m_cDispRows);
+	DDX_Control(pDX, IDC_COMBO_LIST_COUNT, m_cDispLists);
+	DDX_Control(pDX, IDC_EDIT_WIDTH, m_cScreenWidth);
+	DDX_Control(pDX, IDC_EDIT_HEIGHT, m_cScreenHeight);
+	DDX_Control(pDX, IDC_EDIT2, m_cUrl);
 }
 
 BEGIN_MESSAGE_MAP(CGxxGmMultiDispDemoDlg, CDialog)
@@ -98,6 +103,40 @@ BOOL CGxxGmMultiDispDemoDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	m_cDispRows.AddString(_T("1"));
+	m_cDispRows.AddString(_T("2"));
+	m_cDispRows.AddString(_T("3"));
+	m_cDispRows.AddString(_T("4"));
+	m_cDispRows.AddString(_T("5"));
+	m_cDispRows.AddString(_T("6"));
+	m_cDispRows.AddString(_T("7"));
+	m_cDispRows.AddString(_T("8"));
+	m_cDispRows.AddString(_T("9"));
+	m_cDispRows.SetCurSel(0);
+
+	m_cDispLists.AddString(_T("1"));
+	m_cDispLists.AddString(_T("2"));
+	m_cDispLists.AddString(_T("3"));
+	m_cDispLists.AddString(_T("4"));
+	m_cDispLists.AddString(_T("5"));
+	m_cDispLists.AddString(_T("6"));
+	m_cDispLists.AddString(_T("7"));
+	m_cDispLists.AddString(_T("8"));
+	m_cDispLists.AddString(_T("9"));
+	m_cDispLists.SetCurSel(0);
+
+	CWnd *pCwnd = GetDlgItem(IDC_STATIC_SCREEN);
+	CRect rect;
+	pCwnd->GetWindowRect(&rect);
+
+	TCHAR string_width[4096] = {0};
+	TCHAR string_height[4096] = {0};
+	_stprintf_s(string_width, 4096, _T("%d"), rect.Width());
+	_stprintf_s(string_height, 4096, _T("%d"), rect.Height());
+	m_cScreenWidth.SetWindowText(string_width);
+	m_cScreenHeight.SetWindowText(string_height);
+
+	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/t.mp4"));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }

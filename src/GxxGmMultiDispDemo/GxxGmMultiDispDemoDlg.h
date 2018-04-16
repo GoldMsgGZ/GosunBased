@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "afxwin.h"
 
 
 // CGxxGmMultiDispDemoDlg ¶Ô»°¿ò
@@ -29,4 +30,10 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	CComboBox m_cDispRows;
+	CComboBox m_cDispLists;
+	CEdit m_cScreenWidth;
+	CEdit m_cScreenHeight;
+	CEdit m_cUrl;
 };
