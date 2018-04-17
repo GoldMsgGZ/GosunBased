@@ -14,7 +14,9 @@ extern "C" {
 #endif
 
 #include <list>
-#include <windows.h>
+#include <BaseTsd.h>
+#include <Winbase.h>
+//#include <windows.h>
 
 typedef struct _FrameData_
 {

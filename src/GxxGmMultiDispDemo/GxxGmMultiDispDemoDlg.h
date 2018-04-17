@@ -4,6 +4,7 @@
 
 #pragma once
 #include "afxwin.h"
+#include "..\GxxGmMultiDisp\GxxGmMultiDisp.h"
 
 
 // CGxxGmMultiDispDemoDlg ¶Ô»°¿ò
@@ -36,4 +37,12 @@ public:
 	CEdit m_cScreenWidth;
 	CEdit m_cScreenHeight;
 	CEdit m_cUrl;
+
+public:
+	GxxGmMultiDisp gxx_gm_multi_disp_;
+	afx_msg void OnBnClickedBtnDivisionSubscreen();
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedBtnPlay();
+	afx_msg void OnBnClickedBtnPause();
+	afx_msg void OnBnClickedBtnStop();
 };

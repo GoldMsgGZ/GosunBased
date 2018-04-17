@@ -1,7 +1,7 @@
 #ifndef _GxxGmMultiDisp_H_
 #define _GxxGmMultiDisp_H_
 
-
+#include <string>
 #include "..\GxxGmPlayer\GxxGmPlayer.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -15,6 +15,15 @@ public:
 	~GxxGmDisp();
 
 public:
+	void SetDispControl(void* disp, int left, int top, int right, int bottom);
+	void SetBackgroundImage(const char *imgpath);
+	void UpdateDispRect(int left, int top, int right, int bottom);
+
+public:
+	void ShowDispWindow(int left, int top, int right, int bottom, bool is_show = true);
+	bool IsBusy();
+
+public:
 	int Play(const char *url, const char *play_info, bool is_real = true);
 	int Pause();
 	int Resume();
@@ -23,6 +32,11 @@ public:
 public:
 	// 播放器
 	GxxGmPlayer disp_player_;
+
+	// 显示区域，主键
+	// 当发生屏幕交换的时候，交换的实际上是播放器对象
+	// 完成播放器对象交换后更新播放器渲染的显示区域
+	void* disp_control_;
 
 public:
 	std::string GetUrl() { return play_info_url_; }
@@ -46,6 +60,12 @@ public:
 
 public:
 	bool is_real_mode_;
+
+public:
+	int disp_left_;
+	int disp_right_;
+	int disp_top_;
+	int disp_bottom_;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,6 +130,13 @@ public:
 	int Stop(int disp_index);
 
 public:
+	int screen_width_;
+	int screen_height_;
+	void* pCwnd_;
+
+public:
+	int disp_lists_;
+	int disp_rows_;
 	int current_disp_count_;
 	GxxGmDisp gxx_gm_disp_[MAX_DISP_COUNT];
 };

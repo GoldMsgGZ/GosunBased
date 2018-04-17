@@ -20,6 +20,7 @@ GxxGmPlaySDK::GxxGmPlaySDK(GxxGmPlayerNotifer *notifer)
 , http_(new GxxGmHttpImp(this))
 , protocol_type_(PROTOCOL_TYPE_UNKNOWN)
 , notifer_(notifer)
+, is_busy_(false)
 {
 
 }
@@ -35,9 +36,17 @@ GxxGmPlaySDK::~GxxGmPlaySDK()
 	protocol_type_ = PROTOCOL_TYPE_UNKNOWN;
 }
 
+bool GxxGmPlaySDK::IsBusy()
+{
+	return is_busy_;
+}
+
 int GxxGmPlaySDK::Open(const char *url, bool is_real)
 {
-	int errCode = 0;
+	int errCode = -6002;
+
+	// 简单粗暴，当Open成功后，我们就开始认为播放器开始忙碌了
+	is_busy_ = true;
 
 	// 简单粗暴，直接根据协议头判断是使用gsp对象处理还是rtsp对象处理
 	if (_memicmp(url, GSP_PROTOCOL, strlen(GSP_PROTOCOL)) == 0)
@@ -70,6 +79,10 @@ int GxxGmPlaySDK::Open(const char *url, bool is_real)
 	{
 		// 未知协议
 	}
+
+	// 同样简单粗暴，当播放器打开某个源失败的时候，我们认为它又空闲下来了
+	if (errCode != 0)
+		is_busy_ = false;	
 
 	return errCode;
 }
@@ -140,6 +153,12 @@ int GxxGmPlaySDK::Stop()
 		break;
 	}
 
+	// 简单粗暴，只要调用了停止，我们就认为播放器空闲了
+	// 其实还有几种空闲的状态，我们目前没处理：
+	// 1. 播放点播视频结束的时候
+	// 2. 远端媒体服务器挂掉的时候
+	// 3. 网络异常的时候
+	is_busy_ = false;
 	return errCode;
 }
 
@@ -159,9 +178,11 @@ void GxxGmPlaySDK::Close()
 	default:
 		break;
 	}
+
+	is_busy_ = false;
 }
 
-void GxxGmPlaySDK::StreamParamNotifer(UInt32 eVideoCode, UInt32 eAudioCode, UInt32 unSampleRate, UInt32 unBits, UInt32 unChannels, Int32 nRefFrameRate, Int32 nEnableTimeCaculate)
+void GxxGmPlaySDK::StreamParamNotifer(unsigned int eVideoCode, unsigned int eAudioCode, unsigned int unSampleRate, unsigned int unBits, unsigned int unChannels, int nRefFrameRate, int nEnableTimeCaculate)
 {
 	// 继续往上层传
 	notifer_->StreamParamNotifer(eVideoCode, eAudioCode, unSampleRate, unBits, unChannels, nRefFrameRate, nEnableTimeCaculate);
@@ -172,7 +193,7 @@ void GxxGmPlaySDK::StreamParamNotiferEx(AVCodecContext *video_codec_context, AVC
 	notifer_->StreamParamNotiferEx(video_codec_context, audio_codec_context);
 }
 
-void GxxGmPlaySDK::MediaFrameNotifer(StruGSMediaFrameData *media_frame_data)
+void GxxGmPlaySDK::MediaFrameNotifer(/*StruGSMediaFrameData*/void *media_frame_data)
 {
 	notifer_->MediaFrameNotifer(media_frame_data);
 }

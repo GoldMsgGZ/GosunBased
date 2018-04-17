@@ -25,6 +25,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.多窗口管理", "3.多窗口管理", "{C8A97697-30F8-4974-AD60-3281A3E3609D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmMultiDisp", "GxxGmMultiDisp\GxxGmMultiDisp.vcproj", "{8C0959C5-4AE2-4038-B43F-25E61998BDD4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46} = {FFC32066-F1B7-4176-BFE7-C5EA1A6BBD46}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayBase", "GxxGmPlayBase\GxxGmPlayBase.vcproj", "{95FDFAE9-6425-4D2F-B38D-9BD681160995}"
 EndProject
@@ -87,6 +90,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmThreadDemo", "GxxGmThreadDemo\GxxGmThreadDemo.vcproj", "{59629322-ED12-4430-8E8E-0BBDEF279D1C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmMultiDispDemo", "GxxGmMultiDispDemo\GxxGmMultiDispDemo.vcproj", "{077FBB08-1936-458A-A644-784C4728CD6C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4} = {8C0959C5-4AE2-4038-B43F-25E61998BDD4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

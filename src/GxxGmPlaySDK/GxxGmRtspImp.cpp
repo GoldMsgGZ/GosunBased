@@ -1,4 +1,6 @@
 #include <iostream>
+#include "GSTypes.h"
+#include "GSMediaPlayerDef.h"
 #include "GxxGmRtspImp.h"
 #include "GsRtspClient.h"
 
@@ -54,6 +56,7 @@ void StateChangedCallback(RtspClientState state, void* clientData)
 		OutputDebugStringA("ServerTerminated\n");
 		break;
 	case PlayEnd:
+		// 这里应当触发停止操作，或者发送播放结束通知
 		OutputDebugStringA("PlayEnd\n");
 		break;
 	case StreamTimeout:

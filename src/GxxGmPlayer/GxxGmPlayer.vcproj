@@ -167,14 +167,6 @@
 		<Filter
 			Name="GxxGmSDL2Player"
 			>
-			<File
-				RelativePath=".\GxxGmSDL2Player.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GxxGmSDL2Player.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

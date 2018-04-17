@@ -1,4 +1,6 @@
 #include "GxxGmGspImp.h"
+#include "GSTypes.h"
+#include "GSMediaPlayerDef.h"
 #include "StreamServerSDK.h"
 
 

@@ -68,6 +68,11 @@ BEGIN_MESSAGE_MAP(CGxxGmMultiDispDemoDlg, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDC_BTN_DIVISION_SUBSCREEN, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnDivisionSubscreen)
+	ON_BN_CLICKED(IDC_BUTTON1, &CGxxGmMultiDispDemoDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BTN_PLAY, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnPlay)
+	ON_BN_CLICKED(IDC_BTN_PAUSE, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnPause)
+	ON_BN_CLICKED(IDC_BTN_STOP, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnStop)
 END_MESSAGE_MAP()
 
 
@@ -138,6 +143,8 @@ BOOL CGxxGmMultiDispDemoDlg::OnInitDialog()
 
 	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/t.mp4"));
 
+	gxx_gm_multi_disp_.Initialize((void*)pCwnd->GetSafeHwnd());
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -190,3 +197,53 @@ HCURSOR CGxxGmMultiDispDemoDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnDivisionSubscreen()
+{
+	// 分屏
+	CString str_disp_rows;
+	CString str_disp_links;
+
+	m_cDispRows.GetWindowText(str_disp_rows);
+	m_cDispLists.GetWindowText(str_disp_links);
+
+	int disp_rows = _ttoi(str_disp_rows.GetBuffer(0));
+	int disp_links = _ttoi(str_disp_links.GetBuffer(0));
+
+	int errCode = gxx_gm_multi_disp_.ReDivision(disp_rows, disp_links);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedButton1()
+{
+	// 调整播放窗口大小
+	CString str_screen_width;
+	CString str_screen_height;
+
+	m_cScreenWidth.GetWindowText(str_screen_width);
+	m_cScreenHeight.GetWindowText(str_screen_height);
+
+	int screen_width = _ttoi(str_screen_width.GetBuffer(0));
+	int screen_height = _ttoi(str_screen_height.GetBuffer(0));
+
+	int errCode = gxx_gm_multi_disp_.ChangeScreenSize(screen_width, screen_height);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnPlay()
+{
+	CString url;
+
+	m_cUrl.GetWindowText(url);
+
+	const char * play_info = "{ deviceid : \"00000000000000000001\", userid : \"000001\", username : \"JuZhang\" }";
+	int errCode = gxx_gm_multi_disp_.Play(T2A(url.GetBuffer(0)), play_info);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnPause()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnStop()
+{
+	// TODO: 在此添加控件通知处理程序代码
+}

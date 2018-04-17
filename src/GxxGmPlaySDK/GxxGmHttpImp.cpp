@@ -1,4 +1,6 @@
 #include "GxxGmHttpImp.h"
+#include "GSTypes.h"
+#include "GSMediaPlayerDef.h"
 
 #ifdef __cplusplus
 extern "C" {
