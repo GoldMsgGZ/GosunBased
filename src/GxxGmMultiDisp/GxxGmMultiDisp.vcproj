@@ -171,6 +171,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="GxxGmStatic"
+			>
+			<File
+				RelativePath=".\GxxGmStatic.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GxxGmStatic.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

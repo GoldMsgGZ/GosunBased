@@ -1,6 +1,8 @@
 #include "GxxGmMultiDisp.h"
 #include <afxwin.h>
 
+#include "GxxGmStatic.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -185,7 +187,8 @@ int GxxGmMultiDisp::Initialize(void* screen_window, int disp_rows /* = 1 */, int
 			rect.top	= current_disp_top;
 			rect.bottom	= current_disp_bottom;
 
-			CStatic *disp = new CStatic();
+			//CStatic *disp = new CStatic();
+			GxxGmStatic *disp = new GxxGmStatic();
 			disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
 
 			// 将显示对象赋值给子窗口，然后显示子窗口
@@ -245,7 +248,8 @@ int GxxGmMultiDisp::ReDivision(int disp_rows /* = 1 */, int disp_lists /* = 1 */
 
 			if (!gxx_gm_disp_[index].disp_control_)
 			{
-				CStatic *disp = new CStatic();
+				//CStatic *disp = new CStatic();
+				GxxGmStatic *disp = new GxxGmStatic();
 				disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
@@ -301,7 +305,8 @@ int GxxGmMultiDisp::ChangeScreenSize(void* screen_window)
 
 			if (!gxx_gm_disp_[index].disp_control_)
 			{
-				CStatic *disp = new CStatic();
+				//CStatic *disp = new CStatic();
+				GxxGmStatic *disp = new GxxGmStatic();
 				disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
@@ -353,7 +358,8 @@ int GxxGmMultiDisp::ChangeScreenSize(int screen_window_width, int screen_window_
 
 			if (!gxx_gm_disp_[index].disp_control_)
 			{
-				CStatic *disp = new CStatic();
+				//CStatic *disp = new CStatic();
+				GxxGmStatic *disp = new GxxGmStatic();
 				disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
 
 				// 将显示对象赋值给子窗口，然后显示子窗口

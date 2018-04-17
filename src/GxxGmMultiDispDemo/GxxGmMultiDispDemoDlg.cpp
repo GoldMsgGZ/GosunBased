@@ -231,9 +231,9 @@ void CGxxGmMultiDispDemoDlg::OnBnClickedButton1()
 void CGxxGmMultiDispDemoDlg::OnBnClickedBtnPlay()
 {
 	CString url;
-
 	m_cUrl.GetWindowText(url);
 
+	USES_CONVERSION;
 	const char * play_info = "{ deviceid : \"00000000000000000001\", userid : \"000001\", username : \"JuZhang\" }";
 	int errCode = gxx_gm_multi_disp_.Play(T2A(url.GetBuffer(0)), play_info);
 }
