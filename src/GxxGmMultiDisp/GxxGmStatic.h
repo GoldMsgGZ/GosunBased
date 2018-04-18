@@ -3,6 +3,7 @@
 
 #include <afx.h>
 #include <afxwin.h>
+#include <atlimage.h>
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -28,6 +29,8 @@ public:
 	void Set_TextColor(COLORREF cr);
 	COLORREF Get_TextColor();
 
+	BOOL SetLogoImage(LPCTSTR logo_path);
+
 protected:
 	//{{AFX_MSG(CColorText_Static)  
 	afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
@@ -38,6 +41,8 @@ protected:
 	//}}AFX_MSG  
 	DECLARE_MESSAGE_MAP() 
 
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam); 
+
 private:
 	// 鼠标是否在控件上
 	bool is_in_;
@@ -47,6 +52,7 @@ private:
 
 public:
 	CRect logo_pic_rect_;
+	CImage m_logoImage_;
 
 public:
 	// 重载消息处理函数：

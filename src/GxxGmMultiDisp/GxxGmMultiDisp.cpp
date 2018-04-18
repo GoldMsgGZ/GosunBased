@@ -34,8 +34,10 @@ void GxxGmDisp::SetDispControl(void* disp, int left, int top, int right, int bot
 void GxxGmDisp::SetBackgroundImage(const char *imgpath)
 {
 	// 首先加载图片
+	GxxGmStatic *disp = (GxxGmStatic *)CWnd::FromHandle((HWND)disp_control_);
 
-	// 然后绘制到显示区域
+	USES_CONVERSION;
+	disp->SetLogoImage(A2T(imgpath));
 }
 
 void GxxGmDisp::ShowDispWindow(int left, int top, int right, int bottom, bool is_show /* = true */)
@@ -194,7 +196,7 @@ int GxxGmMultiDisp::Initialize(void* screen_window, int disp_rows /* = 1 */, int
 
 			// 将显示对象赋值给子窗口，然后显示子窗口
 			gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
-			gxx_gm_disp_[index].SetBackgroundImage(".\\res\\bkres.dll");	// 这里加载背景图，BMP图像直接改成dll图像
+			gxx_gm_disp_[index].SetBackgroundImage("G:\\OpenSource_Extend\\GosunBased\\src\\Debug\\BMP_BK.bmp");	// 这里加载背景图，BMP图像直接改成dll图像
 			gxx_gm_disp_[index].ShowDispWindow(current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
 
 			++index;
@@ -256,7 +258,7 @@ int GxxGmMultiDisp::ReDivision(int disp_rows /* = 1 */, int disp_lists /* = 1 */
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
 				gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
-				gxx_gm_disp_[index].SetBackgroundImage(".\\res\\bkres.dll");	// 这里加载背景图，BMP图像直接改成dll图像
+				gxx_gm_disp_[index].SetBackgroundImage("G:\\OpenSource_Extend\\GosunBased\\src\\Debug\\BMP_BK.bmp");	// 这里加载背景图，BMP图像直接改成dll图像
 			}
 			else
 			{
@@ -314,7 +316,7 @@ int GxxGmMultiDisp::ChangeScreenSize(void* screen_window)
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
 				gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
-				gxx_gm_disp_[index].SetBackgroundImage(".\\res\\bkres.dll");	// 这里加载背景图，BMP图像直接改成dll图像
+				gxx_gm_disp_[index].SetBackgroundImage("G:\\OpenSource_Extend\\GosunBased\\src\\Debug\\BMP_BK.bmp");	// 这里加载背景图，BMP图像直接改成dll图像
 			}
 			else
 			{
@@ -368,7 +370,7 @@ int GxxGmMultiDisp::ChangeScreenSize(int screen_window_width, int screen_window_
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
 				gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
-				gxx_gm_disp_[index].SetBackgroundImage(".\\res\\bkres.dll");	// 这里加载背景图，BMP图像直接改成dll图像
+				gxx_gm_disp_[index].SetBackgroundImage("G:\\OpenSource_Extend\\GosunBased\\src\\Debug\\BMP_BK.bmp");	// 这里加载背景图，BMP图像直接改成dll图像
 			}
 			else
 			{

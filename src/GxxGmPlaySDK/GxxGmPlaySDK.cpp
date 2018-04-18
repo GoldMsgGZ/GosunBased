@@ -202,3 +202,8 @@ void GxxGmPlaySDK::MediaFrameNotiferEx(AVMediaType type, AVFrame *data)
 {
 	notifer_->MediaFrameNotiferEx(type, data);
 }
+
+void GxxGmPlaySDK::PlayerStateNotifer(enum GxxGmPlayState state)
+{
+	notifer_->PlayerStateNotifer(state);
+};

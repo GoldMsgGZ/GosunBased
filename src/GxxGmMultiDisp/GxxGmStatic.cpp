@@ -1,5 +1,6 @@
 #include "GxxGmStatic.h"
 #include "..\GxxGmPlayBase\GxxGmPlayBase.h"
+#include <afxglobals.h>
 
 #ifdef _DEBUG  
 #define new DEBUG_NEW  
@@ -159,16 +160,78 @@ COLORREF GxxGmStatic::Get_BackColor()
 }
 
 void GxxGmStatic::Set_TextColor(COLORREF cr)   
-{   
+{
 	m_TextColor = cr;
 	if(GetSafeHwnd())
 		Invalidate();
-}  
+}
 
 COLORREF GxxGmStatic::Get_TextColor()
-{  
+{
 	return m_TextColor;
-}  
+}
+
+BOOL GxxGmStatic::SetLogoImage(LPCTSTR logo_path)
+{
+	BOOL bRet = FALSE;  
+	m_logoImage_.Destroy(); //先释放以前资源  
+	bRet = (m_logoImage_.Load(logo_path) == S_OK); //加载新资源  
+	if(m_hWnd)  
+		Invalidate(FALSE);  
+	return bRet;  
+}
+
+LRESULT GxxGmStatic::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	LRESULT ret = S_OK;
+	switch (message)
+	{
+	case WM_ERASEBKGND:
+		ret = S_FALSE;
+		return ret;
+		break;
+	case WM_PAINT:
+		{
+			PAINTSTRUCT ps;  
+			CDC *pDstDC = BeginPaint(&ps);  
+
+			//客户区位置  
+			CRect rcClient;  
+			GetClientRect(&rcClient);  
+
+			//双缓冲绘图  
+			{  
+				CMemDC memDC(*pDstDC, rcClient);  
+				CDC *pDC = &memDC.GetDC();  
+
+				//填充背景色  
+				pDC->FillSolidRect(&rcClient, RGB(25, 25, 25));  
+				pDC->SetStretchBltMode(HALFTONE);  
+
+				if(!m_logoImage_.IsNull())  
+				{  
+					//原图大小  
+					CRect rcSrc(0, 0, m_logoImage_.GetWidth(), m_logoImage_.GetHeight());  
+					//锁定原图比例  
+					double fZoomRate = 1;//min((double)rcClient.Width() / (double)rcSrc.Width(), (double)rcClient.Height() / (double)rcSrc.Height());  
+					int cx = (int)(rcSrc.Width()*fZoomRate), cy = (int)(rcSrc.Height()*fZoomRate);  
+					CRect rcDst(0, 0, cx, cy); //目标大小  
+					rcDst.OffsetRect((rcClient.Width()-cx)/2, (rcClient.Height()-cy)/2);//居中  
+					//rcDst.OffsetRect((rcSrc.Width()-cx)/2, (rcSrc.Height()-cy)/2);//居中  
+
+					//绘图  
+					m_logoImage_.Draw(pDC->m_hDC, rcDst, rcSrc);  
+				}  
+			}  
+
+			EndPaint(&ps); 
+			ret = S_OK;
+		}
+		break;
+	}
+
+	return CStatic::WindowProc(message, wParam, lParam);
+}
 
 void GxxGmStatic::OnMouseLeave()
 {

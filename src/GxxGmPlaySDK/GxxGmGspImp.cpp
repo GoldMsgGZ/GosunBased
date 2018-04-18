@@ -11,7 +11,7 @@ void CALLBACK _ExceptionCallback(GOSUN_HANDLE pHandle, GOSUN_ENUM_EXCEPTION_TYPE
 	switch (type)
 	{
 	case SDK_SERV_DISCONNECT:
-		gsp_->notifer_->PlayerStateNotifer();
+		//gsp_->notifer_->PlayerStateNotifer();
 		break;
 	case SDK_STREAM_CLOSED:
 		break;

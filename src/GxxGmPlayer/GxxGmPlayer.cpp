@@ -148,3 +148,8 @@ void GxxGmPlayer::MediaFrameNotiferEx(AVMediaType type, AVFrame *data)
 
 	//av_frame_free(&av_frame);
 }
+
+void GxxGmPlayer::PlayerStateNotifer(enum GxxGmPlayState state)
+{
+
+}

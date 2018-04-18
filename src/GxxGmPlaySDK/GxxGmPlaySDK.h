@@ -30,6 +30,7 @@ public:
 	virtual void StreamParamNotiferEx(AVCodecContext *video_codec_context, AVCodecContext *audio_codec_context);
 	virtual void MediaFrameNotifer(/*StruGSMediaFrameData*/void *media_frame_data);
 	virtual void MediaFrameNotiferEx(AVMediaType type, AVFrame *data);
+	virtual void PlayerStateNotifer(enum GxxGmPlayState state);
 
 private:
 	GxxGmGspImp *gsp_;
