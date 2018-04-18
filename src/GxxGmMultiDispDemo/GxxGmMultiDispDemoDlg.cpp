@@ -60,7 +60,10 @@ void CGxxGmMultiDispDemoDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO_LIST_COUNT, m_cDispLists);
 	DDX_Control(pDX, IDC_EDIT_WIDTH, m_cScreenWidth);
 	DDX_Control(pDX, IDC_EDIT_HEIGHT, m_cScreenHeight);
-	DDX_Control(pDX, IDC_EDIT2, m_cUrl);
+	DDX_Control(pDX, IDC_EDIT_URL, m_cUrl);
+	DDX_Control(pDX, IDC_EDIT_PLAY_PARAM, m_cPlayParam);
+	DDX_Control(pDX, IDC_EDIT_DISP_INDEX, m_cDispIndex);
+	DDX_Control(pDX, IDC_EDIT_TEXT, m_cStateText);
 }
 
 BEGIN_MESSAGE_MAP(CGxxGmMultiDispDemoDlg, CDialog)
@@ -73,6 +76,10 @@ BEGIN_MESSAGE_MAP(CGxxGmMultiDispDemoDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_PLAY, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnPlay)
 	ON_BN_CLICKED(IDC_BTN_PAUSE, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnPause)
 	ON_BN_CLICKED(IDC_BTN_STOP, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnStop)
+	ON_BN_CLICKED(IDC_BTN_RESUME, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnResume)
+	ON_BN_CLICKED(IDC_BTN_GET_PLAYPARAM, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnGetPlayparam)
+	ON_BN_CLICKED(IDC_BTN_GET_URL, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnGetUrl)
+	ON_BN_CLICKED(IDC_BTN_GET_PLAYPARAM3, &CGxxGmMultiDispDemoDlg::OnBnClickedBtnGetPlayparam3)
 END_MESSAGE_MAP()
 
 
@@ -132,7 +139,8 @@ BOOL CGxxGmMultiDispDemoDlg::OnInitDialog()
 
 	CWnd *pCwnd = GetDlgItem(IDC_STATIC_SCREEN);
 	CRect rect;
-	pCwnd->GetWindowRect(&rect);
+	//pCwnd->GetWindowRect(&rect);
+	pCwnd->GetClientRect(&rect);
 
 	TCHAR string_width[4096] = {0};
 	TCHAR string_height[4096] = {0};
@@ -143,7 +151,18 @@ BOOL CGxxGmMultiDispDemoDlg::OnInitDialog()
 
 	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/t.mp4"));
 
-	gxx_gm_multi_disp_.Initialize((void*)pCwnd->GetSafeHwnd());
+	CButton *realmode_checkbox = (CButton *)GetDlgItem(IDC_CHECK_REALMODE);
+	realmode_checkbox->SetCheck(1);
+
+	//gxx_gm_multi_disp_.Initialize((void*)pCwnd->GetSafeHwnd());
+	
+	// 创建一个子窗口贴在控件上
+	multi_disp_screen_.Create(IDD_DLG_MAINSCREEN, pCwnd);
+	multi_disp_screen_.MoveWindow(&rect);
+	multi_disp_screen_.ShowWindow(TRUE);
+
+	gxx_gm_multi_disp_.Initialize((void*)multi_disp_screen_.GetSafeHwnd(), 4, 4);
+
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -230,20 +249,149 @@ void CGxxGmMultiDispDemoDlg::OnBnClickedButton1()
 
 void CGxxGmMultiDispDemoDlg::OnBnClickedBtnPlay()
 {
+	// 取URL
 	CString url;
 	m_cUrl.GetWindowText(url);
 
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
 	USES_CONVERSION;
-	const char * play_info = "{ deviceid : \"00000000000000000001\", userid : \"000001\", username : \"JuZhang\" }";
-	int errCode = gxx_gm_multi_disp_.Play(T2A(url.GetBuffer(0)), play_info);
+	// 取播放参数
+	CString param;
+	m_cPlayParam.GetWindowText(param);
+	const char * play_info = T2A(param.GetBuffer(0));
+
+	// 取播放模式
+	bool is_real = true;
+	CButton *realmode_checkbox = (CButton *)GetDlgItem(IDC_CHECK_REALMODE);
+	if (realmode_checkbox->GetCheck() == 0)
+		is_real = false;
+
+	// 调用播放
+	int errCode = gxx_gm_multi_disp_.Play(T2A(url.GetBuffer(0)), play_info, disp_id, is_real);
 }
 
 void CGxxGmMultiDispDemoDlg::OnBnClickedBtnPause()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
+	gxx_gm_multi_disp_.Pause(disp_id);
 }
 
 void CGxxGmMultiDispDemoDlg::OnBnClickedBtnStop()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
+	gxx_gm_multi_disp_.Stop(disp_id);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnResume()
+{
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
+	gxx_gm_multi_disp_.Resume(disp_id);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnGetPlayparam()
+{
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
+	USES_CONVERSION;
+	std::string play_param = gxx_gm_multi_disp_.GetPlayInfo(disp_id);
+	CString result;
+	result.Format(_T("播放参数为：%s"), A2T(play_param.c_str()));
+
+	CString state_text;
+	m_cStateText.GetWindowText(state_text);
+	state_text.Append(_T("\r\n"));
+	state_text.Append(result);
+	m_cStateText.SetWindowText(state_text);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnGetUrl()
+{
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
+	USES_CONVERSION;
+	std::string url = gxx_gm_multi_disp_.GetUrl(disp_id);
+	CString result;
+	result.Format(_T("播放URL为：%s"), A2T(url.c_str()));
+
+	CString state_text;
+	m_cStateText.GetWindowText(state_text);
+	state_text.Append(_T("\r\n"));
+	state_text.Append(result);
+	m_cStateText.SetWindowText(state_text);
+}
+
+void CGxxGmMultiDispDemoDlg::OnBnClickedBtnGetPlayparam3()
+{
+	// 取子窗口ID
+	int disp_id = -1;
+	CButton *use_id_checkbox = (CButton *)GetDlgItem(IDC_CHECK_USE_INDEX);
+	if (use_id_checkbox->GetCheck() == 1)
+	{
+		CString id;
+		m_cDispIndex.GetWindowText(id);
+		disp_id = _ttoi(id.GetBuffer(0));
+	}
+
+	USES_CONVERSION;
+	std::string deviceid = gxx_gm_multi_disp_.GetDeviceId(disp_id);
+	CString result;
+	result.Format(_T("设备ID为：%s"), A2T(deviceid.c_str()));
+
+	CString state_text;
+	m_cStateText.GetWindowText(state_text);
+	state_text.Append(_T("\r\n"));
+	state_text.Append(result);
+	m_cStateText.SetWindowText(state_text);
 }

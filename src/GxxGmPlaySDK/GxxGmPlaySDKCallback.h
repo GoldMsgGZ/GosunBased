@@ -14,6 +14,18 @@ extern "C" {
 };
 #endif
 
+enum GxxGmPlayState
+{
+	GxxGmStateReady,
+	GxxGmStatePlaying,
+	GxxGmStatePause,
+	GxxGmStateServerTerminated,
+	GxxGmStatePlayEnd,
+	GxxGmStateStreamTimeOut,
+	GxxGmStateClientClosed,
+	GxxGmStateServerRefused
+};
+
 class GxxGmPlaySDKNotifer
 {
 public:
@@ -27,6 +39,8 @@ public:
 	
 	// 此通知在读取到视频帧的时候上送上来，最终会调用FFmpeg进行解码，使用SDL2进行渲染播放
 	virtual void MediaFrameNotiferEx(AVMediaType type, AVFrame *data) = 0;
+
+	virtual void PlayerStateNotifer(enum GxxGmPlayState state) = 0;
 };
 
 class GxxGmPlayerNotifer
@@ -42,6 +56,8 @@ public:
 
 	// 此通知在读取到视频帧的时候上送上来，最终会调用FFmpeg进行解码，使用SDL2进行渲染播放
 	virtual void MediaFrameNotiferEx(AVMediaType type, AVFrame *data) = 0;
+
+	virtual void PlayerStateNotifer(enum GxxGmPlayState state) = 0;
 };
 
 #endif//_GxxGmPlaySDKCallback_H_

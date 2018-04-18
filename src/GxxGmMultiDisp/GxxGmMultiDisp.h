@@ -130,6 +130,13 @@ public:
 	int Stop(int disp_index);
 
 public:
+	std::string GetPlayInfo(int disp_index);
+	std::string GetUrl(int disp_index);
+	std::string GetDeviceId(int disp_index);
+
+	void SetDeviceId(std::string device_id, int disp_index);
+
+public:
 	int screen_width_;
 	int screen_height_;
 	void* pCwnd_;

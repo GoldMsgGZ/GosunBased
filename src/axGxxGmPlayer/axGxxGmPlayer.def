@@ -1,0 +1,9 @@
+; axGxxGmPlayer.def : 定义模块参数。
+
+LIBRARY      "axGxxGmPlayer.OCX"
+
+EXPORTS
+	DllCanUnloadNow     PRIVATE
+	DllGetClassObject   PRIVATE
+	DllRegisterServer   PRIVATE
+	DllUnregisterServer PRIVATE

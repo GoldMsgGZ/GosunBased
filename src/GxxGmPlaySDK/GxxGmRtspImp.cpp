@@ -30,6 +30,8 @@ void StateChangedCallback(RtspClientState state, void* clientData)
 		break;
 	case Ready:
 		OutputDebugStringA("Ready\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStateReady);
+
 		{
 			// 只有当返回的state为Ready时才能后续对媒体源请求的操作
 			// 只有当获取媒体源描述信息成功返回返回,对媒体源请求的操作才能成功，否则所有的操作请求都无效
@@ -48,25 +50,32 @@ void StateChangedCallback(RtspClientState state, void* clientData)
 		break;
 	case Playing:
 		OutputDebugStringA("Playing\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStatePlaying);
 		break;
 	case Pause:
 		OutputDebugStringA("Pause\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStatePause);
 		break;
 	case ServerTerminated:
 		OutputDebugStringA("ServerTerminated\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStateServerTerminated);
 		break;
 	case PlayEnd:
 		// 这里应当触发停止操作，或者发送播放结束通知
 		OutputDebugStringA("PlayEnd\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStatePlayEnd);
 		break;
 	case StreamTimeout:
 		OutputDebugStringA("StreamTimeout\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStateStreamTimeOut);
 		break;
 	case ClientClosed:
 		OutputDebugStringA("ClientClosed\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStateClientClosed);
 		break;
 	case ServerRefused:
 		OutputDebugStringA("ServerRefused\n");
+		rtsp_client->notifer_->PlayerStateNotifer(GxxGmPlayState::GxxGmStateServerRefused);
 		break;
 	case OnvifUploadUnsupport:
 		OutputDebugStringA("OnvifUploadUnsupport\n");

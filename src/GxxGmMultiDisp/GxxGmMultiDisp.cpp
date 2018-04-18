@@ -62,7 +62,7 @@ void GxxGmDisp::ShowDispWindow(int left, int top, int right, int bottom, bool is
 
 		pCwnd->MoveWindow(&rect);
 		pCwnd->ShowWindow(SW_SHOW);
-		pCwnd->SetWindowText(_T("This is a display screen ..."));
+		//pCwnd->SetWindowText(_T("This is a display screen ..."));
 	}
 	else
 		pCwnd->ShowWindow(SW_HIDE);
@@ -189,7 +189,8 @@ int GxxGmMultiDisp::Initialize(void* screen_window, int disp_rows /* = 1 */, int
 
 			//CStatic *disp = new CStatic();
 			GxxGmStatic *disp = new GxxGmStatic();
-			disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+			disp->Create(_T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+			disp->Set_BackColor(RGB(23, 23, 23));
 
 			// 将显示对象赋值给子窗口，然后显示子窗口
 			gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
@@ -250,7 +251,8 @@ int GxxGmMultiDisp::ReDivision(int disp_rows /* = 1 */, int disp_lists /* = 1 */
 			{
 				//CStatic *disp = new CStatic();
 				GxxGmStatic *disp = new GxxGmStatic();
-				disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+				disp->Create(_T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+				disp->Set_BackColor(RGB(23, 23, 23));
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
 				gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
@@ -307,7 +309,8 @@ int GxxGmMultiDisp::ChangeScreenSize(void* screen_window)
 			{
 				//CStatic *disp = new CStatic();
 				GxxGmStatic *disp = new GxxGmStatic();
-				disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+				disp->Create(_T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+				disp->Set_BackColor(RGB(23, 23, 23));
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
 				gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
@@ -360,7 +363,8 @@ int GxxGmMultiDisp::ChangeScreenSize(int screen_window_width, int screen_window_
 			{
 				//CStatic *disp = new CStatic();
 				GxxGmStatic *disp = new GxxGmStatic();
-				disp->Create(_T("GxxGmPlayer"), WS_CHILD | SS_NOTIFY | SS_SUNKEN, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+				disp->Create(_T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+				disp->Set_BackColor(RGB(23, 23, 23));
 
 				// 将显示对象赋值给子窗口，然后显示子窗口
 				gxx_gm_disp_[index].SetDispControl(disp->GetSafeHwnd(), current_disp_left, current_disp_top, current_disp_right, current_disp_bottom);
@@ -462,4 +466,24 @@ int GxxGmMultiDisp::Stop(int disp_index)
 	gxx_gm_disp_[disp_index].Stop();
 
 	return errCode;
+}
+
+std::string GxxGmMultiDisp::GetUrl(int disp_index)
+{
+	return gxx_gm_disp_[disp_index].GetUrl();
+}
+
+std::string GxxGmMultiDisp::GetPlayInfo(int disp_index)
+{
+	return gxx_gm_disp_[disp_index].GetPlayInfo();
+}
+
+std::string GxxGmMultiDisp::GetDeviceId(int disp_index)
+{
+	return gxx_gm_disp_[disp_index].GetDeviceId();
+}
+
+void GxxGmMultiDisp::SetDeviceId(std::string device_id, int disp_index)
+{
+	gxx_gm_disp_[disp_index].SetDeviceId(device_id);
 }

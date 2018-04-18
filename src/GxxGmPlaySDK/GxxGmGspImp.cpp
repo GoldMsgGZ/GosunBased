@@ -6,7 +6,18 @@
 
 void CALLBACK _ExceptionCallback(GOSUN_HANDLE pHandle, GOSUN_ENUM_EXCEPTION_TYPE type, void* pExceptionInfo, void* userData)
 {
+	GxxGmGspImp *gsp_ = (GxxGmGspImp *)userData;
 
+	switch (type)
+	{
+	case SDK_SERV_DISCONNECT:
+		gsp_->notifer_->PlayerStateNotifer();
+		break;
+	case SDK_STREAM_CLOSED:
+		break;
+	default:
+		break;
+	}
 }
 
 void CALLBACK _StreamCallback(long lHandle, FRAME_HEADER header, char *pData, long nSize, void* userData)

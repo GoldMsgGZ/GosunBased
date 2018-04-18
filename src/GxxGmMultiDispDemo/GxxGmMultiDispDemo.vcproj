@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GxxGmMultiDispScreen.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -228,6 +232,10 @@
 			</File>
 			<File
 				RelativePath=".\GxxGmMultiDispDemoDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GxxGmMultiDispScreen.h"
 				>
 			</File>
 			<File
