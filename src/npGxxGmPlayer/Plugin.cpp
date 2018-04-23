@@ -218,15 +218,15 @@ bool ConstructablePluginObject::Construct(const NPVariant *args, uint32_t argCou
 // NPAPI 插件对 Javascript 导出接口定义
 
 JsParams js_params[] = {
-	//{ 0,	NULL,	"GetVersion",					NPAPI_GetVersion,					JsFuncType_Interface	},
-	//{ 1,	NULL,	"GetPluginDescript",			NPAPI_GetPluginDescript,			JsFuncType_Interface	},
-	//{ 2,	NULL,	"JsCallback",					NPAPI_JsCallback,					JsFuncType_Property		},
-	//{ 3,	NULL,	"TestJsCallback",				NPAPI_TestJsCallback,				JsFuncType_Interface	},
-	//{ 4,	NULL,	"InitializeMediaPlayer",		NPAPI_InitializeMediaPlayer,		JsFuncType_Interface	},
-	//{ 5,	NULL,	"DestroyMediaPlayer",			NPAPI_DestroyMediaPlayer,			JsFuncType_Interface	},
-	//{ 6,	NULL,	"MediaPlayerPlayByLocalPath",	NPAPI_MediaPlayerPlayByLocalPath,	JsFuncType_Interface	},
-	//{ 7,	NULL,	"MediaPlayerPlayByUrl",			NPAPI_MediaPlayerPlayByUrl,			JsFuncType_Interface	},
-	//{ 8,	NULL,	"MediaPlayerStop",				NPAPI_MediaPlayerStop,				JsFuncType_Interface	},
+	{ 0,	NULL,	"GetVersion",					NPAPI_GetVersion,					JsFuncType_Interface	},
+	{ 1,	NULL,	"Initialize",					NPAPI_Initialize,					JsFuncType_Interface	},
+	{ 2,	NULL,	"SetDispCount",					NPAPI_SetDispCount,					JsFuncType_Interface	},
+	{ 3,	NULL,	"Play",							NPAPI_Play,							JsFuncType_Interface	},
+	{ 4,	NULL,	"Pause",						NPAPI_Pause,						JsFuncType_Interface	},
+	{ 5,	NULL,	"Resume",						NPAPI_Resume,						JsFuncType_Interface	},
+	{ 6,	NULL,	"Stop",							NPAPI_Stop,							JsFuncType_Interface	},
+	{ 7,	NULL,	"GetPlayInfo",					NPAPI_GetPlayInfo,					JsFuncType_Interface	},
+	{ 8,	NULL,	"GetPlayingURL",				NPAPI_GetPlayingURL,				JsFuncType_Interface	},
 	{ -1,	NULL,	"",								NULL,								JsFuncType_None			}
 };
 

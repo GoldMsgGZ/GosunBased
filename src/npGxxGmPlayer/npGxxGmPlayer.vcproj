@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\NPAPI\base\public;.\NPAPI\sdk\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_WIN;_X86_"
+				AdditionalIncludeDirectories=".\NPAPI\base\public;.\NPAPI\sdk\include;..\GxxGmPlayer;..\GxxGmPlaySDK;..\ext\RtspStack;..\ext\GSMediaPlayer;..\ext\FFMpeg\include;..\ext\SDL2\include;..\GxxGmPlayBase"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_WIN;_X86_;__STDC_CONSTANT_MACROS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GxxGmPlayBase.lib"
+				AdditionalDependencies="GxxGmPlayBase.lib GxxGmPlayer.lib GxxGmPlaySDK.lib GxxGmMultiDisp.lib GSFoundation.lib GSServerSDK.lib GSRtspClient.lib GSMediaPlayer.lib avformat.lib avcodec.lib avutil.lib swscale.lib swresample.lib SDL2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\Debug"
+				AdditionalLibraryDirectories="..\Debug;..\ext\RtspStack;..\ext\GSStreamServerSDK;..\ext\GSMediaPlayer;..\ext\FFMpeg\lib\x86;..\ext\SDL2\lib\x86;..\ext\Foundation"
 				ModuleDefinitionFile="npGxxGmPlayer.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -244,6 +244,11 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\npGxxGmPlayer.htm"
+			DeploymentContent="true"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

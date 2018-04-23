@@ -150,7 +150,26 @@ int GxxGmHttpImp::Play()
 {
 	int errCode = 0;
 
-	// 启动线程，读出编码包，将编码包数据传到上层
+	//// 启动线程，读出编码包，将编码包数据传到上层
+	//if (control_thread_.IsRunning())
+	//{
+	//	// 线程正在运行，恢复线程
+	//	is_paused_ = false;
+	//}
+
+	//if (read_stream_thread_.IsRunning())
+	//{
+	//	// 线程正在运行，恢复线程
+	//	is_paused_ = false;
+	//}
+	//else
+	//{
+	//	bool ret = read_stream_thread_.Start(_ReadStreamThreadCallback, this);
+	//	if (!ret)
+	//	{
+	//		GxxGmPlayBase::DebugStringOutput("流读取线程启动失败！\n");
+	//	}
+	//}
 	DWORD thread_exit_code = 0;
 	GetExitCodeThread(read_stream_thread_handle_, &thread_exit_code);
 	if (thread_exit_code == STILL_ACTIVE)

@@ -148,4 +148,6 @@ public:
 	GxxGmDisp gxx_gm_disp_[MAX_DISP_COUNT];
 };
 
+extern GxxGmMultiDisp gxx_gm_multi_disp_player_;
+
 #endif//_GxxGmMultiDisp_H_

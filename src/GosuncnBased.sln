@@ -21,6 +21,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmPlayer", "GxxGmPlayer\
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.浏览器插件", "5.浏览器插件", "{068ED2E6-0927-4884-8D69-67560C9F637A}"
+	ProjectSection(SolutionItems) = preProject
+		浏览器插件接口说明.md = 浏览器插件接口说明.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.多窗口管理", "3.多窗口管理", "{C8A97697-30F8-4974-AD60-3281A3E3609D}"
 EndProject

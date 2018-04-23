@@ -19,8 +19,12 @@ public:
 	void Close();
 
 public:
+	static void GS_CALLBACK _ReadStreamThreadCallback(GSThread &thread, void *pThreadData);
 	GSThread read_stream_thread_;
+
+	static void GS_CALLBACK _ControlThreadCallback(GSThread &thread, void *pThreadData);
 	GSThread control_thread_;
+
 	static DWORD WINAPI ReadStreamThread(LPVOID lpParam);
 	static DWORD WINAPI ControlThread(LPVOID lpParam);
 

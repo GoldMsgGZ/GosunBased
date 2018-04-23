@@ -151,5 +151,5 @@ void GxxGmPlayer::MediaFrameNotiferEx(AVMediaType type, AVFrame *data)
 
 void GxxGmPlayer::PlayerStateNotifer(enum GxxGmPlayState state)
 {
-
+	// 收到状态后执行相关操作	
 }
