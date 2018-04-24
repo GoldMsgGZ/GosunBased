@@ -214,14 +214,6 @@
 					RelativePath=".\GxxGmHttpImp.h"
 					>
 				</File>
-				<File
-					RelativePath=".\GxxGmHttpImpEx.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GxxGmHttpImpEx.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="RTMP"
