@@ -149,7 +149,9 @@ BOOL CGxxGmMultiDispDemoDlg::OnInitDialog()
 	m_cScreenWidth.SetWindowText(string_width);
 	m_cScreenHeight.SetWindowText(string_height);
 
-	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/t.mp4"));
+	m_cUrl.SetWindowText(_T("http://127.0.0.1/live/15s.mp4"));
+
+	m_cPlayParam.SetWindowText(_T("{\"deviceid\":\"00000000000000000001\",\"userid\":\"000001\",\"username\":\"ÇñÒµÐË\"}"));
 
 	CButton *realmode_checkbox = (CButton *)GetDlgItem(IDC_CHECK_REALMODE);
 	realmode_checkbox->SetCheck(1);

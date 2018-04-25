@@ -21,6 +21,7 @@ public:
 	int Open(const char *url, bool is_real);
 	int Play();
 	int Pause();
+	int Resume();
 	int Stop();
 	void Close();
 

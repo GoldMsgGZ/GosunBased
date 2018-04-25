@@ -6,8 +6,8 @@
 #include "..\ext\Foundation\GSThreadPool.h"
 #include <iostream>
 
-//#define _THREAD_DEMO_
-#define _THREAD_POOL_DEMO_
+#define _THREAD_DEMO_
+//#define _THREAD_POOL_DEMO_
 
 //
 // 线程函数
@@ -39,6 +39,14 @@ int main(int argc, const char *argv[])
 
 	// 运行5秒后，准备退出
 	Sleep(5000);
+	first_thread.Suspend();
+	Sleep(5000);
+	bool bret = first_thread.IsRunning();
+	bret = first_thread.IsPause();
+	first_thread.Resume();
+	Sleep(5000);
+	bret = first_thread.IsRunning();
+	bret = first_thread.IsPause();
 	first_thread.Stop();
 	first_thread.Join();
 

@@ -133,6 +133,29 @@ int GxxGmPlaySDK::Pause()
 	return errCode;
 }
 
+int GxxGmPlaySDK::Resume()
+{
+	int errCode = 0;
+
+	switch (protocol_type_)
+	{
+	case PROTOCOL_TYPE_GSP:
+		errCode = gsp_->Resume();
+		break;
+	case PROTOCOL_TYPE_RTSP:
+		errCode = rtsp_->Resume();
+		break;
+	case PROTOCOL_TYPE_HTTP:
+		errCode = http_->Resume();
+		break;
+	default:
+		errCode = -6002;
+		break;
+	}
+
+	return errCode;
+}
+
 int GxxGmPlaySDK::Stop()
 {
 	int errCode = 0;

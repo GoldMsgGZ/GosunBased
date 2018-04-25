@@ -16,6 +16,7 @@ public:
 	int Open(const char *url);
 	int Play();
 	int Pause();
+	int Resume();
 	int Stop();
 	void Close();
 

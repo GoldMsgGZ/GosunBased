@@ -151,5 +151,34 @@ void GxxGmPlayer::MediaFrameNotiferEx(AVMediaType type, AVFrame *data)
 
 void GxxGmPlayer::PlayerStateNotifer(enum GxxGmPlayState state)
 {
-	// 收到状态后执行相关操作	
+	// 收到状态后执行相关操作
+	switch (state)
+	{
+	case GxxGmStateReady:
+		break;
+	case GxxGmStatePlaying:
+		break;
+	case GxxGmStatePause:
+		break;
+	case GxxGmStateServerTerminated:
+		break;
+	case GxxGmStatePlayEnd:
+		// 播放完成了，我们调用停止接口
+		Stop();
+		break;
+	case GxxGmStateStreamTimeOut:
+		// 流超时了，我们停止播放
+		Stop();
+		break;
+	case GxxGmStateClientClosed:
+		// 客户端主动关闭的，我们停止播放
+		Stop();
+		break;
+	case GxxGmStateServerRefused:
+		// 服务器主动拒绝了，我们停止播放
+		Stop();
+		break;
+	default:
+		break;
+	}
 }

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="npGxxGmPlayer"
-	ProjectGUID="{220DBDA8-12A9-4B9E-8276-C73CCD96C02E}"
-	RootNamespace="npGxxGmPlayer"
+	Name="npDemo"
+	ProjectGUID="{1B7DC67A-B98A-438A-9654-FB6C1E2B0866}"
+	RootNamespace="npDemo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\NPAPI\base\public;.\NPAPI\sdk\include;..\GxxGmPlayer;..\GxxGmPlaySDK;..\ext\RtspStack;..\ext\GSMediaPlayer;..\ext\FFMpeg\include;..\ext\SDL2\include;..\GxxGmPlayBase"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_WIN;_X86_;__STDC_CONSTANT_MACROS"
+				AdditionalIncludeDirectories=".\NPAPI\base\public;.\NPAPI\sdk\include;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NPDEMO_EXPORTS;XP_WIN;_X86_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,10 +61,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GxxGmPlayBase.lib GxxGmPlayer.lib GxxGmPlaySDK.lib GxxGmMultiDisp.lib GSFoundation.lib GSServerSDK.lib GSRtspClient.lib GSMediaPlayer.lib avformat.lib avcodec.lib avutil.lib swscale.lib swresample.lib SDL2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\Debug;..\ext\RtspStack;..\ext\GSStreamServerSDK;..\ext\GSMediaPlayer;..\ext\FFMpeg\lib\x86;..\ext\SDL2\lib\x86;..\ext\Foundation"
-				ModuleDefinitionFile="npGxxGmPlayer.def"
+				ModuleDefinitionFile="npDemo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -95,7 +93,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -118,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NPDEMO_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -137,7 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				ModuleDefinitionFile="npGxxGmPlayer.def"
+				ModuleDefinitionFile="npDemo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -175,56 +173,16 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-		</Filter>
-		<Filter
-			Name="头文件"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\resource.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="资源文件"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-			<File
-				RelativePath=".\npGxxGmPlayer.rc"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="插件接口业务逻辑模块"
-			>
-			<Filter
-				Name="Javascript接口"
-				>
-				<File
-					RelativePath=".\npJsInterface.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\npJsInterface.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="业务功能模块"
-				>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="NPAPI框架"
-			>
 			<File
 				RelativePath=".\np_entry.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\npGxxGmPlayer.def"
+				RelativePath=".\npDemo.def"
+				>
+			</File>
+			<File
+				RelativePath=".\npJsInterface.cpp"
 				>
 			</File>
 			<File
@@ -239,16 +197,35 @@
 				RelativePath=".\Plugin.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="头文件"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath=".\npJsInterface.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Plugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
 		</Filter>
-		<File
-			RelativePath=".\npGxxGmPlayer.htm"
-			DeploymentContent="true"
+		<Filter
+			Name="资源文件"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</File>
+			<File
+				RelativePath=".\npDemo.rc"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

@@ -1,7 +1,7 @@
 #pragma once
 #include "pluginbase.h"
 #include "npJsInterface.h"
-#include "..\GxxGmMultiDisp\GxxGmMultiDisp.h"
+//#include "..\GxxGmMultiDisp\GxxGmMultiDisp.h"
 
 
 class CPlugin :

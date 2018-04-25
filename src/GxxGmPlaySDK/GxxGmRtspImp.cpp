@@ -256,6 +256,14 @@ int GxxGmRtspImp::Pause()
 		return -1;
 }
 
+int GxxGmRtspImp::Resume()
+{
+	if (rtsp_client_->Play())
+		return 0;
+	else
+		return -1;
+}
+
 int GxxGmRtspImp::Stop()
 {
 	int errCode = 0;

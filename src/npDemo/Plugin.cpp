@@ -198,7 +198,7 @@ DECLARE_NPOBJECT_CLASS_WITH_BASE(ConstructablePluginObject, AllocateConstructabl
 
 bool ConstructablePluginObject::Construct(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	GxxGmPlayBase::DebugStringOutput("Creating new ConstructablePluginObject!\n");
+	//GxxGmPlayBase::DebugStringOutput("Creating new ConstructablePluginObject!\n");
 
 	NPObject *myobj = NPN_CreateObject(mNpp, GET_NPOBJECT_CLASS(ConstructablePluginObject));
 	if (!myobj)
@@ -249,7 +249,7 @@ ScriptablePluginObject::ScriptablePluginObject(NPP npp)
 	int index = 0;
 	while(js_params[index].index_ != -1)
 	{
-		GxxGmPlayBase::DebugStringOutput("ScriptablePluginObject::ScriptablePluginObject() >>> Map %s Js interface...\n", js_params[index].interfaceName_);
+		//GxxGmPlayBase::DebugStringOutput("ScriptablePluginObject::ScriptablePluginObject() >>> Map %s Js interface...\n", js_params[index].interfaceName_);
 		js_params[index].npId_ = NPN_GetStringIdentifier(js_params[index].interfaceName_);
 		++index;
 	}
@@ -363,7 +363,7 @@ bool ScriptablePluginObject::Invoke(NPIdentifier name, const NPVariant *args, ui
 
 bool ScriptablePluginObject::InvokeDefault(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	GxxGmPlayBase::DebugStringOutput("ScriptablePluginObject default method called!\n");
+	//GxxGmPlayBase::DebugStringOutput("ScriptablePluginObject default method called!\n");
 
 	const char* outString = "default method return val";
 	char* npOutString = (char *)NPN_MemAlloc(strlen(outString) + 1);
@@ -464,7 +464,7 @@ NPObject * CPlugin::GetScriptableObject()
 
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:%d, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+	//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:%d, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 
 	switch (msg)
 	{

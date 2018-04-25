@@ -141,6 +141,12 @@ int GxxGmGspImp::Pause()
 	return errCode;
 }
 
+int GxxGmGspImp::Resume()
+{
+	is_paused_ = false;
+	return 0;
+}
+
 int GxxGmGspImp::Stop()
 {
 	int errCode = 0;

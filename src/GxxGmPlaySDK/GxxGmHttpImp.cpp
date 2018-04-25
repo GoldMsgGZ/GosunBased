@@ -28,9 +28,7 @@ extern "C" {
 
 GxxGmHttpImp::GxxGmHttpImp(GxxGmPlaySDKNotifer *notifer)
 : notifer_(notifer)
-, is_paused_(false)
-, need_stop_(false)
-, read_stream_thread_handle_(NULL)
+, framerate_event_handle_(NULL)
 , format_ctx_(NULL)
 , video_stream_index_(-1)
 , audio_stream_index_(-1)
@@ -150,63 +148,33 @@ int GxxGmHttpImp::Play()
 {
 	int errCode = 0;
 
-	//// 启动线程，读出编码包，将编码包数据传到上层
-	//if (control_thread_.IsRunning())
-	//{
-	//	// 线程正在运行，恢复线程
-	//	is_paused_ = false;
-	//}
-
-	//if (read_stream_thread_.IsRunning())
-	//{
-	//	// 线程正在运行，恢复线程
-	//	is_paused_ = false;
-	//}
-	//else
-	//{
-	//	bool ret = read_stream_thread_.Start(_ReadStreamThreadCallback, this);
-	//	if (!ret)
-	//	{
-	//		GxxGmPlayBase::DebugStringOutput("流读取线程启动失败！\n");
-	//	}
-	//}
-	DWORD thread_exit_code = 0;
-	GetExitCodeThread(read_stream_thread_handle_, &thread_exit_code);
-	if (thread_exit_code == STILL_ACTIVE)
-	{
-		// 线程正在运行，那么则将暂停标志位调整为关闭
-		// 这里用系统事件可能会更好
-		GxxGmPlayBase::DebugStringOutput("流读取线程正在运行，将暂停标记关闭！\n");
-		is_paused_ = false;
-	}
-	else
-	{
-		// 不存在线程，那么我们就新建一个线程来处理相关问题
-		GxxGmPlayBase::DebugStringOutput("未检测到流读取线程，启动线程！\n");
+	// 检查是否创建了同步事件，如果没有就创建事件
+	if (framerate_event_handle_ == NULL)
 		framerate_event_handle_ = CreateEvent(NULL, FALSE, FALSE, NULL);
-		if (framerate_event_handle_ == NULL)
-		{
-			errCode = GetLastError();
-			return errCode;
-		}
 
-		control_thread_handle_ = CreateThread(NULL, 0, ControlThread, this, 0, NULL);
-		if (control_thread_handle_ == NULL)
+	// 检查控制线程是否在运行，如果没有运行，则
+	if (!control_thread_.IsRunning())
+	{
+		bool bret = control_thread_.Start(_ControlThreadCallback, this);
+		if (!bret)
 		{
-			errCode = GetLastError();
-			return errCode;
-		}
-
-		read_stream_thread_handle_ = CreateThread(NULL, 0, ReadStreamThread, this, 0, NULL);
-		if (read_stream_thread_handle_ == NULL)
-		{
-			errCode = GetLastError();
-			TerminateThread(control_thread_handle_, 4);
-			return errCode;
+			GxxGmPlayBase::DebugStringOutput("启动控制线程失败！...\n");
+			Stop();
+			return -1;
 		}
 	}
 
-	need_stop_ = false;
+	if (!read_stream_thread_.IsRunning())
+	{
+		bool bret = read_stream_thread_.Start(_ReadStreamThreadCallback, this);
+		if (!bret)
+		{
+			GxxGmPlayBase::DebugStringOutput("启动视频流读取线程失败！...\n");
+			Stop();
+			return -1;
+		}
+	}
+
 	return 0;
 }
 
@@ -214,15 +182,35 @@ int GxxGmHttpImp::Pause()
 {
 	// 暂停读取编码包
 	GxxGmPlayBase::DebugStringOutput("流读取线程正在运行，将暂停标记开启！\n");
-	is_paused_ = true;
-	need_stop_ = false;
+	read_stream_thread_.Suspend();
+	return 0;
+}
+
+int GxxGmHttpImp::Resume()
+{
+	read_stream_thread_.Resume();
 	return 0;
 }
 
 int GxxGmHttpImp::Stop()
 {
 	// 停止读取数据包，通知退出线程
-	need_stop_ = true;
+	read_stream_thread_.Stop();
+	read_stream_thread_.Join();
+
+	control_thread_.Stop();
+	control_thread_.Join();
+
+	CloseHandle(framerate_event_handle_);
+	framerate_event_handle_ = NULL;
+
+	avcodec_close(((AVCodecContext*)video_codec_ctx_));
+	avcodec_close(((AVCodecContext*)audio_codec_ctx_));
+	avformat_close_input(((AVFormatContext **)&format_ctx_));
+	video_codec_ctx_ = NULL;
+	audio_codec_ctx_ = NULL;
+	format_ctx_ = NULL;
+
 	return 0;
 }
 
@@ -231,9 +219,147 @@ void GxxGmHttpImp::Close()
 
 }
 
-DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
+//DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
+//{
+//	GxxGmHttpImp *http_ = (GxxGmHttpImp *)lpParam;
+//	GxxGmPlayBase::DebugStringOutput("已启动媒体解码线程...\n");
+//
+//#ifdef USE_H264BSF
+//	AVBitStreamFilterContext *h264_bit_stream_filter_context = av_bitstream_filter_init("h264_mp4toannexb");
+//#endif
+//
+//	// 这里开始组织
+//	int index = 0;
+//	AVPacket av_packet;
+//	while (true)
+//	{
+//		GxxGmPlayBase::DebugStringOutput("准备读取媒体帧...\n");
+//
+//		// 这里使用了一个非常低劣的手段来实现暂停
+//		while (true)
+//		{
+//			if (http_->is_paused_)
+//			{
+//				if (http_->need_stop_)
+//					break;
+//
+//				Sleep(1);
+//				continue;
+//			}
+//			else
+//				break;
+//		}
+//
+//		if (http_->need_stop_)
+//			break;
+//
+//		// 这里需要有一个事件，或者锁来进行暂停/恢复的同步处理
+//		int errCode = av_read_frame((AVFormatContext*)http_->format_ctx_, &av_packet);
+//		if (errCode != 0)
+//			break;
+//
+//		StruGSMediaFrameData media_frame;
+//		media_frame.PresentationTimestamp = av_packet.pts;
+//
+//		AVFrame *av_frame = av_frame_alloc();
+//		if (av_packet.stream_index == http_->video_stream_index_)
+//		{
+//			WaitForSingleObject(http_->framerate_event_handle_, INFINITE);
+//
+//#ifdef USE_H264BSF
+//			av_bitstream_filter_filter(h264_bit_stream_filter_context, (AVCodecContext*)http_->video_codec_ctx_, NULL, &av_packet.data, &av_packet.size, av_packet.data, av_packet.size, 0);
+//#endif
+//
+//#ifdef _USE_FFMPEG_
+//			int got_pic = 0;
+//			errCode = avcodec_decode_video2((AVCodecContext*)http_->video_codec_ctx_, av_frame, &got_pic, &av_packet);
+//			if (errCode != 0)
+//				GxxGmPlayBase::DebugStringOutput("解码视频帧失败！错误码：%d...\n", errCode);
+//			
+//			if (got_pic)
+//			{
+//				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器...\n");
+//				http_->notifer_->MediaFrameNotiferEx(AVMediaType::AVMEDIA_TYPE_VIDEO, av_frame);
+//				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器完成...\n");
+//			}
+//#else
+//			// 这是视频帧
+//			media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_VIDEO;
+//			media_frame.CodecType = (EnumGSCodeID)http_->eVideoCode_;
+//			media_frame.VideoFrameInfo.Width = ((AVStream*)http_->video_stream_)->codecpar->width;
+//			media_frame.VideoFrameInfo.Height = ((AVStream*)http_->video_stream_)->codecpar->height;
+//			media_frame.VideoFrameInfo.IsKeyFrame = av_packet.flags & AV_PKT_FLAG_KEY;
+//			media_frame.VideoFrameInfo.FrameLength[0] = av_packet.size;
+//			media_frame.VideoFrameInfo.FrameBuffer[0] = (char*)av_packet.data;
+//#endif
+//		}
+//		else if (av_packet.stream_index == http_->audio_stream_index_)
+//		{
+//#ifdef _USE_FFMPEG_
+//			int got_data = 0;
+//			avcodec_decode_audio4((AVCodecContext*)http_->audio_codec_ctx_, av_frame, &got_data, &av_packet);
+//			if (got_data)
+//			{
+//				http_->notifer_->MediaFrameNotiferEx(AVMediaType::AVMEDIA_TYPE_AUDIO, av_frame);
+//			}
+//#else
+//			// 这是音频帧
+//			media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_AUDIO;
+//			media_frame.CodecType = (EnumGSCodeID)http_->eAudioCode_;
+//			media_frame.AudioFrameInfo.SampleRate = http_->unSampleRate_;
+//			media_frame.AudioFrameInfo.Bits = http_->unBits_;
+//			media_frame.AudioFrameInfo.Channels = http_->unChannels_;
+//#endif
+//		}
+//
+//#ifdef _USE_GXX_
+//		http_->notifer_->MediaFrameNotifer(&media_frame);
+//#endif
+//
+//		av_free_packet(&av_packet);
+//		++index;
+//	}
+//
+//	http_->need_stop_ = false;
+//#ifdef USE_H264BSF
+//	av_bitstream_filter_close(h264_bit_stream_filter_context);
+//#endif
+//	avcodec_close(((AVCodecContext*)http_->video_codec_ctx_));
+//	avcodec_close(((AVCodecContext*)http_->audio_codec_ctx_));
+//	avformat_close_input(((AVFormatContext **)&http_->format_ctx_));
+//	http_->video_codec_ctx_ = NULL;
+//	http_->audio_codec_ctx_ = NULL;
+//	http_->format_ctx_ = NULL;
+//	GxxGmPlayBase::DebugStringOutput("准备退出媒体帧读取线程...\n");
+//	return 0;
+//}
+
+//DWORD WINAPI GxxGmHttpImp::ControlThread(LPVOID lpParam)
+//{
+//	GxxGmHttpImp *http_ = (GxxGmHttpImp *)lpParam;
+//
+//	// 计算一下平均帧率下需要Delay的时间
+//	int delay_time = 1000 / http_->nRefFrameRate_;
+//	while (true)
+//	{
+//		if (http_->need_stop_)
+//			break;
+//
+//		SYSTEMTIME st;
+//		GetLocalTime(&st);
+//		GxxGmPlayBase::DebugStringOutput("%02d%02d%02d-%03d:过一帧...\n", st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+//		SetEvent(http_->framerate_event_handle_);
+//		Sleep(delay_time);		// 这里由帧率来控制
+//	}
+//
+//	return 0;
+//}
+
+
+void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void *pThreadData)
 {
-	GxxGmHttpImp *http_ = (GxxGmHttpImp *)lpParam;
+	GxxGmHttpImp *http_ = (GxxGmHttpImp *)pThreadData;
+
 	GxxGmPlayBase::DebugStringOutput("已启动媒体解码线程...\n");
 
 #ifdef USE_H264BSF
@@ -243,32 +369,28 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 	// 这里开始组织
 	int index = 0;
 	AVPacket av_packet;
+	enum GxxGmPlayState play_state;
 	while (true)
 	{
-		GxxGmPlayBase::DebugStringOutput("准备读取媒体帧...\n");
-
-		// 这里使用了一个非常低劣的手段来实现暂停
-		while (true)
+		if (thread.TestExit())
 		{
-			if (http_->is_paused_)
-			{
-				if (http_->need_stop_)
-					break;
-
-				Sleep(1);
-				continue;
-			}
-			else
-				break;
+			GxxGmPlayBase::DebugStringOutput("收到退出媒体解码线程通知...\n");
+			play_state = GxxGmPlayState::GxxGmStateClientClosed;
+			break;
 		}
 
-		if (http_->need_stop_)
-			break;
+		GxxGmPlayBase::DebugStringOutput("准备读取媒体帧...\n");
+
+		// 在此线程中应该不用响应线程暂停的逻辑
 
 		// 这里需要有一个事件，或者锁来进行暂停/恢复的同步处理
 		int errCode = av_read_frame((AVFormatContext*)http_->format_ctx_, &av_packet);
 		if (errCode != 0)
+		{
+			// 到这里了基本是流读取完毕了
+			play_state = GxxGmPlayState::GxxGmStatePlayEnd;
 			break;
+		}
 
 		StruGSMediaFrameData media_frame;
 		media_frame.PresentationTimestamp = av_packet.pts;
@@ -287,7 +409,7 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 			errCode = avcodec_decode_video2((AVCodecContext*)http_->video_codec_ctx_, av_frame, &got_pic, &av_packet);
 			if (errCode != 0)
 				GxxGmPlayBase::DebugStringOutput("解码视频帧失败！错误码：%d...\n", errCode);
-			
+
 			if (got_pic)
 			{
 				GxxGmPlayBase::DebugStringOutput("将视频帧塞入播放器...\n");
@@ -332,29 +454,31 @@ DWORD WINAPI GxxGmHttpImp::ReadStreamThread(LPVOID lpParam)
 		++index;
 	}
 
-	http_->need_stop_ = false;
 #ifdef USE_H264BSF
 	av_bitstream_filter_close(h264_bit_stream_filter_context);
 #endif
-	avcodec_close(((AVCodecContext*)http_->video_codec_ctx_));
-	avcodec_close(((AVCodecContext*)http_->audio_codec_ctx_));
-	avformat_close_input(((AVFormatContext **)&http_->format_ctx_));
-	http_->video_codec_ctx_ = NULL;
-	http_->audio_codec_ctx_ = NULL;
-	http_->format_ctx_ = NULL;
+
+	// 上报播放状态
+	http_->notifer_->PlayerStateNotifer(play_state);
+
+	//avcodec_close(((AVCodecContext*)http_->video_codec_ctx_));
+	//avcodec_close(((AVCodecContext*)http_->audio_codec_ctx_));
+	//avformat_close_input(((AVFormatContext **)&http_->format_ctx_));
+	//http_->video_codec_ctx_ = NULL;
+	//http_->audio_codec_ctx_ = NULL;
+	//http_->format_ctx_ = NULL;
 	GxxGmPlayBase::DebugStringOutput("准备退出媒体帧读取线程...\n");
-	return 0;
 }
 
-DWORD WINAPI GxxGmHttpImp::ControlThread(LPVOID lpParam)
+void GS_CALLBACK GxxGmHttpImp::_ControlThreadCallback(GSThread &thread, void *pThreadData)
 {
-	GxxGmHttpImp *http_ = (GxxGmHttpImp *)lpParam;
+	GxxGmHttpImp *http_ = (GxxGmHttpImp *)pThreadData;
 
 	// 计算一下平均帧率下需要Delay的时间
 	int delay_time = 1000 / http_->nRefFrameRate_;
 	while (true)
 	{
-		if (http_->need_stop_)
+		if (thread.TestExit())
 			break;
 
 		SYSTEMTIME st;
@@ -363,6 +487,4 @@ DWORD WINAPI GxxGmHttpImp::ControlThread(LPVOID lpParam)
 		SetEvent(http_->framerate_event_handle_);
 		Sleep(delay_time);		// 这里由帧率来控制
 	}
-
-	return 0;
 }
