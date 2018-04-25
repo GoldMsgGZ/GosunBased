@@ -108,6 +108,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "npDemo", "npDemo\npDemo.vcproj", "{1B7DC67A-B98A-438A-9654-FB6C1E2B0866}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "npGxxGmPlayer", "npGxxGmPlayer\npGxxGmPlayer.vcproj", "{AE3F3B75-7F2D-4E4A-8430-F7B6F7572610}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4} = {8C0959C5-4AE2-4038-B43F-25E61998BDD4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

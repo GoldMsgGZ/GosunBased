@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\NPAPI\base\public;.\NPAPI\sdk\include;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NPGXXGMPLAYER_EXPORTS;XP_WIN;_X86_"
+				AdditionalIncludeDirectories=".\NPAPI\base\public;.\NPAPI\sdk\include;..\GxxGmPlayBase;..\GxxGmMultiDisp;..\GxxGmPlayer;..\GxxGmPlaySDK;..\ext\FFMpeg\include;..\ext\Foundation;..\ext\GSMediaPlayer;..\ext\GSStreamServerSDK;..\ext\RtspStack"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NPGXXGMPLAYER_EXPORTS;XP_WIN;_X86_;__STDC_CONSTANT_MACROS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="GxxGmPlayBase.lib GxxGmMultiDisp.lib GxxGmPlayer.lib GxxGmPlaySDK.lib GSFoundation.lib GSMediaPlayer.lib GSServerSDK.lib GSRtspClient.lib avcodec.lib avfilter.lib avformat.lib avutil.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\Debug;..\ext\FFMpeg\lib\x86;..\ext\Foundation;..\ext\GSMediaPlayer;..\ext\GSStreamServerSDK;..\ext\RtspStack"
 				ModuleDefinitionFile="npGxxGmPlayer.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -173,6 +175,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\dllmain.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\npGxxGmPlayer.def"
 				>

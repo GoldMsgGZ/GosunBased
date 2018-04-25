@@ -44,7 +44,7 @@
 
 char* NPP_GetMIMEDescription(void)
 {
-	return "application/npGxxGmPlayer-v5-plugin";
+	return "application/npGxxGmPlayer-plugin";
 }
 
 NPError NPP_Initialize(void)

@@ -42,7 +42,7 @@
 #include "npplat.h"
 #include "pluginbase.h"
 #include "Plugin.h"
-//#include "..\GxxGmPlayBase\GxxGmPlayBase.h"
+#include "..\GxxGmPlayBase\GxxGmPlayBase.h"
 
 #ifndef HIBYTE
 #define HIBYTE(x) ((((uint32_t)(x)) & 0xff00) >> 8)
@@ -57,8 +57,8 @@ NPNetscapeFuncs NPNFuncs;
 // 初始化浏览器调用插件的函数表，以NPP（np plugin）开头
 NPError OSCALL NP_GetEntryPoints(NPPluginFuncs* aNPPFuncs)
 {
-	//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer] 进入NP_GetEntryPoints()函数...\n");
-	//GxxGmPlayBase::SetupMiniDumpMonitor("D:\\npGxxGmPlayer.dmp");
+	GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer] 进入NP_GetEntryPoints()函数...\n");
+	GxxGmPlayBase::SetupMiniDumpMonitor("D:\\npGxxGmPlayer.dmp");
 
 #ifdef _DEBUG
 	MessageBoxA(NULL, "插件已启动，等待接入调试器", "调试", 0);
