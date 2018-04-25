@@ -26,15 +26,8 @@ public:
 	static void GS_CALLBACK _ControlThreadCallback(GSThread &thread, void *pThreadData);
 	GSThread control_thread_;
 
-	//static DWORD WINAPI ReadStreamThread(LPVOID lpParam);
-	//static DWORD WINAPI ControlThread(LPVOID lpParam);
-
 public:
 	GxxGmPlaySDKNotifer *notifer_;
-	//bool is_paused_;
-	//bool need_stop_;
-	//HANDLE read_stream_thread_handle_;
-	//HANDLE control_thread_handle_;
 	HANDLE framerate_event_handle_;
 
 public:
