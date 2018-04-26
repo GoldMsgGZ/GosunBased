@@ -2,6 +2,7 @@
 #include "GxxGmPlaySDK.h"
 #include "GxxGmPlayBase.h"
 #include "GSMediaPlayer.h"
+#include "GSMediaPlayer_stub.h"
 
 GxxGmPlayer::GxxGmPlayer()
 : screen_window_(NULL)
@@ -9,6 +10,7 @@ GxxGmPlayer::GxxGmPlayer()
 //, sdl2_player_(new GxxGmSDL2Player())
 , play_sdk_((void*)new GxxGmPlaySDK(this))
 , is_real_(true)
+, gs_mediaplayer_stub_(new GSMediaPlayer_stub())
 {
 
 }
@@ -26,6 +28,10 @@ GxxGmPlayer::~GxxGmPlayer()
 
 int GxxGmPlayer::SetScreenWindow(void* window)
 {
+	int errCode = gs_mediaplayer_stub_->Initialize();
+	if (errCode != 0)
+		return errCode;
+
 	screen_window_ = window;
 	return 0;
 }
@@ -81,14 +87,14 @@ void GxxGmPlayer::StreamParamNotifer(unsigned int eVideoCode, unsigned int eAudi
 		mode = EnumGSMediaPlayMode::GSPLAYMODE_RECORD;
 
 	// 打开播放器
-	EnumGSMediaPlayerErrCode err = GSMediaPlayer_Open(mode, media_desc, (Int32)this->screen_window_, (GSMediaPlayHandle*)&this->gxx_media_player_handle_);
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_Open(mode, media_desc, (Int32)this->screen_window_, (GSMediaPlayHandle*)&this->gxx_media_player_handle_);
 	if (err != GSMEDIAPLAYER_CODE_SUCCESS)
 	{
 		// 调试输出相关信息
 	}
 
 	// 播放
-	err = GSMediaPlayer_Play((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_Play((GSMediaPlayHandle)this->gxx_media_player_handle_);
 	if (err != GSMEDIAPLAYER_CODE_SUCCESS)
 	{
 		// 调试输出相关信息
@@ -132,7 +138,7 @@ void GxxGmPlayer::MediaFrameNotifer(/*StruGSMediaFrameData*/void *media_frame_da
 		return ;
 	}
 
-	EnumGSMediaPlayerErrCode err = GSMediaPlayer_InputData((GSMediaPlayHandle)this->gxx_media_player_handle_, data);
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_InputData((GSMediaPlayHandle)this->gxx_media_player_handle_, data, true);
 
 	return ;
 }

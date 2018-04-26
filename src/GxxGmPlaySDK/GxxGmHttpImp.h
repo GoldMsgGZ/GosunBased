@@ -41,23 +41,23 @@ public:
 
 public:
 	// AVFormatContext
-	void* format_ctx_;
+	char* format_ctx_;
 
 	// 流序号
 	int video_stream_index_;
 	int audio_stream_index_;
 
 	// 流实体
-	void* video_stream_;
-	void* audio_stream_;
+	char* video_stream_;
+	char* audio_stream_;
 
 	// 解码器上下文
-	void* video_codec_ctx_;
-	void* audio_codec_ctx_;
+	char* video_codec_ctx_;
+	char* audio_codec_ctx_;
 
 	// 解码器
-	void* video_codec_;
-	void* audio_codec_;
+	char* video_codec_;
+	char* audio_codec_;
 
 	// 解码器ID
 	UInt32 video_codec_id_;

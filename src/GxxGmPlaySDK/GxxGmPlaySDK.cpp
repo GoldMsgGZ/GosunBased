@@ -19,7 +19,7 @@ GxxGmPlaySDK::GxxGmPlaySDK(GxxGmPlayerNotifer *notifer)
 , rtsp_(new GxxGmRtspImp(this))
 , gsp_(new GxxGmGspImp(this))
 , protocol_type_(PROTOCOL_TYPE_UNKNOWN)
-//, http_(new GxxGmHttpImp(this))
+, http_(new GxxGmHttpImp(this))
 , is_busy_(false)
 {
 
@@ -67,13 +67,13 @@ int GxxGmPlaySDK::Open(const char *url, bool is_real)
 	{
 		protocol_type_ = PROTOCOL_TYPE_HTTP;
 
-		//// 首先解复用，准备好图像转换和音频转换的参数
-		//errCode = http_->Open(url);
-		//if (errCode == 0)
-		//{
-		//	// 准备完成后，启动线程读取编码帧
-		//	errCode = http_->Play();
-		//}
+		// 首先解复用，准备好图像转换和音频转换的参数
+		errCode = http_->Open(url);
+		if (errCode == 0)
+		{
+			// 准备完成后，启动线程读取编码帧
+			errCode = http_->Play();
+		}
 	}
 	else
 	{
@@ -122,9 +122,9 @@ int GxxGmPlaySDK::Pause()
 	case PROTOCOL_TYPE_RTSP:
 		errCode = rtsp_->Pause();
 		break;
-	//case PROTOCOL_TYPE_HTTP:
-	//	errCode = http_->Pause();
-	//	break;
+	case PROTOCOL_TYPE_HTTP:
+		errCode = http_->Pause();
+		break;
 	default:
 		errCode = -6002;
 		break;
@@ -145,9 +145,9 @@ int GxxGmPlaySDK::Resume()
 	case PROTOCOL_TYPE_RTSP:
 		errCode = rtsp_->Resume();
 		break;
-	//case PROTOCOL_TYPE_HTTP:
-	//	errCode = http_->Resume();
-	//	break;
+	case PROTOCOL_TYPE_HTTP:
+		errCode = http_->Resume();
+		break;
 	default:
 		errCode = -6002;
 		break;
@@ -168,9 +168,9 @@ int GxxGmPlaySDK::Stop()
 	case PROTOCOL_TYPE_RTSP:
 		errCode = rtsp_->Stop();
 		break;
-	//case PROTOCOL_TYPE_HTTP:
-	//	errCode = http_->Stop();
-	//	break;
+	case PROTOCOL_TYPE_HTTP:
+		errCode = http_->Stop();
+		break;
 	default:
 		errCode = -6002;
 		break;

@@ -66,7 +66,7 @@ void __stdcall NPAPI_Play(const NPVariant *args, uint32_t argCount, NPVariant *r
 
 	bool is_real_mode = false;
 	if (is_real_mode_int != 0)
-		bool is_real_mode = true;
+		is_real_mode = true;
 
 	GxxGmPlayBase::DebugStringOutput("NPAPI_Play() url = %s, play_info = %s, disp_index = %d\n", url, play_info, disp_index);
 

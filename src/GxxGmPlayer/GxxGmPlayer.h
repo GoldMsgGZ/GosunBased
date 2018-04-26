@@ -4,7 +4,8 @@
 #include "GxxGmPlaySDKCallback.h"
 
 class GxxGmPlaySDK;
-class GxxGmSDL2Player;
+//class GxxGmSDL2Player;
+class GSMediaPlayer_stub;
 
 class GxxGmPlayer : public GxxGmPlayerNotifer
 {
@@ -38,6 +39,7 @@ private:
 
 private:
 	//GxxGmSDL2Player *sdl2_player_;
+	GSMediaPlayer_stub *gs_mediaplayer_stub_;
 
 private:
 	void *play_sdk_; 

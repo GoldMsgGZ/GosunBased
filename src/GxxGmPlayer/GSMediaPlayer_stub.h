@@ -91,7 +91,7 @@ typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_GetPlayedPos)(GSMediaPlayHan
  * @param[in]	bReleative	若为true，则表示ulTimeStamp是相对于即将推入GOP的I帧时戳的差值，否则为源时间戳
  * @return		typedef EnumGSMediaPlayerErrCode
  */
-typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_SetPlayedPos)(GSMediaPlayHandle handle,UInt64 ulTimeStamp,bool bReleative=true);
+typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_SetPlayedPos)(GSMediaPlayHandle handle,UInt64 ulTimeStamp,bool bReleative);
 /**
  * Method		GSMediaPlayer_Close
  * @brief		关闭播放库句柄，此接口调用后，所有播放资源将会被销毁
@@ -107,7 +107,7 @@ typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_Close)(GSMediaPlayHandle han
  * @param[in]	bBlockedIfTooFast	在播放库内部缓存满后，是否阻塞，直到有空闲空间存储帧
  * @return		typedef EnumGSMediaPlayerErrCode
  */
-typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_InputData)(GSMediaPlayHandle handle,const StruGSMediaFrameData* pstMediaFrameData,bool bBlockedIfTooFast=true);
+typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_InputData)(GSMediaPlayHandle handle,const StruGSMediaFrameData* pstMediaFrameData,bool bBlockedIfTooFast);
 
 /**
  * Method		GSMediaPlayer_InputGOPData
@@ -118,7 +118,7 @@ typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_InputData)(GSMediaPlayHandle
  * @param[in]	bBlockedIfTooFast	是否阻塞
  * @return		typedef EnumGSMediaPlayerErrCode
  */
-typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_InputGOPData)(GSMediaPlayHandle handle,const StruGSMediaFrameData** pstGopMediaFrameData,int nSize,bool bBlockedIfTooFast=true);
+typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_InputGOPData)(GSMediaPlayHandle handle,const StruGSMediaFrameData** pstGopMediaFrameData,int nSize,bool bBlockedIfTooFast);
 
 /**
  * Method		GSMediaPlayer_PlaySound

@@ -207,6 +207,14 @@
 			<Filter
 				Name="HTTP"
 				>
+				<File
+					RelativePath=".\GxxGmHttpImp.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GxxGmHttpImp.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="RTMP"

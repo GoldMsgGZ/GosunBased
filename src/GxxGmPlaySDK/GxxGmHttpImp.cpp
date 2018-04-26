@@ -73,8 +73,8 @@ int GxxGmHttpImp::Open(const char *url)
 			if (st->codec->codec_type == AVMEDIA_TYPE_VIDEO)
 			{
 				video_stream_index_ = index;
-				video_stream_ = (void*)st;
-				video_codec_ctx_ = (void*)st->codec;
+				video_stream_ = (char*)st;
+				video_codec_ctx_ = (char*)st->codec;
 
 #ifdef _USE_FFMPEG_
 				video_codec_ = (void*)avcodec_find_decoder(((AVCodecContext*)video_codec_ctx_)->codec_id);
@@ -97,8 +97,8 @@ int GxxGmHttpImp::Open(const char *url)
 			else if (st->codec->codec_type == AVMEDIA_TYPE_AUDIO)
 			{
 				audio_stream_index_ = index;
-				audio_stream_ = (void*)st;
-				audio_codec_ctx_ = (void*)st->codec;
+				audio_stream_ = (char*)st;
+				audio_codec_ctx_ = (char*)st->codec;
 
 #ifdef _USE_FFMPEG_
 				audio_codec_ = (void*)avcodec_find_decoder(((AVCodecContext*)audio_codec_ctx_)->codec_id);
