@@ -142,7 +142,7 @@ GxxGmMultiDisp::GxxGmMultiDisp()
 : current_disp_count_(1)
 , pCwnd_(NULL)
 {
-
+	
 }
 
 GxxGmMultiDisp::~GxxGmMultiDisp()
@@ -170,7 +170,9 @@ int GxxGmMultiDisp::Initialize(void* screen_window, int disp_rows /* = 1 */, int
 	int each_disp_height = screen_height_ / disp_rows;
 
 	current_disp_count_ = disp_rows * disp_lists;
-	pCwnd_ = (void*)CWnd::FromHandle((HWND)screen_window);
+
+	//pCwnd_ = (void*)CWnd::FromHandle((HWND)screen_window);
+	//pCwnd_ = (void*)CWnd::FromHandlePermanent((HWND)screen_window);
 
 	// 接下来开始计算子窗口坐标，并生成对应的显示控件
 	// 依次将控件句柄赋值给子窗口
@@ -192,7 +194,8 @@ int GxxGmMultiDisp::Initialize(void* screen_window, int disp_rows /* = 1 */, int
 
 			//CStatic *disp = new CStatic();
 			GxxGmStatic *disp = new GxxGmStatic();
-			disp->Create(_T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+			//disp->Create(_T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, rect, (CWnd*)pCwnd_, BASE_DISP_ID + index);
+			disp->CreateEx(0, _T("STATIC"), _T(" "), WS_CHILD | SS_NOTIFY | SS_SUNKEN | SS_BITMAP, current_disp_left, current_disp_top, each_disp_width, each_disp_height, (HWND)screen_window, (HMENU)(BASE_DISP_ID + index));
 			disp->Set_BackColor(RGB(23, 23, 23));
 
 			// 将显示对象赋值给子窗口，然后显示子窗口

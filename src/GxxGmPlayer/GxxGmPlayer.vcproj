@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
+			UseOfMFC="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -165,8 +166,16 @@
 			>
 		</Filter>
 		<Filter
-			Name="GxxGmSDL2Player"
+			Name="GSMediaPlayer_stub"
 			>
+			<File
+				RelativePath=".\GSMediaPlayer_stub.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GSMediaPlayer_stub.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

@@ -21,6 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
+			UseOfMFC="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -206,14 +207,6 @@
 			<Filter
 				Name="HTTP"
 				>
-				<File
-					RelativePath=".\GxxGmHttpImp.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GxxGmHttpImp.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="RTMP"

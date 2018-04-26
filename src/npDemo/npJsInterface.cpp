@@ -18,11 +18,11 @@ void __stdcall NPAPI_Initialize(const NPVariant *args, uint32_t argCount, NPVari
 	int disp_rows = NPVARIANT_TO_INT32(args[0]);
 	int disp_lines = NPVARIANT_TO_INT32(args[1]);
 
-	//// 初始化播放器
-	//int errCode = 0;
-	//errCode = gxx_gm_multi_disp_player_.Initialize(global_plugin_->m_hWnd, disp_rows, disp_lines);
-	//if (errCode != 0)
-	//	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Initialize() failed... errCode = %d\n", errCode);
+	// 初始化播放器
+	int errCode = 0;
+	errCode = gxx_gm_multi_disp_player_.Initialize(global_plugin_->m_hWnd, disp_rows, disp_lines);
+	if (errCode != 0)
+		GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Initialize() failed... errCode = %d\n", errCode);
 }
 
 void __stdcall NPAPI_SetDispCount(const NPVariant *args, uint32_t argCount, NPVariant *result)

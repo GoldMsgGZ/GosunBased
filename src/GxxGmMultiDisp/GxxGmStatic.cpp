@@ -11,6 +11,7 @@ static char THIS_FILE[] = __FILE__;
 GxxGmStatic::GxxGmStatic()
 : is_in_(false)
 {
+	AFX_MANAGE_STATE(AfxGetModuleState());
 	b_FillBackColor = 0;
 	m_Font = 0;
 	m_DisBackColro = RGB(200, 200, 200);

@@ -9,6 +9,105 @@
   <title>npGxxGmPlayer 测试页面</title>
  </head>
  <body>
+  <script>
+  var gxxGmPlayer;
+
+  // 初始化
+  function OnInit() {
+	  gxxGmPlayer = document.getElementById("npGxxGmPlayer");
+	  gxxGmPlayer.Initialize(2, 2);
+  }
+
+  // 分屏
+  function OnDivision() {
+  }
+
+  // 播放
+  function OnPlay() {
+	  // 播放视频
+	  var disp_index = document.getElementById("disp_index").value;
+	  var url = document.getElementById("url").value;
+	  var param = document.getElementById("param").value;
+
+	  gxxGmPlayer.Play(url, param, disp_index, 1);
+  }
+
+  // 暂停
+  function OnPause() {
+  }
+
+  // 恢复
+  function OnResume() {
+  }
+
+  // 停止
+  function OnStop() {
+  }
+
+  // 获取播放URL
+  function OnGetPlayUrl() {
+  }
+
+  // 获取播放信息
+  function OnGetPlayInfo() {
+  }
+  </script>
+
   <embed type="application/npGxxGmPlayer-plugin" name="npGxxGmPlayer" id="npGxxGmPlayer" width="800" height="600">
+
+  <br />
+  <input type="button" value="初始化" onclick="OnInit()" />
+
+  <br />
+  <br />
+  <span>分屏行数</span>
+  <select id="row_count">
+   <option value="1">1</option>
+   <option value="2">2</option>
+   <option value="3">3</option>
+   <option value="1">4</option>
+   <option value="1">5</option>
+   <option value="1">6</option>
+   <option value="1">7</option>
+   <option value="1">8</option>
+   <option value="1">9</option>
+  </select>
+  <span>分屏列数</span>
+  <select id="list_count">
+   <option value="1">1</option>
+   <option value="2">2</option>
+   <option value="3">3</option>
+   <option value="1">4</option>
+   <option value="1">5</option>
+   <option value="1">6</option>
+   <option value="1">7</option>
+   <option value="1">8</option>
+   <option value="1">9</option>
+  </select>
+  <input type="button" value="分屏" onclick="OnDivision()"/>
+
+  <br />
+  <br />
+  <span>子窗口索引</span>
+  <input type="text" value="0" id="disp_index" />
+  
+  <br />
+  <span>媒体URL</span>
+  <input type="text" value="http://127.0.0.1/live/15s.mp4" id="url" />
+  
+  <br />
+  <span>播放信息</span>
+  <input type="text" value='{"deviceid":"00000000000000000001","userid":"000001","username":"邱业兴"}' id="param" />
+  
+  <br />
+  <input type="button" value="播放" onclick="OnPlay()"/>
+  <input type="button" value="暂停" onclick="OnPause()"/>
+  <input type="button" value="恢复" onclick="OnResume()"/>
+  <input type="button" value="停止" onclick="OnStop()"/>
+  
+  <br />
+  <input type="button" value="取得播放地址" onclick="OnGetPlayUrl()"/>
+  <input type="button" value="取得播放信息" onclick="OnGetPlayInfo()"/>
+
  </body>
 </html>

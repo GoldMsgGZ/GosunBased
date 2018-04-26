@@ -13,13 +13,8 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(中华人民共和国) resources
-//
-//#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-//#ifdef _WIN32
-//LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
-//#pragma code_page(936)
-//#endif //_WIN32
+// 英语(美国) resources
+
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -78,7 +73,7 @@ BEGIN
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "npGxxGmPlayer"
             VALUE "LegalCopyright", "Copyright (C) 2018, Gosuncn.com"
-			VALUE "MIMEType", "application/npGxxGmPlayer-plugin"
+            VALUE "MIMEType", "application/npGxxGmPlayer-plugin"
             VALUE "OriginalFilename", "npGxxGmPlayer.dll"
             VALUE "ProductName", "npGxxGmPlayer"
             VALUE "ProductVersion", "1, 0, 0, 1"
@@ -86,11 +81,11 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x804, 1200
+        VALUE "Translation", 0x409, 1252
     END
 END
 
-#endif    // 中文(中华人民共和国) resources
+#endif    // 英语(美国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -5,7 +5,7 @@
 
 class GxxGmGspImp;
 class GxxGmRtspImp;
-class GxxGmHttpImp;
+//class GxxGmHttpImp;
 
 
 class GxxGmPlaySDK : public GxxGmPlaySDKNotifer
@@ -36,7 +36,7 @@ public:
 private:
 	GxxGmGspImp *gsp_;
 	GxxGmRtspImp *rtsp_;
-	GxxGmHttpImp *http_;
+	//GxxGmHttpImp *http_;
 	int protocol_type_;
 	bool is_busy_;
 

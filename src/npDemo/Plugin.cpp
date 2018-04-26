@@ -464,7 +464,7 @@ NPObject * CPlugin::GetScriptableObject()
 
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:%d, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+	GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:%d, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 
 	switch (msg)
 	{
@@ -481,8 +481,8 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 			CPlugin *p = (CPlugin *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 			if (p)
 			{
-				char *s = "按下键盘任意键，开始播放视频 !";
-				DrawTextA(hDC, s, strlen(s), &rc, DT_SINGLELINE|DT_CENTER|DT_VCENTER);
+				//char *s = "按下键盘任意键，开始播放视频 !";
+				//DrawTextA(hDC, s, strlen(s), &rc, DT_SINGLELINE|DT_CENTER|DT_VCENTER);
 			}
 
 			EndPaint(hWnd, &ps);

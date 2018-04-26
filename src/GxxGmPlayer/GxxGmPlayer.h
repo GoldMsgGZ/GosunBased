@@ -1,10 +1,6 @@
 #ifndef _GxxGmPlayer_H_
 #define _GxxGmPlayer_H_
 
-//#include "GxxGmPlaySDK.h"
-//#include "GxxGmSDL2Player.h"
-//#include "GSMediaPlayer.h"
-//#include <Windows.h>
 #include "GxxGmPlaySDKCallback.h"
 
 class GxxGmPlaySDK;

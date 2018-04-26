@@ -423,6 +423,8 @@ NPBool CPlugin::init(NPWindow* pNPWindow)
 	// 将窗口与 Plugin 对象关联，这样就可以再窗口处理中访问 Plugin 对象了
 	SetWindowLongPtr(m_hWnd, GWLP_USERDATA, (LONG_PTR)this);
 
+	player.SetScreenWindow((void*)m_hWnd);
+
 	m_bInitialized = TRUE;
 	return TRUE;
 }

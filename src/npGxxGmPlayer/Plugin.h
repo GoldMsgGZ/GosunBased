@@ -2,6 +2,7 @@
 #include "pluginbase.h"
 #include "npJsInterface.h"
 //#include "..\GxxGmMultiDisp\GxxGmMultiDisp.h"
+#include "..\GxxGmPlayer\GxxGmPlayer.h"
 
 
 class CPlugin :
@@ -36,6 +37,8 @@ public:
 	// Javascript交互对象
 	NPObject *m_pScriptableObject;
 	NPObject *m_pJsCallbackObject;
+
+	GxxGmPlayer player;
 };
 
 // 这里声明一个全局的插件对象
