@@ -28,11 +28,12 @@ GxxGmPlayer::~GxxGmPlayer()
 
 int GxxGmPlayer::SetScreenWindow(void* window)
 {
+	screen_window_ = window;
+	
 	int errCode = gs_mediaplayer_stub_->Initialize();
 	if (errCode != 0)
 		return errCode;
 
-	screen_window_ = window;
 	return 0;
 }
 

@@ -154,6 +154,10 @@
 				RelativePath=".\GxxGmMultiDisp.h"
 				>
 			</File>
+			<File
+				RelativePath=".\GxxGmMultiDispEx.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
@@ -168,6 +172,10 @@
 			>
 			<File
 				RelativePath=".\GxxGmMultiDisp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GxxGmMultiDispEx.cpp"
 				>
 			</File>
 		</Filter>

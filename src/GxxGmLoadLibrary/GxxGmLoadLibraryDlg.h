@@ -33,4 +33,6 @@ protected:
 public:
 	CEdit m_cLibPath;
 	afx_msg void OnBnClickedBtnLoad();
+	CEdit m_cCurrentDir;
+	afx_msg void OnBnClickedBtnCurrentdir();
 };

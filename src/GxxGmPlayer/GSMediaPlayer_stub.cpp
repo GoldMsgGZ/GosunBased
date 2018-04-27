@@ -95,7 +95,8 @@ int GSMediaPlayer_stub::Initialize()
 	_tcscpy_s(gsmediaplayer_path, 4096, location);
 	_tcscat_s(gsmediaplayer_path, 4096, _T("\\GSMediaPlayer.dll"));
 
-	HMODULE hMod = LoadLibrary(gsmediaplayer_path);
+	//HMODULE hMod = LoadLibrary(gsmediaplayer_path);
+	HMODULE hMod = LoadLibraryEx(gsmediaplayer_path, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
 	if (hMod == NULL)
 	{
 		errCode = GetLastError();

@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GxxGmPlayBase.lib GxxGmPlaySDK.lib GxxGmPlayer.lib GSFoundation.lib GSServerSDK.lib GSRtspClient.lib GSMediaPlayer.lib avcodec.lib avfilter.lib avformat.lib avutil.lib"
+				AdditionalDependencies="GxxGmPlayBase.lib GxxGmPlaySDK.lib GxxGmPlayer.lib GxxGmMultiDisp.lib GSFoundation.lib GSServerSDK.lib GSRtspClient.lib GSMediaPlayer.lib avcodec.lib avfilter.lib avformat.lib avutil.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\Debug;..\ext\FFMpeg\lib\x86;..\ext\Foundation;..\ext\GSMediaPlayer;..\ext\GSStreamServerSDK;..\ext\RtspStack"
 				IgnoreDefaultLibraryNames=""

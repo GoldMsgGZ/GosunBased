@@ -57,6 +57,7 @@ void CGxxGmLoadLibraryDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT_LIB_PATH, m_cLibPath);
+	DDX_Control(pDX, IDC_EDIT_CURRENT_DIR, m_cCurrentDir);
 }
 
 BEGIN_MESSAGE_MAP(CGxxGmLoadLibraryDlg, CDialog)
@@ -65,6 +66,7 @@ BEGIN_MESSAGE_MAP(CGxxGmLoadLibraryDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BTN_LOAD, &CGxxGmLoadLibraryDlg::OnBnClickedBtnLoad)
+	ON_BN_CLICKED(IDC_BTN_CURRENTDIR, &CGxxGmLoadLibraryDlg::OnBnClickedBtnCurrentdir)
 END_MESSAGE_MAP()
 
 
@@ -173,4 +175,18 @@ void CGxxGmLoadLibraryDlg::OnBnClickedBtnLoad()
 		FreeLibrary(hMod);
 	}
 
+}
+
+void CGxxGmLoadLibraryDlg::OnBnClickedBtnCurrentdir()
+{
+	CString current_dir;
+	m_cCurrentDir.GetWindowText(current_dir);
+
+	BOOL bret = SetCurrentDirectory(current_dir.GetString());
+	if (!bret)
+	{
+		AfxMessageBox(_T("设置当前目录失败"));
+	}
+	else
+		AfxMessageBox(_T("设置当前目录成功"));
 }
