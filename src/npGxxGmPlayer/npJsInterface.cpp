@@ -2,6 +2,11 @@
 #include "GxxGmPlayBase.h"
 //#include "GxxGmMultiDisp.h"
 
+#define _USE_GxxGmMultiDispEx_
+#ifndef _USE_GxxGmMultiDispEx_
+#define _USE_GxxGmPlayer_
+#endif
+
 
 void __stdcall NPAPI_GetVersion(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
@@ -20,11 +25,19 @@ void __stdcall NPAPI_Initialize(const NPVariant *args, uint32_t argCount, NPVari
 	int disp_lines = NPVARIANT_TO_INT32(args[1]);
 	GxxGmPlayBase::DebugStringOutput("NPAPI_Initialize() disp_rows = %d, disp_lines = %d\n", disp_rows, disp_lines);
 
-	//// 初始化播放器
-	//int errCode = 0;
-	//errCode = gxx_gm_multi_disp_player_.Initialize(global_plugin_->m_hWnd, disp_rows, disp_lines);
-	//if (errCode != 0)
-	//	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Initialize() failed... errCode = %d\n", errCode);
+	int errCode = 0;
+
+	// 初始化播放器
+#ifdef _USE_GxxGmPlayer_
+	errCode = global_plugin_->player.SetScreenWindow((void*)global_plugin_->m_hWnd);
+#else
+	#ifdef _USE_GxxGmMultiDispEx_
+		errCode = global_plugin_->multi_disp.Init((int)global_plugin_->m_hWnd, disp_rows, disp_lines);
+	#endif
+#endif
+
+	if (errCode != 0)
+		GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Initialize() failed... errCode = %d\n", errCode);
 }
 
 void __stdcall NPAPI_SetDispCount(const NPVariant *args, uint32_t argCount, NPVariant *result)
@@ -39,10 +52,13 @@ void __stdcall NPAPI_SetDispCount(const NPVariant *args, uint32_t argCount, NPVa
 	int v_count = NPVARIANT_TO_INT32(args[1]);
 	GxxGmPlayBase::DebugStringOutput("NPAPI_SetDispCount() v_count = %d, h_count = %d\n", v_count, h_count);
 
-	//int errCode = 0;
-	//errCode = gxx_gm_multi_disp_player_.ReDivision(v_count, h_count);
-	//if (errCode != 0)
-	//	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Initialize() failed... errCode = %d\n", errCode);
+	int errCode = 0;
+#ifdef _USE_GxxGmMultiDispEx_
+	errCode = global_plugin_->multi_disp.ReDivision(v_count, h_count);
+#endif
+	
+	if (errCode != 0)
+		GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Initialize() failed... errCode = %d\n", errCode);
 }
 
 void __stdcall NPAPI_Play(const NPVariant *args, uint32_t argCount, NPVariant *result)
@@ -71,12 +87,17 @@ void __stdcall NPAPI_Play(const NPVariant *args, uint32_t argCount, NPVariant *r
 	GxxGmPlayBase::DebugStringOutput("NPAPI_Play() url = %s, play_info = %s, disp_index = %d\n", url, play_info, disp_index);
 
 	int errCode = 0;
-	errCode = global_plugin_->player.Open(url, is_real_mode);
-	
 
-	//int errCode = gxx_gm_multi_disp_player_.Play(url, play_info, disp_index, is_real_mode);
-	//if (errCode != 0)
-	//	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Play() failed... errCode = %d\n", errCode);
+#ifdef _USE_GxxGmPlayer_
+	errCode = global_plugin_->player.Open(url, is_real_mode);
+#else
+	#ifdef _USE_GxxGmMultiDispEx_
+		//errCode = global_plugin_->multi_disp.Play((int)global_plugin_->m_hWnd, disp_rows, disp_lines);
+	#endif
+#endif
+
+	if (errCode != 0)
+		GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Play() failed... errCode = %d\n", errCode);
 }
 
 void __stdcall NPAPI_Pause(const NPVariant *args, uint32_t argCount, NPVariant *result)

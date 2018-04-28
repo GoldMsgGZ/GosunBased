@@ -1,7 +1,7 @@
 #pragma once
 #include "pluginbase.h"
 #include "npJsInterface.h"
-//#include "..\GxxGmMultiDisp\GxxGmMultiDisp.h"
+#include "..\GxxGmMultiDisp\GxxGmMultiDispEx.h"
 #include "..\GxxGmPlayer\GxxGmPlayer.h"
 
 
@@ -39,6 +39,7 @@ public:
 	NPObject *m_pJsCallbackObject;
 
 	GxxGmPlayer player;
+	GxxGmMultiDispEx multi_disp;
 };
 
 // 这里声明一个全局的插件对象

@@ -15,11 +15,20 @@
   // 初始化
   function OnInit() {
 	  gxxGmPlayer = document.getElementById("npGxxGmPlayer");
-	  gxxGmPlayer.Initialize(2, 2);
+	  gxxGmPlayer.Initialize(1, 1);
   }
 
   // 分屏
   function OnDivision() {
+	  var obj = document.getElementById("row_count"); //定位id
+	  var index = obj.selectedIndex; // 选中索引
+	  var row_count_val = obj.options[index].value; // 选中值
+        
+      obj = document.getElementById("list_count"); //定位id
+      index = obj.selectedIndex; // 选中索引
+      var list_count_val = obj.options[index].value; // 选中值
+
+	  gxxGmPlayer.ReDivision(list_count_val, row_count_val);
   }
 
   // 播放
@@ -34,14 +43,20 @@
 
   // 暂停
   function OnPause() {
+	  var disp_index = document.getElementById("disp_index").value;
+      gxxGmPlayer.Pause(disp_index);
   }
 
   // 恢复
   function OnResume() {
+	  var disp_index = document.getElementById("disp_index").value;
+      gxxGmPlayer.Resume(disp_index);
   }
 
   // 停止
   function OnStop() {
+	  var disp_index = document.getElementById("disp_index").value;
+      gxxGmPlayer.Stop(disp_index);
   }
 
   // 获取播放URL

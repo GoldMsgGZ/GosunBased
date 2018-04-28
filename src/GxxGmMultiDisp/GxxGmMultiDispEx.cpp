@@ -143,7 +143,7 @@ int GxxGmMultiDispEx::ReDivision(int row_count, int list_count)
 
 			if (!gxx_gm_disp_ex_[disp_index].IsAttached())
 			{
-				HWND disp_hwnd = ::CreateWindowA("STATIC", " ", WS_CHILD|WS_VISIBLE|SS_NOTIFY|SS_SUNKEN|SS_BITMAP, 
+				HWND disp_hwnd = ::CreateWindowA("STATIC", "这是显示分屏", WS_CHILD|WS_VISIBLE|SS_NOTIFY|SS_SUNKEN|SS_BITMAP, 
 					disp_left, disp_top, average_disp_width, average_disp_height, (HWND)screen_hwnd_,
 					NULL, NULL, NULL);
 
