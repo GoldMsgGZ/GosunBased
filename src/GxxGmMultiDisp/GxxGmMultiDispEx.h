@@ -1,6 +1,10 @@
 #ifndef _GxxGmMultiDispEx_H_
 #define _GxxGmMultiDispEx_H_
 
+#include <string>
+
+class GxxGmPlayer;
+
 //////////////////////////////////////////////////////////////////////////
 //
 // 新的多屏管理类，对于屏幕区域的划分和操作全部通过HWND句柄进行
@@ -25,6 +29,23 @@ public:
 public:
 	bool IsAttached();
 
+public:
+	int Play(const char *url, const char *play_info, bool is_real = true);
+	int Pause();
+	int Resume();
+	int Stop();
+
+	int CaptureScreen();
+
+	std::string GetPlayInfo();
+	std::string GetUrl();
+	std::string GetDeviceId();
+
+	void SetDeviceId(std::string device_id);
+
+	bool IsPlaying();
+	bool IsRealMode();
+
 private:
 	// 分屏显示句柄
 	int disp_hwnd_;
@@ -33,10 +54,17 @@ private:
 	// 分屏坐标
 	int row_index_;
 	int list_index_;
+
+private:
+	GxxGmPlayer *player_;
+	std::string play_info_;
+	std::string url_;
+	std::string device_id_;
+	bool is_real_;
 };
 
 
-#define MAX_DISP_COUNT_EX	81
+#define MAX_DISP_COUNT_EX	1
 
 class GxxGmMultiDispEx
 {
@@ -48,39 +76,48 @@ public:
 	int Init(int screen_hwnd, int row_count, int list_count);
 	int ReDivision(int row_count, int list_count);
 
-//public:
-//	/**
-//	 * 播放视频
-//	 * 参数：
-//	 *	@url			播放路径
-//	 *	@play_info		附加的播放信息，字符串
-//	 *	@disp_index		子窗口索引，0~最大窗口索引，-1时为自动搜索空闲的子窗口
-//	 *	@is_real		true 为实时模式，false 为录像模式
-//	 * 返回值
-//	 */
-//	int Play(const char *url, const char *play_info, int disp_index = -1, bool is_real = true);
-//
-//	/**
-//	 * 暂停播放
-//	 */
-//	int Pause(int disp_index);
-//
-//	/**
-//	 * 恢复播放
-//	 */
-//	int Resume(int disp_index);
-//
-//	/**
-//	 * 停止播放
-//	 */
-//	int Stop(int disp_index);
-//
-//public:
-//	std::string GetPlayInfo(int disp_index);
-//	std::string GetUrl(int disp_index);
-//	std::string GetDeviceId(int disp_index);
-//
-//	void SetDeviceId(std::string device_id, int disp_index);
+public:
+	/**
+	 * 播放视频
+	 * 参数：
+	 *	@url			播放路径
+	 *	@play_info		附加的播放信息，字符串
+	 *	@disp_index		子窗口索引，0~最大窗口索引，-1时为自动搜索空闲的子窗口
+	 *	@is_real		true 为实时模式，false 为录像模式
+	 * 返回值
+	 */
+	int Play(const char *url, const char *play_info, int disp_index = -1, bool is_real = true);
+
+	/**
+	 * 暂停播放
+	 */
+	int Pause(int disp_index);
+
+	/**
+	 * 恢复播放
+	 */
+	int Resume(int disp_index);
+
+	/**
+	 * 停止播放
+	 */
+	int Stop(int disp_index);
+
+	/**
+	 * 
+	 */
+	int CaptureScreen(int disp_index);
+
+public:
+	std::string GetPlayInfo(int disp_index);
+	std::string GetUrl(int disp_index);
+	std::string GetDeviceId(int disp_index);
+
+	void SetDeviceId(std::string device_id, int disp_index);
+
+private:
+	bool IsAvaliableDisp(int disp_index);
+	int FindFreeDisp();
 
 public:
 	int screen_hwnd_;
@@ -91,7 +128,8 @@ public:
 	int current_disp_count_;
 	int row_count_;
 	int list_count_;
-	GxxGmDispEx gxx_gm_disp_ex_[MAX_DISP_COUNT_EX];
+	GxxGmDispEx *gxx_gm_disp_ex_;
 };
+
 
 #endif//_GxxGmMultiDispEx_H_

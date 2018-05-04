@@ -396,6 +396,7 @@ CPlugin::CPlugin(NPP pNPInstance)
 , m_hWnd(NULL)
 , m_pScriptableObject(NULL)
 , m_pJsCallbackObject(NULL)
+, multi_disp_ex_(new GxxGmMultiDispEx())
 {
 	NPN_GetValue(m_pNPInstance, NPNVWindowNPObject, &sWindowObj);
 
@@ -423,7 +424,7 @@ NPBool CPlugin::init(NPWindow* pNPWindow)
 	// 将窗口与 Plugin 对象关联，这样就可以再窗口处理中访问 Plugin 对象了
 	SetWindowLongPtr(m_hWnd, GWLP_USERDATA, (LONG_PTR)this);
 
-	int errCode = player.SetScreenWindow((void*)m_hWnd);
+	//int errCode = player.SetScreenWindow((void*)m_hWnd);
 
 	m_bInitialized = TRUE;
 	return TRUE;
@@ -472,6 +473,7 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	{
 	case WM_PAINT:
 		{
+			// 在这里需要将背景设置为RGB(25,25,25)
 			PAINTSTRUCT ps;
 			HDC hDC = BeginPaint(hWnd, &ps);
 

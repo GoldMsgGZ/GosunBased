@@ -1,12 +1,16 @@
 #include "GxxGmMultiDispEx.h"
 #include "..\GxxGmPlayBase\GxxGmPlayBase.h"
+#include "..\GxxGmPlayer\GxxGmPlayer.h"
 #include <Windows.h>
+
 
 GxxGmDispEx::GxxGmDispEx()
 : disp_hwnd_(0)
 , father_hwnd_(0)
 , row_index_(0)
 , list_index_(0)
+, player_(new GxxGmPlayer())
+, is_real_(false)
 {
 
 }
@@ -23,6 +27,7 @@ void GxxGmDispEx::Attach(int self_hwnd, int father_hwnd)
 {
 	disp_hwnd_ = self_hwnd;
 	father_hwnd_ = father_hwnd;
+	player_->SetScreenWindow((void*)disp_hwnd_);
 }
 
 void GxxGmDispEx::SetLocation(int row_index, int list_index)
@@ -65,6 +70,74 @@ bool GxxGmDispEx::IsAttached()
 		return false;
 }
 
+int GxxGmDispEx::Play(const char *url, const char *play_info, bool is_real /* = true */)
+{
+	int errCode = player_->Open(url, is_real);
+	if (errCode == 0)
+	{
+		// 保存播放信息
+		play_info_ = play_info;
+		url_ = url;
+	}
+
+	return errCode;
+}
+
+int GxxGmDispEx::Pause()
+{
+	int errCode = player_->Pause();
+	return errCode;
+}
+
+int GxxGmDispEx::Resume()
+{
+	return 0;
+}
+
+int GxxGmDispEx::Stop()
+{
+	player_->Stop();
+	play_info_.clear();
+	url_.clear();
+	return 0;
+}
+
+int GxxGmDispEx::CaptureScreen()
+{
+	// 未实现
+	return 0;
+}
+
+std::string GxxGmDispEx::GetPlayInfo()
+{
+	return play_info_;
+}
+
+std::string GxxGmDispEx::GetUrl()
+{
+	return url_;
+}
+
+std::string GxxGmDispEx::GetDeviceId()
+{
+	return device_id_;
+}
+
+void GxxGmDispEx::SetDeviceId(std::string device_id)
+{
+	device_id_ = device_id;
+}
+
+bool GxxGmDispEx::IsPlaying()
+{
+	return player_->IsBusy();
+}
+
+bool GxxGmDispEx::IsRealMode()
+{
+	return is_real_;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -74,8 +147,11 @@ bool GxxGmDispEx::IsAttached()
 
 GxxGmMultiDispEx::GxxGmMultiDispEx()
 : current_disp_count_(0)
+, gxx_gm_disp_ex_(new GxxGmDispEx[MAX_DISP_COUNT_EX])
 {
-
+#ifdef _DEBUG
+	MessageBoxA(NULL, "GxxGmMultiDispEx构造函数 >>> 等待调试器接入", "调试", 0);
+#endif
 }
 
 GxxGmMultiDispEx::~GxxGmMultiDispEx()
@@ -174,6 +250,118 @@ int GxxGmMultiDispEx::ReDivision(int row_count, int list_count)
 	for (int index = current_disp_count_; index < MAX_DISP_COUNT_EX; ++index)
 	{
 		// gxx_gm_disp_ex_[index].Stop();
+	}
+
+	return errCode;
+}
+
+int GxxGmMultiDispEx::Play(const char *url, const char *play_info, int disp_index /* = -1 */, bool is_real /* = true */)
+{
+	int real_disp_index = -1;
+
+	if (disp_index > -1)
+	{
+		// 传入的看上去像是一个正常的索引值
+		// 首先判断传入的索引值是否是可用的（在最大索引范围内，并且指定的分屏是空闲的）
+		if (IsAvaliableDisp(disp_index))
+			real_disp_index = disp_index;
+		else
+		{
+			// 索引值不可用
+			return -6003;
+		}
+	}
+	else if (disp_index <= 0)
+	{
+		// 寻找一个空闲的播放窗口
+		real_disp_index = FindFreeDisp();
+		if (real_disp_index < 0)
+			return -6003;
+	}
+	else
+		return -6003;
+	
+	return gxx_gm_disp_ex_[real_disp_index].Play(url, play_info, is_real);
+}
+
+int GxxGmMultiDispEx::Pause(int disp_index)
+{
+	// 检查当前索引是否在范围内
+	// 先检查播放模式，如果是实时模式，就不支持暂停接口
+	if (gxx_gm_disp_ex_[disp_index].IsRealMode())
+		return gxx_gm_disp_ex_[disp_index].Pause();
+	else
+		return -6002;
+}
+
+int GxxGmMultiDispEx::Resume(int disp_index)
+{
+	if (gxx_gm_disp_ex_[disp_index].IsRealMode())
+		return gxx_gm_disp_ex_[disp_index].Resume();
+	else
+		return -6002;
+}
+
+int GxxGmMultiDispEx::Stop(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].Stop();
+}
+
+int GxxGmMultiDispEx::CaptureScreen(int disp_index)
+{
+	if (gxx_gm_disp_ex_[disp_index].IsPlaying())
+		return gxx_gm_disp_ex_[disp_index].CaptureScreen();
+	else
+		return -1;
+}
+
+std::string GxxGmMultiDispEx::GetPlayInfo(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].GetPlayInfo();
+}
+
+std::string GxxGmMultiDispEx::GetUrl(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].GetUrl();
+}
+
+std::string GxxGmMultiDispEx::GetDeviceId(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].GetDeviceId();
+}
+
+void GxxGmMultiDispEx::SetDeviceId(std::string device_id, int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].SetDeviceId(device_id);
+}
+
+
+
+
+bool GxxGmMultiDispEx::IsAvaliableDisp(int disp_index)
+{
+	// 检查是否为可用分屏
+	// 首先，检查索引号是否在可用范围内
+	if ((disp_index > -1) && (disp_index < MAX_DISP_COUNT_EX))
+	{
+		if (!gxx_gm_disp_ex_[disp_index].IsPlaying())
+			return true;
+	}
+
+	return false;
+}
+
+int GxxGmMultiDispEx::FindFreeDisp()
+{
+	int errCode = -1;
+
+	for (int index = 0; index < current_disp_count_; ++index)
+	{
+		if (!gxx_gm_disp_ex_[index].IsPlaying())
+		{
+			errCode = index;
+			break;
+		}		
 	}
 
 	return errCode;

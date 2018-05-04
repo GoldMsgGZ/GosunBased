@@ -61,7 +61,7 @@ NPError OSCALL NP_GetEntryPoints(NPPluginFuncs* aNPPFuncs)
 	GxxGmPlayBase::SetupMiniDumpMonitor("D:\\npGxxGmPlayer.dmp");
 
 #ifdef _DEBUG
-	MessageBoxA(NULL, "插件已启动，等待接入调试器", "调试", 0);
+	MessageBoxA(NULL, "npGxxGmPlayer入口 >>> 插件已启动，等待接入调试器", "调试", 0);
 #endif
 
 	if (!aNPPFuncs)

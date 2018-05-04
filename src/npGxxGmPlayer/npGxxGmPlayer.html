@@ -15,17 +15,34 @@
   // 初始化
   function OnInit() {
 	  gxxGmPlayer = document.getElementById("npGxxGmPlayer");
-	  gxxGmPlayer.Initialize(2, 2);
+	  gxxGmPlayer.Initialize(1, 1);
+  }
+
+  // 获取版本号
+  function OnGetVersion() {
+	  var version = gxxGmPlayer.GetVersion();
+	  alert(version);
   }
 
   // 分屏
   function OnDivision() {
+	  var row_count_obj = document.getElementById("row_count");
+	  var list_count_obj = document.getElementById("list_count");
+
+	  // 
+	  var row_count_index = row_count_obj.selectedIndex;
+	  var list_count_index = list_count_obj.selectedIndex;
+
+	  var row_count = Number(row_count_obj.options[row_count_index].value);
+	  var list_count = Number(list_count_obj.options[list_count_index].value);
+
+	  var disp_index = Number(document.getElementById("disp_index").value);
+	  gxxGmPlayer.SetDispCount(row_count, list_count);
   }
 
   // 播放
   function OnPlay() {
-	  // 播放视频
-	  var disp_index = document.getElementById("disp_index").value;
+	  var disp_index = Number(document.getElementById("disp_index").value);
 	  var url = document.getElementById("url").value;
 	  var param = document.getElementById("param").value;
 
@@ -34,22 +51,32 @@
 
   // 暂停
   function OnPause() {
+	  var disp_index = Number(document.getElementById("disp_index").value);
+	  gxxGmPlayer.Pause(disp_index);
   }
 
   // 恢复
   function OnResume() {
+	  var disp_index = Number(document.getElementById("disp_index").value);
+	  gxxGmPlayer.Resume(disp_index);
   }
 
   // 停止
   function OnStop() {
+	  var disp_index = Number(document.getElementById("disp_index").value);
+	  gxxGmPlayer.Stop(disp_index);
   }
 
   // 获取播放URL
-  function OnGetPlayUrl() {
+  function OnGetPlayingURL() {
+	  var disp_index = Number(document.getElementById("disp_index").value);
+	  var url = gxxGmPlayer.GetPlayingURL(disp_index);
   }
 
   // 获取播放信息
   function OnGetPlayInfo() {
+	  var disp_index = Number(document.getElementById("disp_index").value);
+	  var info = gxxGmPlayer.GetPlayInfo(disp_index);
   }
   </script>
 
@@ -57,6 +84,7 @@
 
   <br />
   <input type="button" value="初始化" onclick="OnInit()" />
+  <input type="button" value="获取版本号" onclick="OnGetVersion()" />
 
   <br />
   <br />
@@ -106,7 +134,7 @@
   <input type="button" value="停止" onclick="OnStop()"/>
   
   <br />
-  <input type="button" value="取得播放地址" onclick="OnGetPlayUrl()"/>
+  <input type="button" value="取得播放地址" onclick="OnGetPlayingURL()"/>
   <input type="button" value="取得播放信息" onclick="OnGetPlayInfo()"/>
 
  </body>

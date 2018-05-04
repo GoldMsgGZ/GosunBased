@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			UseOfMFC="2"
+			UseOfMFC="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -151,10 +151,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\GxxGmMultiDisp.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GxxGmMultiDispEx.h"
 				>
 			</File>
@@ -171,10 +167,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\GxxGmMultiDisp.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GxxGmMultiDispEx.cpp"
 				>
 			</File>
@@ -182,14 +174,6 @@
 		<Filter
 			Name="GxxGmStatic"
 			>
-			<File
-				RelativePath=".\GxxGmStatic.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GxxGmStatic.h"
-				>
-			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
