@@ -16,11 +16,13 @@ public:
 public:
 	int SetScreenWindow(void* window);
 	bool IsBusy();
+	bool IsRealMode();
 	
 public:
 	int Open(const char *url, bool is_real = true);
 	int Play();
 	int Pause();
+	int Resume();
 	int Stop();
 	void Close();
 

@@ -91,6 +91,7 @@ int GxxGmDispEx::Pause()
 
 int GxxGmDispEx::Resume()
 {
+	int errCode = player_->Resume();
 	return 0;
 }
 
@@ -135,7 +136,7 @@ bool GxxGmDispEx::IsPlaying()
 
 bool GxxGmDispEx::IsRealMode()
 {
-	return is_real_;
+	return player_->IsRealMode();
 }
 
 
@@ -217,9 +218,11 @@ int GxxGmMultiDispEx::ReDivision(int row_count, int list_count)
 			int disp_right	= disp_left  + average_disp_width;
 			int disp_bottom = disp_top   + average_disp_height;
 
+			GxxGmPlayBase::DebugStringOutput("分屏索引：%02d\tx:%d\ty:%d\twidth:%d\theight:%d\n", disp_index, disp_left, disp_top, average_disp_width, average_disp_height);
+
 			if (!gxx_gm_disp_ex_[disp_index].IsAttached())
 			{
-				HWND disp_hwnd = ::CreateWindowA("STATIC", " ", WS_CHILD|WS_VISIBLE|SS_NOTIFY|SS_SUNKEN|SS_BITMAP, 
+				HWND disp_hwnd = ::CreateWindowA("STATIC", "这是显示分屏", WS_CHILD|WS_VISIBLE|SS_NOTIFY|SS_SUNKEN|SS_BITMAP, 
 					disp_left, disp_top, average_disp_width, average_disp_height, (HWND)screen_hwnd_,
 					NULL, NULL, NULL);
 
@@ -288,18 +291,12 @@ int GxxGmMultiDispEx::Pause(int disp_index)
 {
 	// 检查当前索引是否在范围内
 	// 先检查播放模式，如果是实时模式，就不支持暂停接口
-	if (gxx_gm_disp_ex_[disp_index].IsRealMode())
-		return gxx_gm_disp_ex_[disp_index].Pause();
-	else
-		return -6002;
+	return gxx_gm_disp_ex_[disp_index].Pause();
 }
 
 int GxxGmMultiDispEx::Resume(int disp_index)
 {
-	if (gxx_gm_disp_ex_[disp_index].IsRealMode())
-		return gxx_gm_disp_ex_[disp_index].Resume();
-	else
-		return -6002;
+	return gxx_gm_disp_ex_[disp_index].Resume();
 }
 
 int GxxGmMultiDispEx::Stop(int disp_index)

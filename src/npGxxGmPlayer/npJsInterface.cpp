@@ -87,7 +87,7 @@ void __stdcall NPAPI_Play(const NPVariant *args, uint32_t argCount, NPVariant *r
 
 void __stdcall NPAPI_Pause(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	int disp_index = NPVARIANT_TO_INT32(args[2]);
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
 	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Pause() disp_index = %d\n", disp_index);
 
  	int errCode = global_plugin_->multi_disp_ex_->Pause(disp_index);
@@ -97,7 +97,7 @@ void __stdcall NPAPI_Pause(const NPVariant *args, uint32_t argCount, NPVariant *
 
 void __stdcall NPAPI_Resume(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	int disp_index = NPVARIANT_TO_INT32(args[2]);
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
 	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Resume() disp_index = %d\n", disp_index);
 
 	int errCode = global_plugin_->multi_disp_ex_->Resume(disp_index);
@@ -107,7 +107,7 @@ void __stdcall NPAPI_Resume(const NPVariant *args, uint32_t argCount, NPVariant 
 
 void __stdcall NPAPI_Stop(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	int disp_index = NPVARIANT_TO_INT32(args[2]);
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
 	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDisp::Stop() disp_index = %d\n", disp_index);
 
  	int errCode = global_plugin_->multi_disp_ex_->Stop(disp_index);
@@ -117,7 +117,7 @@ void __stdcall NPAPI_Stop(const NPVariant *args, uint32_t argCount, NPVariant *r
 
 void __stdcall NPAPI_GetPlayInfo(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	int disp_index = NPVARIANT_TO_INT32(args[2]);
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
 	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::GetPlayInfo() disp_index = %d\n", disp_index);
 
 	std::string play_info = global_plugin_->multi_disp_ex_->GetPlayInfo(disp_index);
@@ -134,7 +134,7 @@ void __stdcall NPAPI_GetPlayInfo(const NPVariant *args, uint32_t argCount, NPVar
 
 void __stdcall NPAPI_GetPlayingURL(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	int disp_index = NPVARIANT_TO_INT32(args[2]);
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
 	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::GetPlayingURL() disp_index = %d\n", disp_index);
 
 	std::string url = global_plugin_->multi_disp_ex_->GetUrl(disp_index);

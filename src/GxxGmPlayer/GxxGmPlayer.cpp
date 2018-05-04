@@ -42,6 +42,11 @@ bool GxxGmPlayer::IsBusy()
 	return ((GxxGmPlaySDK*)play_sdk_)->IsBusy();
 }
 
+bool GxxGmPlayer::IsRealMode()
+{
+	return is_real_;
+}
+
 int GxxGmPlayer::Open(const char *url, bool is_real /* = true */)
 {
 	is_real_ = is_real;
@@ -55,7 +60,18 @@ int GxxGmPlayer::Play()
 
 int GxxGmPlayer::Pause()
 {
+	if (is_real_)
+		return -6003;
+
 	return ((GxxGmPlaySDK*)play_sdk_)->Pause();
+}
+
+int GxxGmPlayer::Resume()
+{
+	if (is_real_)
+		return -6003;
+
+	return ((GxxGmPlaySDK*)play_sdk_)->Resume();
 }
 
 int GxxGmPlayer::Stop()

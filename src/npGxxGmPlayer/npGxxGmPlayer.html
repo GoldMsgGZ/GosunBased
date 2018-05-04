@@ -46,7 +46,11 @@
 	  var url = document.getElementById("url").value;
 	  var param = document.getElementById("param").value;
 
-	  gxxGmPlayer.Play(url, param, disp_index, 1);
+	  var realmode = 0;
+	  if (document.getElementById("is_real_mode").checked)
+		  realmode = 1;
+
+	  gxxGmPlayer.Play(url, param, disp_index, realmode);
   }
 
   // 暂停
@@ -71,12 +75,16 @@
   function OnGetPlayingURL() {
 	  var disp_index = Number(document.getElementById("disp_index").value);
 	  var url = gxxGmPlayer.GetPlayingURL(disp_index);
+
+	  alert('播放URL:' + url);
   }
 
   // 获取播放信息
   function OnGetPlayInfo() {
 	  var disp_index = Number(document.getElementById("disp_index").value);
 	  var info = gxxGmPlayer.GetPlayInfo(disp_index);
+
+	  alert('播放信息:' + info);
   }
   </script>
 
@@ -126,6 +134,9 @@
   <br />
   <span>播放信息</span>
   <input type="text" value='{"deviceid":"00000000000000000001","userid":"000001","username":"邱业兴"}' id="param" />
+
+  <br />
+  <input type="checkbox" name="is_real_mode" value="实时模式" checked="checked" id="is_real_mode" />实时模式
   
   <br />
   <input type="button" value="播放" onclick="OnPlay()"/>

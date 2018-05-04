@@ -64,7 +64,7 @@ private:
 };
 
 
-#define MAX_DISP_COUNT_EX	1
+#define MAX_DISP_COUNT_EX	81
 
 class GxxGmMultiDispEx
 {

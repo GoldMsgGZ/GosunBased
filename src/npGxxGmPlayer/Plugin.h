@@ -40,6 +40,7 @@ public:
 
 	//GxxGmPlayer player;
 	GxxGmMultiDispEx *multi_disp_ex_;
+	//GxxGmMultiDispEx multi_disp;
 };
 
 // 这里声明一个全局的插件对象
