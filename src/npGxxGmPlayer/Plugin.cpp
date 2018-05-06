@@ -467,7 +467,7 @@ NPObject * CPlugin::GetScriptableObject()
 
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:%d, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+	GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 
 	switch (msg)
 	{
@@ -481,30 +481,32 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 			GetClientRect(hWnd, &rc);
 
 
-			//FillRect(hDC, &rc, (HBRUSH)(COLOR_WINDOW));
-			//FrameRect(hDC, &rc, GetStockBrush(BLACK_BRUSH));
+			FillRect(hDC, &rc, (HBRUSH)(COLOR_WINDOW));
+			FrameRect(hDC, &rc, GetStockBrush(/*BLACK_BRUSH*/GRAY_BRUSH));
 
-			//CPlugin *p = (CPlugin *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-			//if (p)
-			//{
-			//	char *s = "按下键盘任意键，开始播放视频 !";
-			//	DrawTextA(hDC, s, strlen(s), &rc, DT_SINGLELINE|DT_CENTER|DT_VCENTER);
-			//}
-
-			HPEN hPen = CreatePen(PS_DOT, 0.1, RGB(255, 0, 0));
-			HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
-
-			SetBkColor(hDC, RGB(25, 25, 25));
-			SetBkMode(hDC, OPAQUE);
-
-			//SetROP2(hDC, R2_NOT);//用处不大，更多查看手册还有getrop2
-
-			//MoveToEx(hDC, rc.left, rc.bottom / 2, NULL);
-			//LineTo(hDC, rc.right, rc.bottom / 2);
-
-			SelectObject(hDC, hOldPen);
+			CPlugin *p = (CPlugin *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+			if (p)
+			{
+				char *s = "按下键盘任意键，开始播放视频 !";
+				DrawTextA(hDC, s, strlen(s), &rc, DT_SINGLELINE|DT_CENTER|DT_VCENTER);
+			}
 
 			EndPaint(hWnd, &ps);
+		}
+		break;
+	case WM_SETCURSOR:
+		{
+
+		}
+		break;
+	case WM_NCHITTEST:
+		{
+			// 当鼠标移动或者有鼠标键按下时候发出
+		}
+		break;
+	case WM_MOUSEMOVE:
+		{
+
 		}
 		break;
 	default:

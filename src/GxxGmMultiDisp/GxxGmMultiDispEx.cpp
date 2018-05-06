@@ -209,8 +209,8 @@ int GxxGmMultiDispEx::ReDivision(int row_count, int list_count)
 	{
 		for (int list_index = 0; list_index < list_count; ++list_index)
 		{
-			// 分屏索引
-			int disp_index = row_index * list_index;
+			// 分屏索引，这里索引算法不是很完善
+			int disp_index = row_index * row_count_ + list_index;
 
 			// 计算坐标
 			int disp_left	= list_index * average_disp_width;
@@ -339,7 +339,7 @@ bool GxxGmMultiDispEx::IsAvaliableDisp(int disp_index)
 {
 	// 检查是否为可用分屏
 	// 首先，检查索引号是否在可用范围内
-	if ((disp_index > -1) && (disp_index < MAX_DISP_COUNT_EX))
+	if ((disp_index > -1) && (disp_index < current_disp_count_))
 	{
 		if (!gxx_gm_disp_ex_[disp_index].IsPlaying())
 			return true;
