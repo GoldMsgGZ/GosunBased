@@ -465,51 +465,122 @@ NPObject * CPlugin::GetScriptableObject()
 	return m_pScriptableObject;
 }
 
+void CPlugin::DrawBkColor(HWND hWnd)
+{
+	PAINTSTRUCT ps;
+	HDC hDC = BeginPaint(hWnd, &ps);
+
+	RECT rc;
+	GetClientRect(hWnd, &rc);
+
+	HBRUSH bkguard_brush = CreateSolidBrush(RGB(25, 25, 25));
+	HBRUSH frame_brush = CreateSolidBrush(RGB(25, 25, 25));//CreateSolidBrush(RGB(30, 140, 250));
+	FillRect(hDC, &rc, bkguard_brush);
+	FrameRect(hDC, &rc, frame_brush);
+
+	EndPaint(hWnd, &ps);
+}
+
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
-
 	switch (msg)
 	{
 	case WM_PAINT:
 		{
+			// 0x000F
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 绘制 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 			// 在这里需要将背景设置为RGB(25,25,25)
-			PAINTSTRUCT ps;
-			HDC hDC = BeginPaint(hWnd, &ps);
-
-			RECT rc;
-			GetClientRect(hWnd, &rc);
-
-
-			FillRect(hDC, &rc, (HBRUSH)(COLOR_WINDOW));
-			FrameRect(hDC, &rc, GetStockBrush(/*BLACK_BRUSH*/GRAY_BRUSH));
-
-			CPlugin *p = (CPlugin *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-			if (p)
-			{
-				char *s = "按下键盘任意键，开始播放视频 !";
-				DrawTextA(hDC, s, strlen(s), &rc, DT_SINGLELINE|DT_CENTER|DT_VCENTER);
-			}
-
-			EndPaint(hWnd, &ps);
+			global_plugin_->DrawBkColor(hWnd);
+		}
+		break;
+	case WM_ERASEBKGND:
+		{
+			// 0x0014
+			// 当窗口背景必须被擦除时 (例如,窗口的移动,窗口的大小的改变)才发送
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口背景必须被擦除 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			global_plugin_->DrawBkColor(hWnd);
+		}
+		break;
+	case WM_SHOWWINDOW:
+		{
+			// 0x0018
+			// 发出了显示窗口消息
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 显示窗口 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_SETCURSOR:
 		{
-
+			// 0x0020
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 设置光标位置 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
+		break;
+	case WM_MOUSEACTIVATE:
+		{
+			// 0x0021
+		}
+		break;
+	case WM_CHILDACTIVATE:
+		{
+			// 0x0022
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 激活子窗口 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
+		break;
+	case WM_WINDOWPOSCHANGING:
+		{
+			// 0x0046
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口位置更改 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_NCHITTEST:
 		{
+			// 0x0084
 			// 当鼠标移动或者有鼠标键按下时候发出
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标移动或按下 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
+		break;
+	case WM_NCPAINT:
+		{
+			// 0x0085
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 绘制客户区以外区域(例如标题栏、菜单栏等) MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
+		break;
+	case WM_CTLCOLORSTATIC:
+		{
+			// 0x0138
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 静态控件颜色更改 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_MOUSEMOVE:
 		{
+			// 0x0200
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标移动 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 
+			// 获取当前鼠标坐标，判断在哪个子窗口范围内
+			// 然后绘制该窗口的
+		}
+		break;
+	case WM_LBUTTONDOWN:
+		{
+			// 0x0201
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标左键按下 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
+		break;
+	case WM_LBUTTONUP:
+		{
+			// 0x0202
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标左键弹起 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
+		break;
+	case WM_PARENTNOTIFY:
+		{
+			// 0x0210
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口被建立,销毁或用户单击鼠标键 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	default:
+		{
+			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+		}
 		break;
 	}
 

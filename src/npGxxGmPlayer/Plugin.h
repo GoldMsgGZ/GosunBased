@@ -26,6 +26,9 @@ public:
 
 	NPObject *GetScriptableObject();
 
+public:
+	void DrawBkColor(HWND hWnd);
+
 public:  
 	NPP m_pNPInstance;  
 	NPBool m_bInitialized; 
