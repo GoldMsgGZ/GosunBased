@@ -154,6 +154,10 @@
 				RelativePath=".\GxxGmMultiDispEx.h"
 				>
 			</File>
+			<File
+				RelativePath=".\GxxGmMultiDispMsgId.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
@@ -172,7 +176,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="GxxGmStatic"
+			Name="GxxGmDisp"
 			>
 		</Filter>
 		<File

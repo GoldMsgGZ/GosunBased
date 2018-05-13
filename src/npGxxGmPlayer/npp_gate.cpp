@@ -85,6 +85,7 @@ NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc
 	return NPERR_NO_ERROR;
 }
 
+// 删除插件的一个运行实例（instance）
 // here is the place to clean up and destroy the nsPluginInstance object
 NPError NPP_Destroy (NPP instance, NPSavedData** save)
 {
@@ -103,12 +104,14 @@ NPError NPP_Destroy (NPP instance, NPSavedData** save)
 // is about to be destroyed so we can do some gui specific
 // initialization and shutdown
 NPError NPP_SetWindow (NPP instance, NPWindow* pNPWindow)
-{    
+{
 	if (!instance)
 		return NPERR_INVALID_INSTANCE_ERROR;
 
 	if (!pNPWindow)
 		return NPERR_GENERIC_ERROR;
+
+	GxxGmPlayBase::DebugStringOutput("NPP_SetWindow() 有某个插件窗口准备创建或准备销毁了...\n");
 
 	CPlugin * plugin = (CPlugin *)instance->pdata;
 

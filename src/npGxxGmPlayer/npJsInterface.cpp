@@ -115,6 +115,13 @@ void __stdcall NPAPI_Stop(const NPVariant *args, uint32_t argCount, NPVariant *r
  		GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::Stop() failed... errCode = %d\n", errCode);
 }
 
+void __stdcall NPAPI_StopAll(const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int errCode = global_plugin_->multi_disp_ex_->StopAll();
+	if (errCode != 0)
+		GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::StopAll() failed... errCode = %d\n", errCode);
+}
+
 void __stdcall NPAPI_GetPlayInfo(const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
 	int disp_index = NPVARIANT_TO_INT32(args[0]);
@@ -145,4 +152,45 @@ void __stdcall NPAPI_GetPlayingURL(const NPVariant *args, uint32_t argCount, NPV
 
 	strcpy(output_buffer, url.c_str());
 	STRINGZ_TO_NPVARIANT(output_buffer, *result);
+}
+
+
+// 关于回调函数，可以参考以下资料：
+// https://blog.csdn.net/rainkop/article/details/8063709
+// 
+void __stdcall NPAPI_PlayCallback(const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::SetPlayCallback() argCount = %d\n", argCount);
+
+	// 
+	if (global_plugin_ != NULL)
+	{
+		// 这里检查是否已经注册了播放回调对象
+		// 其他的回调安装，在其他的安装函数中实现即可
+		if (global_plugin_->m_pPlayCallbackObject == NULL)
+			global_plugin_->m_pPlayCallbackObject = NPN_RetainObject(NPVARIANT_TO_OBJECT(*args));
+
+		//NPObject *pPlayCallbackObject = NPN_RetainObject(NPVARIANT_TO_OBJECT(*args));
+		//global_plugin_->m_pPlayCallbackObject.push_back(pPlayCallbackObject);
+	}
+}
+
+void __stdcall NPAPI_TestPlayCallback(const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::TestPlayCallback() argCount = %d\n", argCount);
+
+	if (global_plugin_ != NULL)
+	{
+		//std::vector<NPObject *>::iterator iter;
+		//for (iter = global_plugin_->m_pPlayCallbackObject.begin(); iter != global_plugin_->m_pPlayCallbackObject.end(); ++iter)
+		//{
+		//	NPVariant result;
+		//	NPN_InvokeDefault(global_plugin_->m_pNPInstance, *iter, NULL, 0, &result);
+		//	NPN_ReleaseVariantValue(&result);
+		//}
+
+		NPVariant result;
+		NPN_InvokeDefault(global_plugin_->m_pNPInstance, global_plugin_->m_pPlayCallbackObject, NULL, 0, &result);
+		NPN_ReleaseVariantValue(&result);
+	}
 }

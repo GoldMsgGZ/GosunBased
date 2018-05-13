@@ -1,7 +1,9 @@
 #include "GxxGmMultiDispEx.h"
 #include "..\GxxGmPlayBase\GxxGmPlayBase.h"
 #include "..\GxxGmPlayer\GxxGmPlayer.h"
+#include "GxxGmMultiDispMsgId.h"
 #include <Windows.h>
+#include <WindowsX.h>
 
 
 GxxGmDispEx::GxxGmDispEx()
@@ -11,16 +13,20 @@ GxxGmDispEx::GxxGmDispEx()
 , list_index_(0)
 , player_(new GxxGmPlayer())
 , is_real_(false)
+, old_proc_(0)
 {
 
 }
 
 GxxGmDispEx::~GxxGmDispEx()
 {
+	SetWindowLongPtr((HWND)disp_hwnd_, GWLP_WNDPROC, (LPARAM)(WNDPROC)old_proc_);
+
 	disp_hwnd_   = 0;
 	father_hwnd_ = 0;
 	row_index_	 = 0;
 	list_index_  = 0;
+	old_proc_	 = 0;
 }
 
 void GxxGmDispEx::Attach(int self_hwnd, int father_hwnd)
@@ -28,6 +34,9 @@ void GxxGmDispEx::Attach(int self_hwnd, int father_hwnd)
 	disp_hwnd_ = self_hwnd;
 	father_hwnd_ = father_hwnd;
 	player_->SetScreenWindow((void*)disp_hwnd_);
+
+	// 
+	old_proc_ = (long)(WNDPROC)SetWindowLongPtr((HWND)disp_hwnd_, GWLP_WNDPROC, (LPARAM)(WNDPROC)GxxGmDispEx::WinProc);
 }
 
 void GxxGmDispEx::SetLocation(int row_index, int list_index)
@@ -139,6 +148,60 @@ bool GxxGmDispEx::IsRealMode()
 	return player_->IsRealMode();
 }
 
+#ifndef _WIN64
+int __stdcall GxxGmDispEx::WinProc(int hwnd, unsigned int msg, unsigned int wParam, long lParam)
+#else
+int __stdcall GxxGmDispEx::WinProc(__int64 hwnd, unsigned int msg, unsigned __int64 wParam, __int64 lParam)
+#endif
+{
+	int errCode = 0;
+
+	switch (msg)
+	{
+	case WM_PAINT:
+		{
+			// 0x000F
+			PAINTSTRUCT ps;
+			HDC hDC = BeginPaint((HWND)hwnd, &ps);
+
+			RECT rc;
+			GetClientRect((HWND)hwnd, &rc);
+
+			HBRUSH frame_brush;
+			HBRUSH bkguard_brush = CreateSolidBrush(RGB(25, 25, 25));
+			if ((wParam == 0) || (wParam == MSG_PAINT_NORMAL_FRAME))
+				frame_brush = CreateSolidBrush(RGB(25, 25, 25));//CreateSolidBrush(RGB(30, 140, 250));
+			else if (wParam == MSG_PAINT_ACTIVE_FRAME)
+				frame_brush = CreateSolidBrush(RGB(30, 140, 250));
+
+			FillRect(hDC, &rc, bkguard_brush);
+			FrameRect(hDC, &rc, frame_brush);
+
+			EndPaint((HWND)hwnd, &ps);
+		}
+		break;
+	case WM_LBUTTONDOWN:
+		{
+			// 0x0201
+			int mouse_pos_x = GET_X_LPARAM(lParam);
+			int mouse_pos_y = GET_Y_LPARAM(lParam);
+			GxxGmPlayBase::DebugStringOutput("[GxxGmDispEx MESSAGE] 分屏 %d 鼠标左键按下，坐标：(%d, %d) MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", hwnd, mouse_pos_x, mouse_pos_y, msg, wParam, lParam);
+
+			// 通知上层，更改当前活跃窗口
+			//BOOL bret = PostMessage((HWND)father_hwnd_, (UINT)MSG_PAINT_ACTIVE_FRAME, (WPARAM)hwnd, (LPARAM)0);
+			//if (!bret)
+			//	GxxGmPlayBase::DebugStringOutput("[GxxGmDispEx MESSAGE] 分屏 %d 鼠标左键按下，坐标：(%d, %d) 发送绘制活跃窗口消息失败！ MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", hwnd, mouse_pos_x, mouse_pos_y, msg, wParam, lParam);
+			//else
+			//	GxxGmPlayBase::DebugStringOutput("[GxxGmDispEx MESSAGE] 分屏 %d 鼠标左键按下，坐标：(%d, %d) 发送绘制活跃窗口消息成功！ MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", hwnd, mouse_pos_x, mouse_pos_y, msg, wParam, lParam);
+		}
+		break;
+	default:
+		break;
+	}
+	
+	return DefWindowProc((HWND)hwnd, msg, wParam, lParam);
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -233,11 +296,15 @@ int GxxGmMultiDispEx::ReDivision(int row_count, int list_count)
 					return errCode;
 				}
 
+				GxxGmPlayBase::DebugStringOutput("创建分屏 %d 成功！窗口句柄为：%d\n", disp_index, (int)disp_hwnd);
+
 				// 保存分屏句柄和父句柄
 				gxx_gm_disp_ex_[disp_index].Attach((int)disp_hwnd, (int)screen_hwnd_);
 
 				// 设置分屏坐标
 				gxx_gm_disp_ex_[disp_index].SetLocation(row_index, list_index);
+
+				// 这里是否需要增加一个消息处理函数，用于处理对应的子窗口消息
 			}
 			
 
@@ -302,6 +369,20 @@ int GxxGmMultiDispEx::Resume(int disp_index)
 int GxxGmMultiDispEx::Stop(int disp_index)
 {
 	return gxx_gm_disp_ex_[disp_index].Stop();
+}
+
+int GxxGmMultiDispEx::StopAll()
+{
+	int errCode = 0;
+
+	for (int index = 0; index < MAX_DISP_COUNT_EX; ++index)
+	{
+		errCode = gxx_gm_disp_ex_[index].Stop();
+		if (errCode != 0)
+			GxxGmPlayBase::DebugStringOutput("停止%d号分屏失败！错误码：%d\n", index);
+	}
+
+	return errCode;
 }
 
 int GxxGmMultiDispEx::CaptureScreen(int disp_index)

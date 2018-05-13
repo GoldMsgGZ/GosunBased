@@ -1,0 +1,34 @@
+#ifndef _ppapi_framework_H_
+#define _ppapi_framework_H_
+
+#include <algorithm>
+
+#include "ppapi/cpp/instance.h"
+#include "ppapi/cpp/module.h"
+#include "ppapi/cpp/var.h"
+
+// When compiling natively on Windows, PostMessage can be #define-d to
+// something else.
+#ifdef PostMessage
+#undef PostMessage
+#endif
+
+// This is a simple C++ Pepper plugin that demonstrates HandleMessage and
+// PostMessage.
+
+// This object represents one time the page says <embed>.
+class MyInstance : public pp::Instance {
+public:
+	explicit MyInstance(PP_Instance instance) : pp::Instance(instance) {}
+	virtual ~MyInstance() {}
+	 
+public:
+	virtual void DidChangeView(const View& view);
+	virtual void DidChangeView(const Rect& position, const Rect& clip);
+	virtual void DidChangeFocus(bool has_focus);
+	virtual bool HandleInputEvent(const pp::InputEvent& event);
+	virtual void HandleMessage(const pp::Var& message_data);
+};
+
+#endif//_ppapi_framework_H_
+ 

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="wangyu">
+  <meta name="Keywords" content="ppapi">
+  <meta name="Description" content="">
+  <title>ppGxxGmPlayer 测试页面</title>
+ </head>
+ <body>
+  <script>
+  var player;
+
+  function OnInit() {
+	  player = document.getElementById("plugin");
+  }
+  </script>
+  <object id="plugin" type="application/x-ppapi-ppGxxGmPlayer" width="800" height="600"/>
+
+  <input type="button" value="初始化" onclick="OnInit()" />
+ </body>
+</html>

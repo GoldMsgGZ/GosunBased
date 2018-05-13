@@ -46,10 +46,19 @@ public:
 	bool IsPlaying();
 	bool IsRealMode();
 
+public:
+#ifndef _WIN64
+	static int __stdcall WinProc(int hwnd, unsigned int msg, unsigned int wParam, long lParam);
+#else
+	static int __stdcall WinProc(__int64 hwnd, unsigned int msg, unsigned __int64 wParam, __int64 lParam);
+#endif
+	
+
 private:
 	// ·ÖÆÁÏÔÊ¾¾ä±ú
 	int disp_hwnd_;
 	int father_hwnd_;
+	long old_proc_;
 
 	// ·ÖÆÁ×ø±ê
 	int row_index_;
@@ -102,6 +111,8 @@ public:
 	 * Í£Ö¹²¥·Å
 	 */
 	int Stop(int disp_index);
+
+	int StopAll();
 
 	/**
 	 * 

@@ -1,5 +1,4 @@
 #include "Plugin.h"
-#include "..\GxxGmPlayBase\GxxGmPlayBase.h"
 #include <windowsX.h>
 #include "npruntime.h"
 
@@ -225,8 +224,11 @@ JsParams js_params[] = {
 	{ 4,	NULL,	"Pause",						NPAPI_Pause,						JsFuncType_Interface	},
 	{ 5,	NULL,	"Resume",						NPAPI_Resume,						JsFuncType_Interface	},
 	{ 6,	NULL,	"Stop",							NPAPI_Stop,							JsFuncType_Interface	},
-	{ 7,	NULL,	"GetPlayInfo",					NPAPI_GetPlayInfo,					JsFuncType_Interface	},
-	{ 8,	NULL,	"GetPlayingURL",				NPAPI_GetPlayingURL,				JsFuncType_Interface	},
+	{ 7,	NULL,	"StopAll",						NPAPI_StopAll,						JsFuncType_Interface	},
+	{ 8,	NULL,	"GetPlayInfo",					NPAPI_GetPlayInfo,					JsFuncType_Interface	},
+	{ 9,	NULL,	"GetPlayingURL",				NPAPI_GetPlayingURL,				JsFuncType_Interface	},
+	{ 10,	NULL,	"PlayCallback",					NPAPI_PlayCallback,					JsFuncType_Property		},
+	{ 11,	NULL,	"TestPlayCallback",				NPAPI_TestPlayCallback,				JsFuncType_Interface	},
 	{ -1,	NULL,	"",								NULL,								JsFuncType_None			}
 };
 
@@ -395,7 +397,7 @@ CPlugin::CPlugin(NPP pNPInstance)
 , m_bInitialized(FALSE)
 , m_hWnd(NULL)
 , m_pScriptableObject(NULL)
-, m_pJsCallbackObject(NULL)
+//, m_pJsCallbackObject(NULL)
 , multi_disp_ex_(new GxxGmMultiDispEx())
 {
 	NPN_GetValue(m_pNPInstance, NPNVWindowNPObject, &sWindowObj);
@@ -407,7 +409,13 @@ CPlugin::~CPlugin(void)
 {
 	// 释放Js对象
 	NPN_ReleaseObject(m_pScriptableObject);
-	NPN_ReleaseObject(m_pJsCallbackObject);
+	NPN_ReleaseObject(m_pPlayCallbackObject);
+
+	//std::vector<NPObject *>::iterator iter;
+	//for (iter = global_plugin_->m_pPlayCallbackObject.begin(); iter != global_plugin_->m_pPlayCallbackObject.end(); )
+	//{
+	//	iter = global_plugin_->m_pPlayCallbackObject.erase(iter);
+	//}
 }
 
 NPBool CPlugin::init(NPWindow* pNPWindow)
@@ -490,15 +498,15 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 			// 0x000F
 			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 绘制 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 			// 在这里需要将背景设置为RGB(25,25,25)
-			global_plugin_->DrawBkColor(hWnd);
+			// global_plugin_->DrawBkColor(hWnd);
 		}
 		break;
 	case WM_ERASEBKGND:
 		{
 			// 0x0014
 			// 当窗口背景必须被擦除时 (例如,窗口的移动,窗口的大小的改变)才发送
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口背景必须被擦除 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
-			global_plugin_->DrawBkColor(hWnd);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口背景必须被擦除 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//global_plugin_->DrawBkColor(hWnd);
 		}
 		break;
 	case WM_SHOWWINDOW:
@@ -511,7 +519,7 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	case WM_SETCURSOR:
 		{
 			// 0x0020
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 设置光标位置 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 设置光标位置 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_MOUSEACTIVATE:
@@ -529,57 +537,92 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 		{
 			// 0x0046
 			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口位置更改 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			global_plugin_->DrawBkColor(hWnd);
 		}
 		break;
 	case WM_NCHITTEST:
 		{
 			// 0x0084
 			// 当鼠标移动或者有鼠标键按下时候发出
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标移动或按下 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标移动或按下 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_NCPAINT:
 		{
 			// 0x0085
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 绘制客户区以外区域(例如标题栏、菜单栏等) MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 绘制客户区以外区域(例如标题栏、菜单栏等) MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_CTLCOLORSTATIC:
 		{
 			// 0x0138
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 静态控件颜色更改 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 静态控件颜色更改 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_MOUSEMOVE:
 		{
 			// 0x0200
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标移动 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标移动 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 
 			// 获取当前鼠标坐标，判断在哪个子窗口范围内
-			// 然后绘制该窗口的
 		}
 		break;
 	case WM_LBUTTONDOWN:
 		{
 			// 0x0201
 			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标左键按下 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			
+			
 		}
 		break;
 	case WM_LBUTTONUP:
 		{
 			// 0x0202
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标左键弹起 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 鼠标左键弹起 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	case WM_PARENTNOTIFY:
 		{
 			// 0x0210
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口被建立,销毁或用户单击鼠标键 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			switch (wParam)
+			{
+			case WM_LBUTTONDOWN:
+				{
+					// 获取当前鼠标坐标，判断在哪个子窗口范围内
+					// 设置当前活跃窗口为该窗口，并绘制边框
+					//int mouse_pos_x = GET_X_LPARAM(lParam);
+					//int mouse_pos_y = GET_Y_LPARAM(lParam);
+					int mouse_pos_x = GET_WM_PARENTNOTIFY_X(wParam, lParam);
+					int mouse_pos_y = GET_WM_PARENTNOTIFY_Y(wParam, lParam);
+					HWND disp_hwnd = GET_WM_PARENTNOTIFY_HWNDCHILD(wParam, lParam);
+
+					GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 在子窗口(%d)内鼠标左键按下，坐标：(%d, %d) MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", (int)disp_hwnd, mouse_pos_x, mouse_pos_y, msg, wParam, lParam);
+				}
+				break;
+			default:
+				{
+					GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 子窗口被建立,销毁 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+				}
+			}
 		}
 		break;
+	//case MSG_PAINT_ACTIVE_FRAME:
+	//	{
+	//		// 取出索引
+	//		int disp_hwnd = wParam;
+
+	//		for (int index = 0; index < MAX_DISP_COUNT_EX; ++index)
+	//		{
+	//			// 
+	//			if ()
+	//			{
+	//			}
+	//		}
+	//	}
+	//	break;
 	default:
 		{
-			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
+			//GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
 		}
 		break;
 	}

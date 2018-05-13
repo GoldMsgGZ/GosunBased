@@ -3,6 +3,8 @@
 #include "npJsInterface.h"
 #include "..\GxxGmMultiDisp\GxxGmMultiDispEx.h"
 #include "..\GxxGmPlayer\GxxGmPlayer.h"
+#include "..\GxxGmPlayBase\GxxGmPlayBase.h"
+#include <vector>
 
 
 class CPlugin :
@@ -39,7 +41,8 @@ public:
 
 	// JavascriptΩªª•∂‘œÛ
 	NPObject *m_pScriptableObject;
-	NPObject *m_pJsCallbackObject;
+	NPObject *m_pPlayCallbackObject;
+	//std::vector<NPObject *> m_pPlayCallbackObject;
 
 	//GxxGmPlayer player;
 	GxxGmMultiDispEx *multi_disp_ex_;
