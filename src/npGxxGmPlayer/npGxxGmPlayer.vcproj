@@ -231,6 +231,14 @@
 				RelativePath=".\Plugin.h"
 				>
 			</File>
+			<File
+				RelativePath=".\PluginSet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PluginSet.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="3.²¥·ÅÆÁÄ»"

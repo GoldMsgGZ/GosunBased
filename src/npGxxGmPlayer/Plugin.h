@@ -50,7 +50,7 @@ public:
 };
 
 // 这里声明一个全局的插件对象
-extern CPlugin *global_plugin_;
+//extern CPlugin *global_plugin_;
 
 // Helper class that can be used to map calls to the NPObject hooks
 // into virtual methods on instances of classes that derive from this
@@ -77,6 +77,7 @@ public:
 	virtual bool Construct(const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 public:
+	// 这里应该是外部调用的实际入口
 	static void _Deallocate(NPObject *npobj);
 	static void _Invalidate(NPObject *npobj);
 	static bool _HasMethod(NPObject *npobj, NPIdentifier name);
@@ -136,7 +137,7 @@ enum _JsFuncType_
 };
 
 // 定义js处理函数
-typedef void (__stdcall * _Func_Js)(const NPVariant *args, uint32_t argCount, NPVariant *result);
+typedef void (__stdcall * _Func_Js)(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 typedef struct _JS_PARAMS_
 {

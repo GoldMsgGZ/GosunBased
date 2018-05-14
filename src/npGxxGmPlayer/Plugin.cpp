@@ -3,7 +3,7 @@
 #include "npruntime.h"
 
 
-CPlugin *global_plugin_ = NULL;
+//CPlugin *global_plugin_ = NULL;
 
 static NPObject *sWindowObj;
 
@@ -41,14 +41,14 @@ nsPluginInstanceBase * NS_NewPluginInstance(nsPluginCreateData * aCreateDataStru
 	if(!aCreateDataStruct)
 		return NULL;
 
-	global_plugin_ = new CPlugin(aCreateDataStruct->instance);
+	CPlugin *plugin = new CPlugin(aCreateDataStruct->instance);
 
 	// NPAPI默认创建的是Windowed插件
 	// 我们要创建winless插件，则需要将 bWindowed 手动设置为 FALSE
 	BOOL bWindowed = TRUE;
 	NPN_SetValue(aCreateDataStruct->instance, NPPVpluginTransparentBool, (void *)bWindowed);
 
-	return global_plugin_;
+	return plugin;
 }
 
 void NS_DestroyPluginInstance(nsPluginInstanceBase * aPlugin)
@@ -120,67 +120,78 @@ bool ScriptablePluginObjectBase::Construct(const NPVariant *args, uint32_t argCo
 void ScriptablePluginObjectBase::_Deallocate(NPObject *npobj)
 {
 	// Call the virtual destructor.
-	delete (ScriptablePluginObjectBase *)npobj;
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	delete obj;
 }
 
 // static
 void ScriptablePluginObjectBase::_Invalidate(NPObject *npobj)
 {
-	((ScriptablePluginObjectBase *)npobj)->Invalidate();
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	obj->Invalidate();
 }
 
 // static
 bool ScriptablePluginObjectBase::_HasMethod(NPObject *npobj, NPIdentifier name)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->HasMethod(name);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->HasMethod(name);
 }
 
 // static
 bool ScriptablePluginObjectBase::_Invoke(NPObject *npobj, NPIdentifier name, const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->Invoke(name, args, argCount, result);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->Invoke(name, args, argCount, result);
 }
 
 // static
 bool ScriptablePluginObjectBase::_InvokeDefault(NPObject *npobj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->InvokeDefault(args, argCount, result);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->InvokeDefault(args, argCount, result);
 }
 
 // static
 bool ScriptablePluginObjectBase::_HasProperty(NPObject * npobj, NPIdentifier name)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->HasProperty(name);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->HasProperty(name);
 }
 
 // static
 bool ScriptablePluginObjectBase::_GetProperty(NPObject *npobj, NPIdentifier name, NPVariant *result)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->GetProperty(name, result);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->GetProperty(name, result);
 }
 
 // static
 bool ScriptablePluginObjectBase::_SetProperty(NPObject *npobj, NPIdentifier name, const NPVariant *value)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->SetProperty(name, value);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->SetProperty(name, value);
 }
 
 // static
 bool ScriptablePluginObjectBase::_RemoveProperty(NPObject *npobj, NPIdentifier name)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->RemoveProperty(name);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->RemoveProperty(name);
 }
 
 // static
 bool ScriptablePluginObjectBase::_Enumerate(NPObject *npobj, NPIdentifier **identifier, uint32_t *count)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->Enumerate(identifier, count);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->Enumerate(identifier, count);
 }
 
 // static
 bool ScriptablePluginObjectBase::_Construct(NPObject *npobj, const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-	return ((ScriptablePluginObjectBase *)npobj)->Construct(args, argCount, result);
+	ScriptablePluginObjectBase *obj = (ScriptablePluginObjectBase *)npobj;
+	return obj->Construct(args, argCount, result);
 }
 
 
@@ -319,7 +330,7 @@ bool ScriptablePluginObject::SetProperty(NPIdentifier name, const NPVariant *val
 				// 找到对应的处理函数
 				// 设置属性的时候，固定传一个参数进去，不处理结果
 				_Func_Js js_handler = js_params[index].jsFunc_;
-				js_handler(value, 1, NULL);
+				js_handler(this->mNpp, value, 1, NULL);
 				res = true;
 				break;
 			}
@@ -334,6 +345,7 @@ bool ScriptablePluginObject::SetProperty(NPIdentifier name, const NPVariant *val
 bool ScriptablePluginObject::Invoke(NPIdentifier name, const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
 	// 这里解决具体的调用
+	GxxGmPlayBase::DebugStringOutput("ScriptablePluginObject::Invoke() 被调用，plugin pointer : %d\n", this->mNpp->pdata);
 	bool res = false;
 	int index = 0;
 	while(js_params[index].index_ != -1)
@@ -346,7 +358,7 @@ bool ScriptablePluginObject::Invoke(NPIdentifier name, const NPVariant *args, ui
 				{
 					// 这里处理Js调用插件的接口
 					_Func_Js js_handler = js_params[index].jsFunc_;
-					js_handler(args, argCount, result);
+					js_handler(this->mNpp, args, argCount, result);
 					res = true;
 				}
 				break;
@@ -540,7 +552,7 @@ static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 		{
 			// 0x0046
 			GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer MESSAGE] 窗口位置更改 MSG:0x%04x, WPARAM:%d, LPARAM:%d\n", msg, wParam, lParam);
-			global_plugin_->DrawBkColor(hWnd);
+			//global_plugin_->DrawBkColor(hWnd);
 		}
 		break;
 	case WM_NCHITTEST:
