@@ -33,6 +33,8 @@
 * the provisions above, a recipient may use your version of this file under
 * the terms of any one of the MPL, the GPL or the LGPL.
 *
+* 本文件范围内为浏览器提供给插件调用的接口
+* 
 * ***** END LICENSE BLOCK ***** */
 
 ////////////////////////////////////////////////////////////
@@ -42,6 +44,7 @@
 #include "npapi.h"
 #include "npplat.h"
 #include "npfunctions.h"
+#include "..\GxxGmPlayBase\GxxGmPlayBase.h"
 
 #ifndef HIBYTE
 #define HIBYTE(x) ((((uint32_t)(x)) & 0xff00) >> 8)
@@ -246,6 +249,7 @@ void NPN_ReleaseObject(NPObject *obj)
 bool NPN_Invoke(NPP npp, NPObject* obj, NPIdentifier methodName,
                 const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
+	//GxxGmPlayBase::DebugStringOutput("")
   return NPNFuncs.invoke(npp, obj, methodName, args, argCount, result);
 }
 

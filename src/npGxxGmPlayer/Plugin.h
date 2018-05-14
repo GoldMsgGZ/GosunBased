@@ -90,6 +90,7 @@ public:
 	static bool _Construct(NPObject *npobj, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 protected:
+	// ²å¼þÊµÀý¾ä±ú
 	NPP mNpp;
 };
 

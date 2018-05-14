@@ -398,8 +398,10 @@ CPlugin::CPlugin(NPP pNPInstance)
 , m_hWnd(NULL)
 , m_pScriptableObject(NULL)
 //, m_pJsCallbackObject(NULL)
+, m_pPlayCallbackObject(NULL)
 , multi_disp_ex_(new GxxGmMultiDispEx())
 {
+	GxxGmPlayBase::DebugStringOutput("创建一个插件对象！\n");
 	NPN_GetValue(m_pNPInstance, NPNVWindowNPObject, &sWindowObj);
 
 	// 这里定义各个开放的接口
@@ -408,6 +410,7 @@ CPlugin::CPlugin(NPP pNPInstance)
 CPlugin::~CPlugin(void)
 {
 	// 释放Js对象
+	GxxGmPlayBase::DebugStringOutput("释放一个插件对象！\n");
 	NPN_ReleaseObject(m_pScriptableObject);
 	NPN_ReleaseObject(m_pPlayCallbackObject);
 

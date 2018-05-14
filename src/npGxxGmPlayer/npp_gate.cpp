@@ -64,6 +64,8 @@ NPError NPP_New(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc
 	if (!instance)
 		return NPERR_INVALID_INSTANCE_ERROR;
 
+	GxxGmPlayBase::DebugStringOutput("NPP_New() 准备创建一个插件实例... NPMIMEType:%s \n", pluginType);
+
 	// create a new plugin instance object
 	// initialization will be done when the associated window is ready
 	nsPluginCreateData ds;
@@ -92,6 +94,8 @@ NPError NPP_Destroy (NPP instance, NPSavedData** save)
 	if (!instance)
 		return NPERR_INVALID_INSTANCE_ERROR;
 
+	GxxGmPlayBase::DebugStringOutput("NPP_New() 准备销毁一个插件实例...\n");
+
 	CPlugin * plugin = (CPlugin *)instance->pdata;
 	if (plugin) {
 		plugin->shut();
@@ -111,7 +115,7 @@ NPError NPP_SetWindow (NPP instance, NPWindow* pNPWindow)
 	if (!pNPWindow)
 		return NPERR_GENERIC_ERROR;
 
-	GxxGmPlayBase::DebugStringOutput("NPP_SetWindow() 有某个插件窗口准备创建或准备销毁了...\n");
+	//GxxGmPlayBase::DebugStringOutput("NPP_SetWindow() 有某个插件窗口准备创建或准备销毁了...\n");
 
 	CPlugin * plugin = (CPlugin *)instance->pdata;
 
@@ -141,6 +145,7 @@ NPError NPP_SetWindow (NPP instance, NPWindow* pNPWindow)
 	return NPERR_NO_ERROR;
 }
 
+// 供浏览器查询插件内部信息
 NPError	NPP_GetValue(NPP instance, NPPVariable variable, void *value)
 {
 	if (!instance)
@@ -168,6 +173,7 @@ NPError	NPP_GetValue(NPP instance, NPPVariable variable, void *value)
 	return plugin->GetValue(variable, value);
 }
 
+// 通知插件实例出现了新的流数据
 NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream* stream, NPBool seekable, uint16_t* stype)
 {
 	if (!instance)
@@ -180,6 +186,7 @@ NPError NPP_NewStream(NPP instance, NPMIMEType type, NPStream* stream, NPBool se
 	return plugin->NewStream(type, stream, seekable, stype);
 }
 
+// 调用NPP_Write()函数之前，狅插件可以接收多少字节的数据
 int32_t NPP_WriteReady (NPP instance, NPStream *stream)
 {
 	if (!instance)
@@ -192,6 +199,7 @@ int32_t NPP_WriteReady (NPP instance, NPStream *stream)
 	return plugin->WriteReady(stream);
 }
 
+// 插件读取流数据
 int32_t NPP_Write (NPP instance, NPStream *stream, int32_t offset, int32_t len, void *buffer)
 {   
 	if (!instance)
@@ -216,6 +224,7 @@ NPError NPP_DestroyStream (NPP instance, NPStream *stream, NPError reason)
 	return plugin->DestroyStream(stream, reason);
 }
 
+// 为数据流提供一个本地文件名
 void NPP_StreamAsFile (NPP instance, NPStream* stream, const char* fname)
 {
 	if (!instance)
@@ -228,6 +237,7 @@ void NPP_StreamAsFile (NPP instance, NPStream* stream, const char* fname)
 	plugin->StreamAsFile(stream, fname);
 }
 
+// 请求嵌入式打印或全屏打印
 void NPP_Print (NPP instance, NPPrint* printInfo)
 {
 	if (!instance)

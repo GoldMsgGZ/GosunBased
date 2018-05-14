@@ -58,6 +58,8 @@ NPNetscapeFuncs NPNFuncs;
 NPError OSCALL NP_GetEntryPoints(NPPluginFuncs* aNPPFuncs)
 {
 	GxxGmPlayBase::DebugStringOutput("[npGxxGmPlayer] 进入NP_GetEntryPoints()函数...\n");
+
+	// 安装崩溃转储，这里未来需要修改一下，尝试转储到C:\\Windows\\Minidump目录内，不行的话就在Application Data内创建对应的转储目录
 	GxxGmPlayBase::SetupMiniDumpMonitor("D:\\npGxxGmPlayer.dmp");
 
 #ifdef _DEBUG
