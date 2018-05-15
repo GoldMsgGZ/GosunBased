@@ -148,21 +148,21 @@ int GxxGmHttpImp::Play()
 {
 	int errCode = 0;
 
-	// 检查是否创建了同步事件，如果没有就创建事件
-	if (framerate_event_handle_ == NULL)
-		framerate_event_handle_ = CreateEvent(NULL, FALSE, FALSE, NULL);
+	//// 检查是否创建了同步事件，如果没有就创建事件
+	//if (framerate_event_handle_ == NULL)
+	//	framerate_event_handle_ = CreateEvent(NULL, FALSE, FALSE, NULL);
 
-	// 检查控制线程是否在运行，如果没有运行，则
-	if (!control_thread_.IsRunning())
-	{
-		bool bret = control_thread_.Start(_ControlThreadCallback, this);
-		if (!bret)
-		{
-			GxxGmPlayBase::DebugStringOutput("启动控制线程失败！...\n");
-			Stop();
-			return -1;
-		}
-	}
+	//// 检查控制线程是否在运行，如果没有运行，则
+	//if (!control_thread_.IsRunning())
+	//{
+	//	bool bret = control_thread_.Start(_ControlThreadCallback, this);
+	//	if (!bret)
+	//	{
+	//		GxxGmPlayBase::DebugStringOutput("启动控制线程失败！...\n");
+	//		Stop();
+	//		return -1;
+	//	}
+	//}
 
 	if (!read_stream_thread_.IsRunning())
 	{
@@ -198,8 +198,8 @@ int GxxGmHttpImp::Stop()
 	read_stream_thread_.Stop();
 	read_stream_thread_.Join();
 
-	control_thread_.Stop();
-	control_thread_.Join();
+	//control_thread_.Stop();
+	//control_thread_.Join();
 
 	CloseHandle(framerate_event_handle_);
 	framerate_event_handle_ = NULL;
@@ -263,9 +263,11 @@ void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void 
 		AVFrame *av_frame = av_frame_alloc();
 		if (av_packet.stream_index == http_->video_stream_index_)
 		{
-			WaitForSingleObject(http_->framerate_event_handle_, INFINITE);
+			// 这里是做帧率控制的
+			//WaitForSingleObject(http_->framerate_event_handle_, INFINITE);
 
 #ifdef USE_H264BSF
+			// 这里需要判断，如果是H264编码，我们就需要用过滤器进行过滤
 			av_bitstream_filter_filter(h264_bit_stream_filter_context, (AVCodecContext*)http_->video_codec_ctx_, NULL, &av_packet.data, &av_packet.size, av_packet.data, av_packet.size, 0);
 #endif
 
@@ -324,14 +326,9 @@ void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void 
 #endif
 
 	// 上报播放状态
-	http_->notifer_->PlayerStateNotifer(play_state);
+	// 这里也不上报了，因为
+	//http_->notifer_->PlayerStateNotifer(play_state);
 
-	//avcodec_close(((AVCodecContext*)http_->video_codec_ctx_));
-	//avcodec_close(((AVCodecContext*)http_->audio_codec_ctx_));
-	//avformat_close_input(((AVFormatContext **)&http_->format_ctx_));
-	//http_->video_codec_ctx_ = NULL;
-	//http_->audio_codec_ctx_ = NULL;
-	//http_->format_ctx_ = NULL;
 	GxxGmPlayBase::DebugStringOutput("准备退出媒体帧读取线程...\n");
 }
 

@@ -189,9 +189,6 @@ void __stdcall NPAPI_PlayCallback(NPP instance, const NPVariant *args, uint32_t 
 		// 其他的回调安装，在其他的安装函数中实现即可
 		if (plugin->m_pPlayCallbackObject == NULL)
 			plugin->m_pPlayCallbackObject = NPN_RetainObject(NPVARIANT_TO_OBJECT(*args));
-
-		//NPObject *pPlayCallbackObject = NPN_RetainObject(NPVARIANT_TO_OBJECT(*args));
-		//global_plugin_->m_pPlayCallbackObject.push_back(pPlayCallbackObject);
 	}
 }
 
@@ -203,14 +200,6 @@ void __stdcall NPAPI_TestPlayCallback(NPP instance, const NPVariant *args, uint3
 
 	if (plugin != NULL)
 	{
-		//std::vector<NPObject *>::iterator iter;
-		//for (iter = global_plugin_->m_pPlayCallbackObject.begin(); iter != global_plugin_->m_pPlayCallbackObject.end(); ++iter)
-		//{
-		//	NPVariant result;
-		//	NPN_InvokeDefault(global_plugin_->m_pNPInstance, *iter, NULL, 0, &result);
-		//	NPN_ReleaseVariantValue(&result);
-		//}
-
 		NPVariant result;
 		NPN_InvokeDefault(plugin->m_pNPInstance, plugin->m_pPlayCallbackObject, NULL, 0, &result);
 		NPN_ReleaseVariantValue(&result);

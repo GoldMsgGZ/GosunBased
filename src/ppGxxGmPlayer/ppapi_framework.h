@@ -6,6 +6,7 @@
 #include "ppapi/cpp/instance.h"
 #include "ppapi/cpp/module.h"
 #include "ppapi/cpp/var.h"
+#include "ppapi/cpp/input_event.h"
 
 // When compiling natively on Windows, PostMessage can be #define-d to
 // something else.
@@ -23,8 +24,8 @@ public:
 	virtual ~MyInstance() {}
 	 
 public:
-	virtual void DidChangeView(const View& view);
-	virtual void DidChangeView(const Rect& position, const Rect& clip);
+	virtual void DidChangeView(const pp::View& view);
+	virtual void DidChangeView(const pp::Rect& position, const pp::Rect& clip);
 	virtual void DidChangeFocus(bool has_focus);
 	virtual bool HandleInputEvent(const pp::InputEvent& event);
 	virtual void HandleMessage(const pp::Var& message_data);
