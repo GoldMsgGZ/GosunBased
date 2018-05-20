@@ -79,6 +79,59 @@ int GxxGmPlayer::Stop()
 	return ((GxxGmPlaySDK*)play_sdk_)->Stop();
 }
 
+int GxxGmPlayer::OpenAudio()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_PlaySound((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	if (err != EnumGSMediaPlayerErrCode::GSMEDIAPLAYER_CODE_SUCCESS)
+	{
+		GxxGmPlayBase::DebugStringOutput("打开声音失败！错误码：%d\n", err);
+		return err;
+	}
+
+	GxxGmPlayBase::DebugStringOutput("打开声音成功！\n");
+	return 0;
+}
+
+int GxxGmPlayer::GetVolumn()
+{
+	int volume = 0;
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_GetVolumn((GSMediaPlayHandle)this->gxx_media_player_handle_, &volume);
+	if (err != EnumGSMediaPlayerErrCode::GSMEDIAPLAYER_CODE_SUCCESS)
+	{
+		GxxGmPlayBase::DebugStringOutput("获取音量失败！错误码：%d\n", err);
+		return -1;
+	}
+
+	GxxGmPlayBase::DebugStringOutput("获取音量成功！音量为：%d\n", volume);
+	return volume;
+}
+
+int GxxGmPlayer::SetVolumn(int volume)
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetVolumn((GSMediaPlayHandle)this->gxx_media_player_handle_, volume);
+	if (err != EnumGSMediaPlayerErrCode::GSMEDIAPLAYER_CODE_SUCCESS)
+	{
+		GxxGmPlayBase::DebugStringOutput("设置音量失败！错误码：%d\n", err);
+		return err;
+	}
+
+	GxxGmPlayBase::DebugStringOutput("设置音量成功！音量为：%d\n", volume);
+	return err;
+}
+
+int GxxGmPlayer::CloseAudio()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_StopSound((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	if (err != EnumGSMediaPlayerErrCode::GSMEDIAPLAYER_CODE_SUCCESS)
+	{
+		GxxGmPlayBase::DebugStringOutput("关闭声音失败！错误码：%d\n", err);
+		return err;
+	}
+
+	GxxGmPlayBase::DebugStringOutput("关闭声音成功！\n");
+	return err;
+}
+
 void GxxGmPlayer::Close()
 {
 	((GxxGmPlaySDK*)play_sdk_)->Close();

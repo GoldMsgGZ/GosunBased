@@ -24,6 +24,12 @@ public:
 	int Pause();
 	int Resume();
 	int Stop();
+
+	int OpenAudio();
+	int SetVolumn(int volume);
+	int GetVolumn();
+	int CloseAudio();
+
 	void Close();
 
 public:

@@ -185,6 +185,30 @@ int GxxGmPlaySDK::Stop()
 	return errCode;
 }
 
+int GxxGmPlaySDK::OpenAudio()
+{
+	int errCode = 0;
+	return errCode;
+}
+
+int GxxGmPlaySDK::GetVolume()
+{
+	int errCode = 0;
+	return errCode;
+}
+
+int GxxGmPlaySDK::SetVolume(int volume)
+{
+	int errCode = 0;
+	return errCode;
+}
+
+int GxxGmPlaySDK::CloseAudio()
+{
+	int errCode = 0;
+	return errCode;
+}
+
 void GxxGmPlaySDK::Close()
 {
 	switch (protocol_type_)

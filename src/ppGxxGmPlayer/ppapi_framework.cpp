@@ -30,6 +30,9 @@ bool MyInstance::HandleInputEvent(const pp::InputEvent& event)
 	switch (event_type)
 	{
 	case PP_INPUTEVENT_TYPE_UNDEFINED:
+		{
+			sprintf_s(dbgmsg, 4096, "未知消息...");
+		}
 		break;
 	case PP_INPUTEVENT_TYPE_MOUSEDOWN:
 		{
@@ -40,27 +43,55 @@ bool MyInstance::HandleInputEvent(const pp::InputEvent& event)
 			int32_t mouse_click_count = mouse_event.GetClickCount();			// 获取鼠标按下的次数
 			pp::Point mouse_point = mouse_event.GetPosition();					// 获取鼠标位置
 
-			sprintf_s(dbgmsg, 4096, "鼠标按下, mouse_button:%d, mouse_click_count:%d, mouse_point:(%d, %d)\n", mouse_button, mouse_click_count, mouse_point.x(), mouse_point.y());
+			sprintf_s(dbgmsg, 4096, "鼠标按下, mouse_button:%d, mouse_click_count:%d, mouse_point:(%d, %d)", mouse_button, mouse_click_count, mouse_point.x(), mouse_point.y());
 		}
 		break;
 	case PP_INPUTEVENT_TYPE_MOUSEUP:
 		{
 			// 鼠标弹起
+			pp::MouseInputEvent mouse_event(event);	
+
+			PP_InputEvent_MouseButton mouse_button = mouse_event.GetButton();	// 获取鼠标按下的具体是哪个案件
+			int32_t mouse_click_count = mouse_event.GetClickCount();			// 获取鼠标按下的次数
+			pp::Point mouse_point = mouse_event.GetPosition();					// 获取鼠标位置
+
+			sprintf_s(dbgmsg, 4096, "鼠标弹起, mouse_button:%d, mouse_click_count:%d, mouse_point:(%d, %d)", mouse_button, mouse_click_count, mouse_point.x(), mouse_point.y());
 		}
 		break;
 	case PP_INPUTEVENT_TYPE_MOUSEMOVE:
 		{
 			// 鼠标移动
+			pp::MouseInputEvent mouse_event(event);	
+
+			PP_InputEvent_MouseButton mouse_button = mouse_event.GetButton();	// 获取鼠标按下的具体是哪个案件
+			int32_t mouse_click_count = mouse_event.GetClickCount();			// 获取鼠标按下的次数
+			pp::Point mouse_point = mouse_event.GetPosition();					// 获取鼠标位置
+
+			sprintf_s(dbgmsg, 4096, "鼠标移动, mouse_button:%d, mouse_click_count:%d, mouse_point:(%d, %d)", mouse_button, mouse_click_count, mouse_point.x(), mouse_point.y());
 		}
 		break;
 	case PP_INPUTEVENT_TYPE_MOUSEENTER:
 		{
 			// 鼠标进入
+			pp::MouseInputEvent mouse_event(event);	
+
+			PP_InputEvent_MouseButton mouse_button = mouse_event.GetButton();	// 获取鼠标按下的具体是哪个案件
+			int32_t mouse_click_count = mouse_event.GetClickCount();			// 获取鼠标按下的次数
+			pp::Point mouse_point = mouse_event.GetPosition();					// 获取鼠标位置
+
+			sprintf_s(dbgmsg, 4096, "鼠标进入, mouse_button:%d, mouse_click_count:%d, mouse_point:(%d, %d)", mouse_button, mouse_click_count, mouse_point.x(), mouse_point.y());
 		}
 		break;
 	case PP_INPUTEVENT_TYPE_MOUSELEAVE:
 		{
 			// 鼠标移出
+			pp::MouseInputEvent mouse_event(event);	
+
+			PP_InputEvent_MouseButton mouse_button = mouse_event.GetButton();	// 获取鼠标按下的具体是哪个案件
+			int32_t mouse_click_count = mouse_event.GetClickCount();			// 获取鼠标按下的次数
+			pp::Point mouse_point = mouse_event.GetPosition();					// 获取鼠标位置
+
+			sprintf_s(dbgmsg, 4096, "鼠标移出, mouse_button:%d, mouse_click_count:%d, mouse_point:(%d, %d)", mouse_button, mouse_click_count, mouse_point.x(), mouse_point.y());
 		}
 		break;
 	case PP_INPUTEVENT_TYPE_WHEEL:
@@ -69,6 +100,9 @@ bool MyInstance::HandleInputEvent(const pp::InputEvent& event)
 		}
 		break;
 	case PP_INPUTEVENT_TYPE_RAWKEYDOWN:
+		{
+			// 
+		}
 		break;
 	case PP_INPUTEVENT_TYPE_KEYDOWN:
 		{
@@ -96,18 +130,30 @@ bool MyInstance::HandleInputEvent(const pp::InputEvent& event)
 	case PP_INPUTEVENT_TYPE_IME_TEXT:
 		break;
 	case PP_INPUTEVENT_TYPE_TOUCHSTART:
+		{
+			// 触控板开始
+		}
 		break;
 	case PP_INPUTEVENT_TYPE_TOUCHMOVE:
+		{
+			// 触控板移动
+		}
 		break;
 	case PP_INPUTEVENT_TYPE_TOUCHEND:
+		{
+			// 触控板结束
+		}
 		break;
 	case PP_INPUTEVENT_TYPE_TOUCHCANCEL:
+		{
+			// 触控板取消
+		}
 		break;
 	default:
 		break;
 	}
 
-	GxxGmPlayBase::DebugStringOutput("[ppGxxGmPlayer.dll] MyInstance::HandleInputEvent(const pp::InputEvent& event) 接口被调用，event_type:%d, event_time:%f, event_modifiers:%d\n", event_type, event_time, event_modifiers);
+	GxxGmPlayBase::DebugStringOutput("[ppGxxGmPlayer.dll] MyInstance::HandleInputEvent(const pp::InputEvent& event) %s\n", dbgmsg);
 	return true;
 }
 

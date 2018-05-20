@@ -38,7 +38,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\vs2010\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>GxxGmPlayBase.lib;GxxGmPlaySDK.lib;GxxGmPlayer.lib;GxxGmMultiDisp.lib;GSFoundation.lib;GSServerSDK.lib;GSRtspClient.lib;GSMediaPlayer.lib;avcodec.lib;avfilter.lib;avformat.lib;avutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Debug;..\ext\FFMpeg\lib\x86;..\ext\Foundation;..\ext\GSMediaPlayer;..\ext\GSStreamServerSDK;..\ext\RtspStack;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Debug\vs2010;..\ext\FFMpeg\lib\x86;..\ext\Foundation;..\ext\GSMediaPlayer;..\ext\GSStreamServerSDK;..\ext\RtspStack;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>npGxxGmPlayer.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>

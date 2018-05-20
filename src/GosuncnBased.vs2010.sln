@@ -87,6 +87,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GxxGmMultiDispDemo", "GxxGmMultiDispDemo\GxxGmMultiDispDemo.vcxproj", "{077FBB08-1936-458A-A644-784C4728CD6C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ppGxxGmPlayer", "ppGxxGmPlayer\ppGxxGmPlayer.vcxproj", "{124FD36E-3489-4F6C-9084-45A227F2C711}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C0959C5-4AE2-4038-B43F-25E61998BDD4} = {8C0959C5-4AE2-4038-B43F-25E61998BDD4}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axGxxGmPlayer", "axGxxGmPlayer\axGxxGmPlayer.vcxproj", "{5459AABD-0DF8-4923-B019-0EFEA635D572}"
 EndProject

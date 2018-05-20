@@ -118,6 +118,7 @@ void DataReceivedCallback(StruGSFrameDataEx* frameHeader, void* clientData)
 		frame_data.VideoFrameInfo.FrameBuffer[0] = pFrame;
 		break;
 	case EnumGSMediaType::GS_MEDIA_TYPE_AUDIO:
+		//frame_data.AudioFrameInfo.SampleRate = 
 		break;
 	default:
 		break;

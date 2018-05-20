@@ -148,22 +148,6 @@ int GxxGmHttpImp::Play()
 {
 	int errCode = 0;
 
-	//// 检查是否创建了同步事件，如果没有就创建事件
-	//if (framerate_event_handle_ == NULL)
-	//	framerate_event_handle_ = CreateEvent(NULL, FALSE, FALSE, NULL);
-
-	//// 检查控制线程是否在运行，如果没有运行，则
-	//if (!control_thread_.IsRunning())
-	//{
-	//	bool bret = control_thread_.Start(_ControlThreadCallback, this);
-	//	if (!bret)
-	//	{
-	//		GxxGmPlayBase::DebugStringOutput("启动控制线程失败！...\n");
-	//		Stop();
-	//		return -1;
-	//	}
-	//}
-
 	if (!read_stream_thread_.IsRunning())
 	{
 		bool bret = read_stream_thread_.Start(_ReadStreamThreadCallback, this);
@@ -267,8 +251,11 @@ void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void 
 			//WaitForSingleObject(http_->framerate_event_handle_, INFINITE);
 
 #ifdef USE_H264BSF
-			// 这里需要判断，如果是H264编码，我们就需要用过滤器进行过滤
-			av_bitstream_filter_filter(h264_bit_stream_filter_context, (AVCodecContext*)http_->video_codec_ctx_, NULL, &av_packet.data, &av_packet.size, av_packet.data, av_packet.size, 0);
+			if (http_->eVideoCode_ == GS_CODEID_ST_H264)
+			{
+				// 这里需要判断，如果是H264编码，我们就需要用过滤器进行过滤
+				av_bitstream_filter_filter(h264_bit_stream_filter_context, (AVCodecContext*)http_->video_codec_ctx_, NULL, &av_packet.data, &av_packet.size, av_packet.data, av_packet.size, 0);
+			}
 #endif
 
 #ifdef _USE_FFMPEG_
@@ -304,6 +291,12 @@ void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void 
 				http_->notifer_->MediaFrameNotiferEx(AVMediaType::AVMEDIA_TYPE_AUDIO, av_frame);
 			}
 #else
+
+			if (http_->eAudioCode_ == GS_CODEID_AUDIO_ST_AAC)
+			{
+				// 这里需要增加adts头部
+			}
+
 			// 这是音频帧
 			media_frame.MediaType = EnumGSMediaType::GS_MEDIA_TYPE_AUDIO;
 			media_frame.CodecType = (EnumGSCodeID)http_->eAudioCode_;
@@ -322,7 +315,10 @@ void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void 
 	}
 
 #ifdef USE_H264BSF
-	av_bitstream_filter_close(h264_bit_stream_filter_context);
+	if (eVideoCode_ == GS_CODEID_ST_H264)
+	{
+		av_bitstream_filter_close(h264_bit_stream_filter_context);
+	}
 #endif
 
 	// 上报播放状态
