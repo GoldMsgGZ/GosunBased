@@ -205,3 +205,82 @@ void __stdcall NPAPI_TestPlayCallback(NPP instance, const NPVariant *args, uint3
 		NPN_ReleaseVariantValue(&result);
 	}
 }
+
+void __stdcall NPAPI_OpenSound(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+		int errCode = plugin->multi_disp_ex_->OpenAudio(disp_index);
+		if (errCode != 0)
+			GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::OpenAudio() failed... errCode = %d\n", errCode);
+	}
+}
+
+void __stdcall NPAPI_CloseSound(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+		int errCode = plugin->multi_disp_ex_->CloseAudio(disp_index);
+		if (errCode != 0)
+			GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::CloseAudio() failed... errCode = %d\n", errCode);
+	}
+}
+
+void __stdcall NPAPI_GetVolume(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+		int volume_val = plugin->multi_disp_ex_->GetVolume(disp_index);
+		if (volume_val < 0)
+			GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::GetVolume() failed... errCode = %d\n", volume_val);
+
+		INT32_TO_NPVARIANT(volume_val, *result);
+	}
+}
+
+void __stdcall NPAPI_SetVolume(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+	int volume_val = NPVARIANT_TO_INT32(args[1]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+		int errCode = plugin->multi_disp_ex_->SetVolume(disp_index, volume_val);
+		if (errCode != 0)
+			GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::SetVolume() failed... errCode = %d\n", errCode);
+	}
+}
+
+void __stdcall NPAPI_CapturePicture(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+	NPString save_path = NPVARIANT_TO_STRING(args[1]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+		char path[4096] = {0};
+		memcpy(path, save_path.UTF8Characters, save_path.UTF8Length);
+
+		// 0:bmp,1:jpeg,2:png
+		// 这里默认永远保存PNG图像
+		int errCode = plugin->multi_disp_ex_->CapturePicture(disp_index, path, 2);
+		if (errCode != 0)
+			GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::CapturePicture() failed... errCode = %d\n", errCode);
+	}
+}

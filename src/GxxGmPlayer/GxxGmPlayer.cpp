@@ -92,7 +92,7 @@ int GxxGmPlayer::OpenAudio()
 	return 0;
 }
 
-int GxxGmPlayer::GetVolumn()
+int GxxGmPlayer::GetVolume()
 {
 	int volume = 0;
 	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_GetVolumn((GSMediaPlayHandle)this->gxx_media_player_handle_, &volume);
@@ -106,7 +106,7 @@ int GxxGmPlayer::GetVolumn()
 	return volume;
 }
 
-int GxxGmPlayer::SetVolumn(int volume)
+int GxxGmPlayer::SetVolume(int volume)
 {
 	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetVolumn((GSMediaPlayHandle)this->gxx_media_player_handle_, volume);
 	if (err != EnumGSMediaPlayerErrCode::GSMEDIAPLAYER_CODE_SUCCESS)
@@ -137,6 +137,12 @@ void GxxGmPlayer::Close()
 	((GxxGmPlaySDK*)play_sdk_)->Close();
 }
 
+int GxxGmPlayer::CapturePicture(const char *save_path, int img_type)
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_CapturePicture((GSMediaPlayHandle)this->gxx_media_player_handle_, save_path, img_type);
+	return err;
+}
+
 void GxxGmPlayer::StreamParamNotifer(unsigned int eVideoCode, unsigned int eAudioCode, unsigned int unSampleRate, unsigned int unBits, unsigned int unChannels, int nRefFrameRate, int nEnableTimeCaculate)
 {
 	// 将参数组织为渲染所需要的数据结构
@@ -161,6 +167,17 @@ void GxxGmPlayer::StreamParamNotifer(unsigned int eVideoCode, unsigned int eAudi
 	if (err != GSMEDIAPLAYER_CODE_SUCCESS)
 	{
 		// 调试输出相关信息
+		GxxGmPlayBase::DebugStringOutput("打开播放组件失败！错误码：%d\n", err);
+	}
+
+	if (mode == EnumGSMediaPlayMode::GSPLAYMODE_RECORD)
+	{
+		// 安装播放回调
+		err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetBufferEmptyCallback((GSMediaPlayHandle)this->gxx_media_player_handle_, GxxGmPlayer::_FuncOnBufferEmptyCB, this);
+		if (err != GSMEDIAPLAYER_CODE_SUCCESS)
+		{
+			GxxGmPlayBase::DebugStringOutput("安装播放完成回调失败！错误码：%d\n", err);
+		}
 	}
 
 	// 播放

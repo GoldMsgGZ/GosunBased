@@ -112,10 +112,34 @@ int GxxGmDispEx::Stop()
 	return 0;
 }
 
-int GxxGmDispEx::CaptureScreen()
+int GxxGmDispEx::OpenAudio()
+{
+	int errCode = player_->OpenAudio();
+	return errCode;
+}
+
+int GxxGmDispEx::SetVolume(int volume)
+{
+	int errCode = player_->SetVolume(volume);
+	return errCode;
+}
+
+int GxxGmDispEx::GetVolume()
+{
+	return player_->GetVolume();
+}
+
+int GxxGmDispEx::CloseAudio()
+{
+	int errCode = player_->CloseAudio();
+	return errCode;
+}
+
+int GxxGmDispEx::CapturePicture(const char *save_path, int img_type)
 {
 	// Î´ÊµÏÖ
-	return 0;
+	int errCode = player_->CapturePicture(save_path, img_type);
+	return errCode;
 }
 
 std::string GxxGmDispEx::GetPlayInfo()
@@ -385,10 +409,30 @@ int GxxGmMultiDispEx::StopAll()
 	return errCode;
 }
 
-int GxxGmMultiDispEx::CaptureScreen(int disp_index)
+int GxxGmMultiDispEx::OpenAudio(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].OpenAudio();
+}
+
+int GxxGmMultiDispEx::SetVolume(int disp_index, int volume)
+{
+	return gxx_gm_disp_ex_[disp_index].SetVolume(volume);
+}
+
+int GxxGmMultiDispEx::GetVolume(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].GetVolume();
+}
+
+int GxxGmMultiDispEx::CloseAudio(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].CloseAudio();
+}
+
+int GxxGmMultiDispEx::CapturePicture(int disp_index, const char *save_path, int img_type)
 {
 	if (gxx_gm_disp_ex_[disp_index].IsPlaying())
-		return gxx_gm_disp_ex_[disp_index].CaptureScreen();
+		return gxx_gm_disp_ex_[disp_index].CapturePicture(save_path, img_type);
 	else
 		return -1;
 }

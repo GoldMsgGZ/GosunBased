@@ -26,11 +26,16 @@ public:
 	int Stop();
 
 	int OpenAudio();
-	int SetVolumn(int volume);
-	int GetVolumn();
+	int SetVolume(int volume);
+	int GetVolume();
 	int CloseAudio();
 
 	void Close();
+
+	int CapturePicture(const char *save_path, int img_type);
+
+public:
+	static void __stdcall _FuncOnBufferEmptyCB(EnumGSMediaType eMediaType,UInt64 ulLatestPlayed,UInt64 ulLatestedPlayedKey,void* pUser);
 
 public:
 	// 由PlaySDK上送上来

@@ -315,7 +315,7 @@ void GS_CALLBACK GxxGmHttpImp::_ReadStreamThreadCallback(GSThread &thread, void 
 	}
 
 #ifdef USE_H264BSF
-	if (eVideoCode_ == GS_CODEID_ST_H264)
+	if (http_->eVideoCode_ == GS_CODEID_ST_H264)
 	{
 		av_bitstream_filter_close(h264_bit_stream_filter_context);
 	}

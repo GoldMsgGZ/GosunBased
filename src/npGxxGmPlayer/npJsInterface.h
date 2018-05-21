@@ -21,6 +21,11 @@ void __stdcall NPAPI_GetPlayInfo(NPP instance, const NPVariant *args, uint32_t a
 void __stdcall NPAPI_GetPlayingURL(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 void __stdcall NPAPI_PlayCallback(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 void __stdcall NPAPI_TestPlayCallback(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_OpenSound(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_CloseSound(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_GetVolume(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_SetVolume(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_CapturePicture(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 //void __stdcall NPAPI_Initialize(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 #endif//_npJsInterface_H_

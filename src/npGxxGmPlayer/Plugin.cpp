@@ -240,6 +240,10 @@ JsParams js_params[] = {
 	{ 9,	NULL,	"GetPlayingURL",				NPAPI_GetPlayingURL,				JsFuncType_Interface	},
 	{ 10,	NULL,	"PlayCallback",					NPAPI_PlayCallback,					JsFuncType_Property		},
 	{ 11,	NULL,	"TestPlayCallback",				NPAPI_TestPlayCallback,				JsFuncType_Interface	},
+	{ 12,	NULL,	"OpenSound",					NPAPI_OpenSound,					JsFuncType_Interface	},
+	{ 13,	NULL,	"CloseSound",					NPAPI_CloseSound,					JsFuncType_Interface	},
+	{ 14,	NULL,	"SetVolume",					NPAPI_SetVolume,					JsFuncType_Interface	},
+	{ 15,	NULL,	"GetVolume",					NPAPI_GetVolume,					JsFuncType_Interface	},
 	{ -1,	NULL,	"",								NULL,								JsFuncType_None			}
 };
 

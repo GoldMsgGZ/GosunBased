@@ -245,7 +245,7 @@ typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_StopSound)(GSMediaPlayHandle
   * @param[in]	nPicType   0:bmp,1:jpeg,2:png
   * @return		typedef EnumGSMediaPlayerErrCode
   */
- typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_CapturePicture)(GSMediaPlayHandle handle, const char *szPicFileName,Int32 nPicType);
+ typedef EnumGSMediaPlayerErrCode ( * _GSMediaPlayer_CapturePicture)(GSMediaPlayHandle handle, const char *szPicFileName, Int32 nPicType);
 
 
 

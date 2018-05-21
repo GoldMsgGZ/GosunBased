@@ -35,7 +35,12 @@ public:
 	int Resume();
 	int Stop();
 
-	int CaptureScreen();
+	int OpenAudio();
+	int SetVolume(int volume);
+	int GetVolume();
+	int CloseAudio();
+
+	int CapturePicture(const char *save_path, int img_type);
 
 	std::string GetPlayInfo();
 	std::string GetUrl();
@@ -114,10 +119,15 @@ public:
 
 	int StopAll();
 
+	int OpenAudio(int disp_index);
+	int SetVolume(int disp_index, int volume);
+	int GetVolume(int disp_index);
+	int CloseAudio(int disp_index);
+
 	/**
 	 * 
 	 */
-	int CaptureScreen(int disp_index);
+	int CapturePicture(int disp_index, const char *save_path, int img_type);
 
 public:
 	std::string GetPlayInfo(int disp_index);
