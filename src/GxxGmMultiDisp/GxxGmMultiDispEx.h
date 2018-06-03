@@ -41,6 +41,22 @@ public:
 	int CloseAudio();
 
 	int CapturePicture(const char *save_path, int img_type);
+	// 快放
+	int Fast();
+	// 慢放
+	int Slow();
+	// 调节播放速度
+	int SetPlaySpeed(double speed);
+	// 帧进
+	int Next();
+	// 帧退
+	int Back();
+	// 设置当前播放的起始位置
+	int SetPlayPos(unsigned __int64 pulTimeStamp);
+	// 清空播放缓存
+	int ClearPlayBuffer();
+	// 刷新窗口视图
+	int RefreshView();
 
 	std::string GetPlayInfo();
 	std::string GetUrl();
@@ -128,6 +144,23 @@ public:
 	 * 
 	 */
 	int CapturePicture(int disp_index, const char *save_path, int img_type);
+
+	// 快放
+	int Fast(int disp_index);
+	// 慢放
+	int Slow(int disp_index);
+	// 调节播放速度
+	int SetPlaySpeed(int disp_index, double speed);
+	// 帧进
+	int Next(int disp_index);
+	// 帧退
+	int Back(int disp_index);
+	// 设置当前播放的起始位置
+	int SetPlayPos(int disp_index, unsigned __int64 pulTimeStamp);
+	// 清空播放缓存
+	int ClearPlayBuffer(int disp_index);
+	// 刷新窗口视图
+	int RefreshView(int disp_index);
 
 public:
 	std::string GetPlayInfo(int disp_index);

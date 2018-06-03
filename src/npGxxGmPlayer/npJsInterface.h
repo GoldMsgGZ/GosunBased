@@ -26,6 +26,14 @@ void __stdcall NPAPI_CloseSound(NPP instance, const NPVariant *args, uint32_t ar
 void __stdcall NPAPI_GetVolume(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 void __stdcall NPAPI_SetVolume(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 void __stdcall NPAPI_CapturePicture(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_Fast(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_Slow(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_SetPlaySpeed(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_Next(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_Back(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_SetPlayPos(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_ClearPlayBuffer(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
+void __stdcall NPAPI_RefreshView(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 //void __stdcall NPAPI_Initialize(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result);
 
 #endif//_npJsInterface_H_

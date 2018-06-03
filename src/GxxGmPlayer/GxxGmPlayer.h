@@ -19,23 +19,49 @@ public:
 	bool IsRealMode();
 	
 public:
+	// 打开
 	int Open(const char *url, bool is_real = true);
+	// 播放
 	int Play();
+	// 暂停
 	int Pause();
+	// 恢复
 	int Resume();
+	// 停止
 	int Stop();
 
+	// 打开声音
 	int OpenAudio();
+	// 设置音量
 	int SetVolume(int volume);
+	// 获取音量
 	int GetVolume();
+	// 关闭声音
 	int CloseAudio();
 
 	void Close();
 
+	// 截图
 	int CapturePicture(const char *save_path, int img_type);
+	// 快放
+	int Fast();
+	// 慢放
+	int Slow();
+	// 调节播放速度
+	int SetPlaySpeed(double speed);
+	// 帧进
+	int Next();
+	// 帧退
+	int Back();
+	// 设置当前播放的起始位置
+	int SetPlayPos(unsigned __int64 pulTimeStamp);
+	// 清空播放缓存
+	int ClearPlayBuffer();
+	// 刷新窗口视图
+	int RefreshView();
 
 public:
-	static void __stdcall _FuncOnBufferEmptyCB(EnumGSMediaType eMediaType,UInt64 ulLatestPlayed,UInt64 ulLatestedPlayedKey,void* pUser);
+	//static void __stdcall _FuncOnBufferEmptyCB(EnumGSMediaType eMediaType,UInt64 ulLatestPlayed,UInt64 ulLatestedPlayedKey,void* pUser);
 
 public:
 	// 由PlaySDK上送上来

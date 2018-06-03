@@ -284,3 +284,91 @@ void __stdcall NPAPI_CapturePicture(NPP instance, const NPVariant *args, uint32_
 			GxxGmPlayBase::DebugStringOutput("GxxGmMultiDispEx::CapturePicture() failed... errCode = %d\n", errCode);
 	}
 }
+
+void __stdcall NPAPI_Fast(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_Slow(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_SetPlaySpeed(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_Next(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_Back(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_SetPlayPos(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_ClearPlayBuffer(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}
+
+void __stdcall NPAPI_RefreshView(NPP instance, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+	int disp_index = NPVARIANT_TO_INT32(args[0]);
+
+	CPlugin *plugin = (CPlugin *)instance->pdata;
+
+	if (plugin != NULL)
+	{
+	}
+}

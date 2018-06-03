@@ -143,6 +143,59 @@ int GxxGmPlayer::CapturePicture(const char *save_path, int img_type)
 	return err;
 }
 
+int GxxGmPlayer::Fast()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_Fast((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	return err;
+}
+
+int GxxGmPlayer::Slow()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_Slow((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	return err;
+}
+
+int GxxGmPlayer::SetPlaySpeed(double speed)
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetPlaySpeed((GSMediaPlayHandle)this->gxx_media_player_handle_, speed);
+	return err;
+}
+
+int GxxGmPlayer::Next()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_Next((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	return err;
+}
+
+int GxxGmPlayer::Back()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_Back((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	return err;
+}
+
+int GxxGmPlayer::SetPlayPos(UInt64 pulTimeStamp)
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetPlayedPos((GSMediaPlayHandle)this->gxx_media_player_handle_, pulTimeStamp, true);
+	return err;
+}
+
+int GxxGmPlayer::ClearPlayBuffer()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_ClearPlayBuffer((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	return err;
+}
+
+int GxxGmPlayer::RefreshView()
+{
+	EnumGSMediaPlayerErrCode err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_RefreshView((GSMediaPlayHandle)this->gxx_media_player_handle_);
+	return err;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//
+//
+
 void GxxGmPlayer::StreamParamNotifer(unsigned int eVideoCode, unsigned int eAudioCode, unsigned int unSampleRate, unsigned int unBits, unsigned int unChannels, int nRefFrameRate, int nEnableTimeCaculate)
 {
 	// 将参数组织为渲染所需要的数据结构
@@ -172,12 +225,12 @@ void GxxGmPlayer::StreamParamNotifer(unsigned int eVideoCode, unsigned int eAudi
 
 	if (mode == EnumGSMediaPlayMode::GSPLAYMODE_RECORD)
 	{
-		// 安装播放回调
-		err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetBufferEmptyCallback((GSMediaPlayHandle)this->gxx_media_player_handle_, GxxGmPlayer::_FuncOnBufferEmptyCB, this);
-		if (err != GSMEDIAPLAYER_CODE_SUCCESS)
-		{
-			GxxGmPlayBase::DebugStringOutput("安装播放完成回调失败！错误码：%d\n", err);
-		}
+		//// 安装播放回调
+		//err = gs_mediaplayer_stub_->ptr_GSMediaPlayer_SetBufferEmptyCallback((GSMediaPlayHandle)this->gxx_media_player_handle_, GxxGmPlayer::_FuncOnBufferEmptyCB, this);
+		//if (err != GSMEDIAPLAYER_CODE_SUCCESS)
+		//{
+		//	GxxGmPlayBase::DebugStringOutput("安装播放完成回调失败！错误码：%d\n", err);
+		//}
 	}
 
 	// 播放

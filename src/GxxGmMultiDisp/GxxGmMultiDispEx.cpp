@@ -142,6 +142,54 @@ int GxxGmDispEx::CapturePicture(const char *save_path, int img_type)
 	return errCode;
 }
 
+int GxxGmDispEx::Fast()
+{
+	int errCode = player_->Fast();
+	return errCode;
+}
+
+int GxxGmDispEx::Slow()
+{
+	int errCode = player_->Slow();
+	return errCode;
+}
+
+int GxxGmDispEx::SetPlaySpeed(double speed)
+{
+	int errCode = player_->SetPlaySpeed(speed);
+	return errCode;
+}
+
+int GxxGmDispEx::Next()
+{
+	int errCode = player_->Next();
+	return errCode;
+}
+
+int GxxGmDispEx::Back()
+{
+	int errCode = player_->Back();
+	return errCode;
+}
+
+int GxxGmDispEx::SetPlayPos(unsigned __int64 pulTimeStamp)
+{
+	int errCode = player_->SetPlayPos(pulTimeStamp);
+	return errCode;
+}
+
+int GxxGmDispEx::ClearPlayBuffer()
+{
+	int errCode = player_->ClearPlayBuffer();
+	return errCode;
+}
+
+int GxxGmDispEx::RefreshView()
+{
+	int errCode = player_->RefreshView();
+	return errCode;
+}
+
 std::string GxxGmDispEx::GetPlayInfo()
 {
 	return play_info_;
@@ -436,6 +484,50 @@ int GxxGmMultiDispEx::CapturePicture(int disp_index, const char *save_path, int 
 	else
 		return -1;
 }
+
+int GxxGmMultiDispEx::Fast(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].Fast();
+}
+
+int GxxGmMultiDispEx::Slow(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].Slow();
+}
+
+int GxxGmMultiDispEx::SetPlaySpeed(int disp_index, double speed)
+{
+	return gxx_gm_disp_ex_[disp_index].SetPlaySpeed(speed);
+}
+
+int GxxGmMultiDispEx::Next(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].Next();
+}
+
+int GxxGmMultiDispEx::Back(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].Back();
+}
+
+int GxxGmMultiDispEx::SetPlayPos(int disp_index, unsigned __int64 pulTimeStamp)
+{
+	return gxx_gm_disp_ex_[disp_index].SetPlayPos(pulTimeStamp);
+}
+
+int GxxGmMultiDispEx::ClearPlayBuffer(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].ClearPlayBuffer();
+}
+
+int GxxGmMultiDispEx::RefreshView(int disp_index)
+{
+	return gxx_gm_disp_ex_[disp_index].RefreshView();
+}
+
+//////////////////////////////////////////////////////////////////////////
+//
+//
 
 std::string GxxGmMultiDispEx::GetPlayInfo(int disp_index)
 {

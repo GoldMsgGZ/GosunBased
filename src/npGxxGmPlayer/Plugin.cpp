@@ -244,6 +244,15 @@ JsParams js_params[] = {
 	{ 13,	NULL,	"CloseSound",					NPAPI_CloseSound,					JsFuncType_Interface	},
 	{ 14,	NULL,	"SetVolume",					NPAPI_SetVolume,					JsFuncType_Interface	},
 	{ 15,	NULL,	"GetVolume",					NPAPI_GetVolume,					JsFuncType_Interface	},
+	{ 15,	NULL,	"CapturePicture",				NPAPI_CapturePicture,				JsFuncType_Interface	},
+	{ 15,	NULL,	"Fast",							NPAPI_Fast,							JsFuncType_Interface	},
+	{ 15,	NULL,	"Slow",							NPAPI_Slow,							JsFuncType_Interface	},
+	{ 15,	NULL,	"SetPlaySpeed",					NPAPI_SetPlaySpeed,					JsFuncType_Interface	},
+	{ 15,	NULL,	"Next",							NPAPI_Next,							JsFuncType_Interface	},
+	{ 15,	NULL,	"Back",							NPAPI_Back,							JsFuncType_Interface	},
+	{ 15,	NULL,	"SetPlayPos",					NPAPI_SetPlayPos,					JsFuncType_Interface	},
+	{ 15,	NULL,	"ClearPlayBuffer",				NPAPI_ClearPlayBuffer,				JsFuncType_Interface	},
+	{ 15,	NULL,	"RefreshView",					NPAPI_RefreshView,					JsFuncType_Interface	},
 	{ -1,	NULL,	"",								NULL,								JsFuncType_None			}
 };
 
