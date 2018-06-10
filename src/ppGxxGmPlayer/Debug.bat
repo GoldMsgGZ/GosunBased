@@ -1,0 +1,1 @@
+"E:\opensource\bgWebPlugin\PPAPI\GoogleChromePortable\App\Google Chrome\chrome.exe" -no-sandbox --register-pepper-plugins="E:\opensource\GosunBased\src\Debug\vs2010\ppGxxGmPlayer.dll;application/x-ppapi-ppgxxgmplayer" "http://127.0.0.1/chrome-plugins/ppGxxGmPlayer.html"

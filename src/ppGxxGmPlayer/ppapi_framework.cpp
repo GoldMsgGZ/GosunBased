@@ -2,10 +2,22 @@
 #include "..\GxxGmPlayBase\GxxGmPlayBase.h"
 
 
+bool MyInstance::Init(uint32_t argc, const char* argn[], const char* argv[])
+{
+
+}
+
 void MyInstance::DidChangeView(const pp::View& view)
 {
 	pp::Rect view_rect = view.GetRect();
 	GxxGmPlayBase::DebugStringOutput("[ppGxxGmPlayer.dll] MyInstance::DidChangeView(const pp::View& view) 接口被调用，view_rect=(%d, %d, %d, %d)\n", view_rect.x(), view_rect.y(), view_rect.width(), view_rect.height());
+
+	PP_Instance instance = this->pp_instance();
+
+	if (plugin_hwnd_ == NULL)
+	{
+		// 创建子窗口
+	}
 }
 
 void MyInstance::DidChangeView(const pp::Rect& position, const pp::Rect& clip)
@@ -164,15 +176,14 @@ bool MyInstance::HandleInputEvent(const pp::InputEvent& event)
 void MyInstance::HandleMessage(const pp::Var& message_data) {
 	if (message_data.is_string()) {
 		std::string string_copy(message_data.AsString());
-		std::reverse(string_copy.begin(), string_copy.end());
-		bool is_palindrome(message_data.AsString() == string_copy);
+		GxxGmPlayBase::DebugStringOutput("[ppGxxGmPlayer.dll] 接收到页面传入的数据：%s\n", string_copy.c_str());
 
-		if (is_palindrome)
-		{
-			GxxGmPlayBase::DebugStringOutput("[ppGxxGmPlayer.dll] 接收到页面传入的数据：%s\n", string_copy.c_str());
-		}
+		//////////////////////////////////////////////////////////////////////////
+		//
+		// 在这里调用消息分发模块，将消息分发到不同的模块中去
 
-		PostMessage(pp::Var(is_palindrome));
+		// 将消息通过事件监听接口返回给javascript
+		PostMessage(pp::Var(string_copy));
 	}
 }
 

@@ -61,7 +61,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>.\ppapi_sdk\lib\x86\Debug;..\Debug\vs2010</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\ppapi_sdk\lib\x86\Debug\Static;..\Debug\vs2010</AdditionalLibraryDirectories>
       <AdditionalDependencies>ppapi_cpp.lib;ppapi_cpp_objects.lib;GxxGmPlayBase.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -88,9 +88,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ppapi_framework.h" />
+    <ClInclude Include="ppapi_subwindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ppapi_framework.cpp" />
+    <ClCompile Include="ppapi_subwindow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
