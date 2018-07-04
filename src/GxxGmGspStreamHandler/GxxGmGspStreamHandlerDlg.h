@@ -6,6 +6,7 @@
 #include "afxwin.h"
 
 #include "StreamServerSDK.h"
+#include "PSFormat.h"
 
 
 // CGxxGmGspStreamHandlerDlg ¶Ô»°¿ò
@@ -35,7 +36,9 @@ protected:
 public:
 	CEdit m_cDevId;
 	CString devid;
+
 	GOSUN_SERV_HANDLE handle_;
+	GS_MpegPSHandle ps_handle_;
 
 	afx_msg void OnBnClickedButtonHandler();
 	afx_msg void OnBnClickedButtonLogin();

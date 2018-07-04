@@ -51,6 +51,8 @@ END_MESSAGE_MAP()
 
 CGxxGmGspStreamHandlerDlg::CGxxGmGspStreamHandlerDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CGxxGmGspStreamHandlerDlg::IDD, pParent)
+	, handle_(NULL)
+	, ps_handle_(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -105,7 +107,7 @@ BOOL CGxxGmGspStreamHandlerDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 	SSInit();
 
-	m_cDevId.SetWindowText(_T("123456"));
+	m_cDevId.SetWindowText(_T("110"));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -173,8 +175,32 @@ void CALLBACK _StreamCallback(long lHandle, FRAME_HEADER header, char *pData, lo
 	unsigned int time2 = header.stampMillSec;
 
 	char msg[409600] = {0};
-	sprintf(msg, "视频编码：%d 音频编码：%d 帧类型：%d 帧率：%d 时间戳%d.%d\n", video_codec_id, audio_codec_id, frame_type, frame_rate, time1, time2);
+	// 这里拿到的应该都是PS流
+	// 视频编码是 GS_CODEID_GS_GUOMAI_VIPC
+	// 音频编码是 GS_CODEID_GS_GUOMAI_AIPC
+	// 帧类型 P帧和I帧
+	// 帧率25
+	// 时间戳是绝对时间戳
+	sprintf(msg, "<<<PS流>>> 视频编码：%d 音频编码：%d 帧类型：%d 帧率：%d 时间戳%d.%d\n", video_codec_id, audio_codec_id, frame_type, frame_rate, time1, time2);
 	TRACE(msg);
+
+	// 这里需要将数据送入解包接口，在解包回调接口输出
+	GS_MPEGPS_InputPSData(dlg->ps_handle_, (BYTE*)pData, (UInt32)nSize);
+}
+
+void CALLBACK _ESFrameReceivedCallBack(GS_MpegPSHandle handle, StruESFrameInfo const *stESFrameInfo, StruPSFrameInfo const* stPSFrameInfo, void* pUserData)
+{
+	CGxxGmGspStreamHandlerDlg *dlg = (CGxxGmGspStreamHandlerDlg*)pUserData;
+
+	EnumGSPSCodecType es_codec_id = stESFrameInfo->eCodec;
+	EnumGSMediaType es_media_type = stESFrameInfo->eType;
+	unsigned __int64 pts = stESFrameInfo->nPTS;
+	stESFrameInfo->nBufLen;
+
+	TRACE("[[[ES流]]] 编码ID：%d 媒体类型：%d 时间戳:%I64d 编码帧长度：%d\n", es_codec_id, es_media_type, pts, stESFrameInfo->nBufLen);
+
+	// 这里将包分发到播放器中解码渲染
+	
 }
 
 void CGxxGmGspStreamHandlerDlg::OnBnClickedButtonHandler()
@@ -205,6 +231,36 @@ void CGxxGmGspStreamHandlerDlg::OnBnClickedButtonHandler()
 		return ;
 
 	// 分析解复用信息
+	for (int index = 0; index < desc.iMediaNum; ++index)
+	{
+		if (desc.desc[index].mediaType == SDK_EnumMediaType::MEDIA_SYS_HEADER)
+		{
+			TRACE("系统头部，不处理\n");
+		}
+		else if (desc.desc[index].mediaType == SDK_EnumMediaType::MEDIA_VIDEO)
+		{
+			SDK_StruVideoDescri d = desc.desc[index].mediaDesc.videoDesc;
+			EnumStreamCodeID codec_id = d.eCodeID;
+			TRACE("视频流解复用：视频编码：%d 帧率：%d.%d\n", codec_id, d.iFrameRate, d.iFrameRate2);
+		}
+		else if (desc.desc[index].mediaType == SDK_EnumMediaType::MEDIA_AUDIO)
+		{
+			SDK_StruAudioDescri a = desc.desc[index].mediaDesc.audioDesc;
+			EnumStreamCodeID codec_id = a.eCodeID;
+			int bits = a.iBits;
+			int channels = a.iChannels;
+			int sample_rate = a.iSample;
+			TRACE("视频流解复用：音频编码：%d 码率：%d 声道数：%d 采样率：%d\n", codec_id, bits, channels, sample_rate);
+		}
+	}
+
+	// 似乎在这里就应该注册流转换句柄了
+	EnumGS_MPEGPS_RetCode ret = GS_MPEGPS_CreatePS2ESHandle(&ps_handle_);
+	if (ret == GS_MPEGPS_Ret_Success)
+	{
+		// 成功了，注册回调
+		ret = GS_MPEGPS_SetESFrameReceivedCallback(ps_handle_, _ESFrameReceivedCallBack, this);
+	}
 
 	errCode = SSPlay(stream_handle_);
 	if (errCode != GOSUN_SUCCESS)

@@ -2,10 +2,10 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GxxGmGspStreamHandler"
-	ProjectGUID="{A31C038F-D84A-4000-8C1A-13B6A90C14C5}"
-	RootNamespace="GxxGmGspStreamHandler"
-	Keyword="MFCProj"
+	Name="GxxGmStrermHandler"
+	ProjectGUID="{995AFCE9-DA3A-4AC0-8321-3773B26E8E79}"
+	RootNamespace="GxxGmStrermHandler"
+	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -20,8 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			UseOfMFC="2"
+			ConfigurationType="2"
 			CharacterSet="1"
 			>
 			<Tool
@@ -38,19 +37,16 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="false"
-				ValidateParameters="true"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\ext\GSStreamServerSDK;..\ext\TinyXML\include;..\ext\PSFormat_win32_V1.0.0.27679_20180110"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
+				AdditionalIncludeDirectories="..\ext\GSStreamServerSDK;..\ext\PSFormat_win32_V1.0.0.27679_20180110"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GXXGMSTRERMHANDLER_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -59,18 +55,15 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="2052"
-				AdditionalIncludeDirectories="$(IntDir)"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GSServerSDK.lib tinyxml.lib PSFormat.lib"
+				AdditionalDependencies="GSServerSDK.lib PSFormat.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\ext\GSStreamServerSDK;..\ext\TinyXML\lib\Debug;..\ext\PSFormat_win32_V1.0.0.27679_20180110"
+				AdditionalLibraryDirectories="..\ext\GSStreamServerSDK;..\ext\PSFormat_win32_V1.0.0.27679_20180110"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -101,8 +94,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			UseOfMFC="2"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -120,19 +112,15 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				PreprocessorDefinitions="NDEBUG"
-				MkTypLibCompatible="false"
-				ValidateParameters="true"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
-				MinimalRebuild="false"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GXXGMSTRERMHANDLER_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -141,9 +129,6 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="2052"
-				AdditionalIncludeDirectories="$(IntDir)"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -184,92 +169,48 @@
 	</References>
 	<Files>
 		<Filter
-			Name="源文件"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="流处理"
 			>
 			<File
-				RelativePath=".\GxxGmGspStreamHandler.cpp"
+				RelativePath=".\GxxGmStreamRecevicer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GxxGmGspStreamHandlerDlg.cpp"
+				RelativePath=".\GxxGmStreamRecevicer.h"
 				>
 			</File>
-			<File
-				RelativePath=".\stdafx.cpp"
+			<Filter
+				Name="GSP"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				<File
+					RelativePath=".\GxxGmGSPHandler.cpp"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
+				</File>
+				<File
+					RelativePath=".\GxxGmGSPHandler.h"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
-			Name="头文件"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\GxxGmGspStreamHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GxxGmGspStreamHandlerDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\targetver.h"
-				>
-			</File>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="资源文件"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="高新兴与FFmpeg转换"
+			>
 			<File
-				RelativePath=".\res\GxxGmGspStreamHandler.ico"
+				RelativePath=".\FFmpeg2Gxx.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GxxGmGspStreamHandler.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\res\GxxGmGspStreamHandler.rc2"
+				RelativePath=".\FFmpeg2Gxx.h"
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
-		<Global
-			Name="RESOURCE_FILE"
-			Value="GxxGmGspStreamHandler.rc"
-		/>
 	</Globals>
 </VisualStudioProject>

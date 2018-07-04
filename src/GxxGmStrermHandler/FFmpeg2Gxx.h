@@ -13,7 +13,6 @@ extern "C" {
 
 #include "GSStreamCodeID.h"
 
-enum EnumGSCodeID FFmpegCodecId2GxxCodecId(enum AVCodecID codecid);
-enum AVCodecID GxxCodecId2FFmpegCodecId(enum EnumGSCodeID codecid);
+EnumGSCodeID FFmpegCodecId2GxxCodecId(enum AVCodecID codecid);
 
 #endif//_FFmpeg2Gxx_H_
