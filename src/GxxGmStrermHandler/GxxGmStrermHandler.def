@@ -1,0 +1,9 @@
+LIBRARY	"GxxGmStrermHandler"
+
+EXPORTS
+	??0GxxGmStreamRecevicer@@QAE@PAVGxxGmStreamRecevicerObserver@@@Z
+	??1GxxGmStreamRecevicer@@QAE@XZ
+	?OpenURL@GxxGmStreamRecevicer@@QAEHPBD@Z
+	?Close@GxxGmStreamRecevicer@@QAEXXZ
+	?Play@GxxGmStreamRecevicer@@QAEHXZ
+	?Stop@GxxGmStreamRecevicer@@QAEXXZ

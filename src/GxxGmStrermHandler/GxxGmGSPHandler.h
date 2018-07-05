@@ -19,7 +19,7 @@ public:
 public:
 	void* GetStreamHandle() { return stream_handle_; }
 	void* GetMpegPsHandle() { return mpeg_ps_handle_; }
-	bool IsDemuxingOK() { media_info_total_count_ == collected_media_info_count_ ? true : false; }
+	bool IsDemuxingOK() { return media_info_total_count_ == collected_media_info_count_ ? true : false; }
 
 private:
 	void *stream_handle_;

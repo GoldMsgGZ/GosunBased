@@ -39,17 +39,17 @@ void CALLBACK _ESFrameReceivedCallBack(GS_MpegPSHandle handle, StruESFrameInfo c
 
 
 GxxGmGSPHandler::GxxGmGSPHandler()
-, stream_handle_(NULL)
+: stream_handle_(NULL)
 , mpeg_ps_handle_(NULL)
 , media_info_total_count_(0)
 , collected_media_info_count_(0)
 {
-
+	//SSInit();
 }
 
 GxxGmGSPHandler::~GxxGmGSPHandler()
 {
-
+	//SSUninit();
 }
 
 int GxxGmGSPHandler::OpenURL(const char *url)
@@ -57,7 +57,12 @@ int GxxGmGSPHandler::OpenURL(const char *url)
 	int errCode = 0;
 
 	SDK_StruMediaMuxDesc desc;
-	errCode = SSOpenEx(url, &stream_handle_, _StreamCallback, this, &desc);
+	ZeroMemory(&desc, sizeof(SDK_StruMediaMuxDesc));
+	EnumStreamCodeID codeID[2];
+	codeID[0] = CODEID_NONE;
+	codeID[1] = CODEID_NONE;
+	//errCode = SSOpenEx(url, &stream_handle_, _StreamCallback, this, &desc, false);
+	errCode = SSOpen(url, &stream_handle_, _StreamCallback, this, codeID, TRAN_RTPLAY, false);
 	if (errCode != GOSUN_SUCCESS)
 		return errCode;
 
@@ -69,7 +74,7 @@ int GxxGmGSPHandler::OpenURL(const char *url)
 		{
 			SDK_StruVideoDescri d = desc.desc[index].mediaDesc.videoDesc;
 			EnumStreamCodeID codec_id = d.eCodeID;
-			TRACE("视频流解复用：视频编码：%d 帧率：%d.%d\n", codec_id, d.iFrameRate, d.iFrameRate2);
+			//TRACE("视频流解复用：视频编码：%d 帧率：%d.%d\n", codec_id, d.iFrameRate, d.iFrameRate2);
 		}
 		else if (desc.desc[index].mediaType == SDK_EnumMediaType::MEDIA_AUDIO)
 		{
@@ -78,7 +83,7 @@ int GxxGmGSPHandler::OpenURL(const char *url)
 			int bits = a.iBits;
 			int channels = a.iChannels;
 			int sample_rate = a.iSample;
-			TRACE("视频流解复用：音频编码：%d 码率：%d 声道数：%d 采样率：%d\n", codec_id, bits, channels, sample_rate);
+			//TRACE("视频流解复用：音频编码：%d 码率：%d 声道数：%d 采样率：%d\n", codec_id, bits, channels, sample_rate);
 		}
 	}
 

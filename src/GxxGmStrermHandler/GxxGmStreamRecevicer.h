@@ -2,6 +2,7 @@
 #define _GxxGmStreamRecevicer_H_
 
 class GxxGmGSPHandler;
+struct AVPacket;
 
 /**
  * 高新兴国迈编解码上下文

@@ -13,14 +13,15 @@ GxxGmStreamRecevicer::GxxGmStreamRecevicer(GxxGmStreamRecevicerObserver *observe
 , is_output_(false)
 , audio_stream_(NULL)
 , video_stream_(NULL)
+, instance_(new GxxGmRecevicerInstance)
 {
-	SSInit();
+	//SSInit();
 }
 
 GxxGmStreamRecevicer::~GxxGmStreamRecevicer()
 {
 	observer_ = NULL;
-	SSUninit();
+	//SSUninit();
 }
 
 int GxxGmStreamRecevicer::OpenURL(const char *url)

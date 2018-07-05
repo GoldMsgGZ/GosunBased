@@ -226,7 +226,9 @@ void CGxxGmGspStreamHandlerDlg::OnBnClickedButtonHandler()
 
 	GOSUN_STREAM_HANDLE stream_handle_ = NULL;
 	SDK_StruMediaMuxDesc desc;
+	EnumStreamCodeID codeID[2];
 	errCode = SSOpenEx(url, &stream_handle_, _StreamCallback, this, &desc);
+	//errCode = SSOpen(url, &stream_handle_, _StreamCallback, this, codeID);
 	if (errCode != GOSUN_SUCCESS)
 		return ;
 
@@ -241,12 +243,24 @@ void CGxxGmGspStreamHandlerDlg::OnBnClickedButtonHandler()
 		{
 			SDK_StruVideoDescri d = desc.desc[index].mediaDesc.videoDesc;
 			EnumStreamCodeID codec_id = d.eCodeID;
+			if (codec_id == CODEID_GS_VIPC)
+			{
+				// 视频编码H264
+				// 帧率25
+			}
 			TRACE("视频流解复用：视频编码：%d 帧率：%d.%d\n", codec_id, d.iFrameRate, d.iFrameRate2);
 		}
 		else if (desc.desc[index].mediaType == SDK_EnumMediaType::MEDIA_AUDIO)
 		{
 			SDK_StruAudioDescri a = desc.desc[index].mediaDesc.audioDesc;
 			EnumStreamCodeID codec_id = a.eCodeID;
+			if (codec_id == CODEID_GS_AIPC)
+			{
+				// 音频编码G711u
+				// 采样率8K
+				// 双声道
+				// 
+			}
 			int bits = a.iBits;
 			int channels = a.iChannels;
 			int sample_rate = a.iSample;

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GxxGmStrermHandler"
-	ProjectGUID="{995AFCE9-DA3A-4AC0-8321-3773B26E8E79}"
-	RootNamespace="GxxGmStrermHandler"
+	Name="GxxGmStrermHandlerDemo"
+	ProjectGUID="{A88034E2-2B18-4944-A499-EF1F8BE43328}"
+	RootNamespace="GxxGmStrermHandlerDemo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\ext\GSStreamServerSDK;..\ext\PSFormat_win32_V1.0.0.27679_20180110;..\ext\FFMpeg\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;GXXGMSTRERMHANDLER_EXPORTS;__STDC_CONSTANT_MACROS"
+				AdditionalIncludeDirectories="..\GxxGmStrermHandler;..\ext\GSStreamServerSDK;..\ext\PSFormat_win32_V1.0.0.27679_20180110"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,10 +60,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="GxxGmStrermHandler.lib GSServerSDK.lib PSFormat.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\Debug;..\ext\GSStreamServerSDK;..\ext\PSFormat_win32_V1.0.0.27679_20180110;"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,6 +84,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -82,7 +94,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -105,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;GXXGMSTRERMHANDLER_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -124,9 +136,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				ModuleDefinitionFile="GxxGmStrermHandler.def"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -158,28 +169,32 @@
 	</References>
 	<Files>
 		<Filter
-			Name="流处理"
+			Name="源文件"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\GxxGmStreamRecevicer.cpp"
+				RelativePath=".\GxxGmStrermHandlerDemo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GxxGmStreamRecevicer.h"
+				RelativePath=".\stdafx.cpp"
 				>
 			</File>
-			<Filter
-				Name="GSP"
+		</Filter>
+		<Filter
+			Name="头文件"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath=".\stdafx.h"
 				>
-				<File
-					RelativePath=".\GxxGmGSPHandler.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GxxGmGSPHandler.h"
-					>
-				</File>
-			</Filter>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
@@ -187,20 +202,8 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<Filter
-			Name="高新兴与FFmpeg转换"
-			>
-			<File
-				RelativePath=".\FFmpeg2Gxx.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\FFmpeg2Gxx.h"
-				>
-			</File>
-		</Filter>
 		<File
-			RelativePath=".\GxxGmStrermHandler.def"
+			RelativePath=".\ReadMe.txt"
 			>
 		</File>
 	</Files>
