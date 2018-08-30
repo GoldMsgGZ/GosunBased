@@ -289,6 +289,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="视音频编解码器接口"
+			>
+			<File
+				RelativePath=".\GxxGmCodec.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GxxGmCodec.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
